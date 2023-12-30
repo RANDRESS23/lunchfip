@@ -1,0 +1,349 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Estudiantes {
+  id_estudiante          String          @id @default(uuid())
+  primer_nombre          String          @db.VarChar(50)
+  segundo_nombre         String?         @db.VarChar(50)
+  primer_apellido        String          @db.VarChar(50)
+  segundo_apellido       String?         @db.VarChar(50)
+  
+  id_tipo_documento      String
+  tipo_documento         Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
+
+  numero_documento       String          @db.VarChar(20) @unique
+
+  id_programa            String
+  programa               Programas       @relation(fields: [id_programa], references: [id_programa], onDelete: Cascade)
+
+  correo_institucional   String          @db.VarChar(50) @unique
+  clave                  String 
+
+  id_sexo                String
+  sexo                   Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
+
+  celular                String          @db.VarChar(20) @unique
+  saldo                  Int             @default(0)
+
+  estados_estudiantes    Estados_Estudiantes[]
+  codigos_qr_estudiantes Codigos_QR_Estudiantes[]
+  estudiantes_reservas   Estudiantes_Reservas[]
+  estudiantes_recargas   Estudiantes_Recargas[]
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  @@index([id_tipo_documento])
+  @@index([id_programa])
+  @@index([id_sexo])
+}
+
+model Estados_Estudiantes {
+  id_estado_estudiante  String      @id @default(uuid())
+  
+  id_estudiante         String
+  estudiante            Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+
+  id_estado             String
+  estado                Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_estudiante])
+  @@index([id_estado])
+}
+
+model Empleados {
+  id_empleado            String          @id @default(uuid())
+  primer_nombre          String          @db.VarChar(50)
+  segundo_nombre         String?         @db.VarChar(50)
+  primer_apellido        String          @db.VarChar(50)
+  segundo_apellido       String?         @db.VarChar(50)
+  
+  id_tipo_documento      String
+  tipo_documento         Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
+
+  numero_documento       String          @db.VarChar(20) @unique
+
+  correo                 String          @db.VarChar(50) @unique
+  clave                  String 
+
+  id_sexo                String
+  sexo                   Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
+
+  celular                String          @db.VarChar(20) @unique
+
+  reservas               Reservas[]
+  entregas               Entregas[]
+  empleados_recargas     Empleados_Recargas[]
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  @@index([id_tipo_documento])
+  @@index([id_sexo])
+}
+
+model Recargas {
+  id_recarga            String      @id @default(uuid())
+  saldo                 Int         @default(0)
+  fecha                 DateTime    @default(now())
+
+  estudiantes_recargas  Estudiantes_Recargas[]
+  empleados_recargas    Empleados_Recargas[]
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+}
+
+model Estados {
+  id_estado            String      @id @default(uuid())
+  estado               String      @db.VarChar(20)
+
+  estados_estudiantes  Estados_Estudiantes[]
+  estados_reservas     Estados_Reservas[]
+
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+}
+
+model Sexos {
+  id_sexo      String      @id @default(uuid())
+  sexo         String      @db.VarChar(20)
+
+  estudiantes  Estudiantes[]
+  empleados    Empleados[]
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Tipos_Documento {
+  id_tipo_documento String      @id @default(uuid())
+  tipo_documento    String      @db.VarChar(50)
+
+  estudiantes       Estudiantes[]
+  empleados         Empleados[]
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model Facultades {
+  id_facultad String      @id @default(uuid())
+  facultad    String      @db.VarChar(100)
+
+  programas   Programas[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Programas {
+  id_programa   String      @id @default(uuid())
+  programa      String      @db.VarChar(100)
+
+  id_facultad   String
+  facultad      Facultades  @relation(fields: [id_facultad], references: [id_facultad], onDelete: Cascade)
+
+  estudiantes   Estudiantes[]
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([id_facultad])
+}
+
+model Codigos_QR_Estudiantes {
+  id_codigo_qr_estudiante   String      @id @default(uuid())
+
+  id_estudiante             String
+  estudiante                Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+
+  url_codigo_qr             String      @db.Text
+
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+
+  @@index([id_estudiante])
+}
+
+model Estados_Reservas {
+  id_estado_reserva  String      @id @default(uuid())
+  
+  id_reserva         String
+  reserva            Reservas    @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+
+  id_estado          String
+  estado             Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  @@index([id_reserva])
+  @@index([id_estado])
+}
+
+model Reservas {
+  id_reserva            String      @id @default(uuid())
+
+  id_empleado           String
+  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+
+  fecha                 DateTime    @default(now())
+
+  estados_reservas      Estados_Reservas[]
+  codigos_qr_reservas   Codigos_QR_Reservas[]
+  estudiantes_reservas  Estudiantes_Reservas[]
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_empleado])
+}
+
+model Entregas {
+  id_entrega            String      @id @default(uuid())
+
+  id_empleado           String
+  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+
+  fecha                 DateTime    @default(now())
+
+  estudiantes_entregas  Estudiantes_Entregas[]
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_empleado])
+}
+
+model Codigos_QR_Reservas {
+  id_codigo_qr_reserva  String     @id @default(uuid())
+
+  id_reserva            String
+  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+
+  url_codigo_qr         String     @db.Text
+
+  createdAt             DateTime   @default(now())
+  updatedAt             DateTime   @updatedAt
+
+  @@index([id_reserva])
+}
+
+model Estudiantes_Reservas {
+  id_estudiante_reserva  String        @id @default(uuid())
+
+  id_reserva             String
+  reserva                Reservas      @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  
+  id_estudiante          String
+  estudiante             Estudiantes   @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+
+  estudiantes_entregas  Estudiantes_Entregas[]
+
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  @@index([id_reserva])
+  @@index([id_estudiante])
+}
+
+model Estudiantes_Entregas {
+  id_estudiante_entrega  String                @id @default(uuid())
+
+  id_entrega             String
+  entrega                Entregas              @relation(fields: [id_entrega], references: [id_entrega], onDelete: Cascade)
+  
+  id_estudiante_reserva  String
+  estudiante_reserva     Estudiantes_Reservas  @relation(fields: [id_estudiante_reserva], references: [id_estudiante_reserva], onDelete: Cascade)
+
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+
+  @@index([id_entrega])
+  @@index([id_estudiante_reserva])
+}
+
+model Estudiantes_Recargas {
+  id_estudiante_recarga  String       @id @default(uuid())
+
+  id_estudiante          String
+  estudiante             Estudiantes  @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  
+  id_recarga             String
+  recarga                Recargas     @relation(fields: [id_recarga], references: [id_recarga], onDelete: Cascade)
+
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  @@index([id_estudiante])
+  @@index([id_recarga])
+}
+
+model Empleados_Recargas {
+  id_empleado_recarga    String       @id @default(uuid())
+
+  id_empleado            String
+  empleado               Empleados    @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+  
+  id_recarga             String
+  recarga                Recargas     @relation(fields: [id_recarga], references: [id_recarga], onDelete: Cascade)
+
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  @@index([id_empleado])
+  @@index([id_recarga])
+}
+
+model Almuerzos {
+  id_almuerzo           String      @id @default(uuid())
+  fecha                 DateTime    @default(now())
+  total_almuerzos       Int
+
+  almuerzos_entregados  Almuerzos_Entregados[]
+  almuerzos_reservados  Almuerzos_Reservados[]
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+}
+
+model Almuerzos_Entregados {
+  id_almuerzos_entregados  String      @id @default(uuid())
+
+  id_almuerzo              String
+  almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+
+  cantidad                 Int
+
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+
+  @@index([id_almuerzo])
+}
+
+model Almuerzos_Reservados {
+  id_almuerzos_reservados  String      @id @default(uuid())
+
+  id_almuerzo              String
+  almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+
+  cantidad                 Int
+
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+
+  @@index([id_almuerzo])
+}
