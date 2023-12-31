@@ -1,5 +1,9 @@
-export default function Home() {
+import { HomeSection } from '@/components/Title/HomeSection'
+
+export default function Home () {
   return (
-    <div>Hello World!</div>
+    <main className='w-4/5 mx-auto'>
+      <HomeSection />
+    </main>
   )
 }
