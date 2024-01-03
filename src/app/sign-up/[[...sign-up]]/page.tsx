@@ -1,5 +1,9 @@
-import { SignUp } from '@clerk/nextjs'
+import { FormSignUp } from './_components/FormSignUp'
 
 export default function Page () {
-  return <SignUp />
+  return (
+    <div className='container py-28 mx-auto'>
+      <FormSignUp />
+    </div>
+  )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, Divider } from '@nextui-org/react'
 // import { AcmeLogo } from './AcmeLogo.jsx'
 import Link from 'next/link.js'
 import { ThemeSwitcher } from '../ThemeSwitcher'
@@ -10,20 +10,18 @@ export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const menuItems = [
-    'Profile',
-    'Dashboard',
-    'Activity',
-    'Analytics',
-    'System',
-    'Deployments',
-    'My Settings',
-    'Team Settings',
-    'Help & Feedback',
-    'Log Out'
+    {
+      title: 'Iniciar Sesión',
+      href: '/sign-in'
+    },
+    {
+      title: 'Registrarse',
+      href: '/sign-up'
+    }
   ]
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} className='fixed'>
+    <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed'>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -59,24 +57,23 @@ export const NavBar = () => {
         <NavbarItem className="hidden lg:flex">
           <Link href="#">Login</Link>
         </NavbarItem>
-        <NavbarItem>
+        <NavbarItem className="hidden lg:flex">
           <Button as={Link} color="primary" href="#" variant="flat">
             Sign Up
           </Button>
         </NavbarItem>
       </NavbarContent>
       <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+        {menuItems.map(({ title, href }, index) => (
+          <NavbarMenuItem key={`${title}-${index}`}>
             <Link
-              color={
-                index === 2 ? 'primary' : index === menuItems.length - 1 ? 'danger' : 'foreground'
-              }
               className="w-full"
-              href="#"
+              href={href}
+              onClick={() => { setIsMenuOpen(false) }}
             >
-              {item}
+              {title}
             </Link>
+            <Divider className='mt-2' />
           </NavbarMenuItem>
         ))}
       </NavbarMenu>

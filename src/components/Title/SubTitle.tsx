@@ -18,7 +18,7 @@ export const SubTitle = ({ description }: SubTitleProps) => {
 
   return (
     <p className={cn(
-      'text-lg text-center container flex justify-center items-center flex-wrap italic',
+      'text-lg text-center container flex justify-center items-center flex-wrap italic lg:max-w-2xl',
       themeFocus === 'dark' ? 'text-[#888888]' : 'text-[#666666]'
     )}>
       {description}
