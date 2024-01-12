@@ -1,5 +1,5 @@
 import { Button as ButtonUI } from '@nextui-org/react'
-import { cn } from '@/lib/utils'
+import { cn } from '@/libs/utils'
 
 interface ButtonProps {
   type: 'button' | 'submit' | 'reset'

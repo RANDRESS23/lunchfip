@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
+import { Toaster } from 'sonner'
 import NextUIProviderContext from '@/providers/NextUIProvider'
 import { NavBar } from '@/components/Navbar'
 import './globals.css'
@@ -22,6 +23,7 @@ export default function RootLayout ({
       <body className={inter.className}>
         <ClerkProvider>
           <NextUIProviderContext>
+            <Toaster />
             <NavBar />
             {children}
           </NextUIProviderContext>

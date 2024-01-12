@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import api from '@/lib/api'
+import api from '@/libs/api'
 import { type Sexos } from '@/types/sexos'
 
 export default function useSexos () {

@@ -1,5 +1,5 @@
-import { encryptPassword } from '@/lib/bcrypt'
-import { db } from '@/lib/prismaDB'
+import { encryptPassword } from '@/libs/bcrypt'
+import { db } from '@/libs/prismaDB'
 import { estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { PythonShell, type Options } from 'python-shell'

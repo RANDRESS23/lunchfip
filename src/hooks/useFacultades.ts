@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import api from '@/lib/api'
+import api from '@/libs/api'
 import { type Facultad } from '@/types/facultades'
 
 export default function useFacultades () {

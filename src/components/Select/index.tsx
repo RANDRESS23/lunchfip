@@ -12,26 +12,33 @@ interface SelectProps {
   options: Array<{ label: string, value: string }>
   disabled?: boolean
   register: UseFormRegister<FieldValues>
-  errors?: FieldErrors<FieldValues>
+  errors: FieldErrors<FieldValues>
 }
 
 export const Select = (
   { label, isRequired, name, options, disabled, register, errors }: SelectProps
 ) => {
   return (
-    <SelectUI
-      label={label}
-      isRequired={isRequired}
-      isDisabled={disabled}
-      {...register(name)}
-    >
+    <>
+      <SelectUI
+        label={label}
+        isRequired={isRequired}
+        isDisabled={disabled}
+        {...register(name)}
+      >
+        {
+          options.map(({ label, value }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))
+        }
+      </SelectUI>
       {
-        options.map(({ label, value }) => (
-          <SelectItem key={label} value={value}>
-            {label}
-          </SelectItem>
-        ))
+        errors[name]?.message !== undefined && (
+          <p className='text-red-600'>{String(errors[name]?.message)}</p>
+        )
       }
-    </SelectUI>
+    </>
   )
 }

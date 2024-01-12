@@ -1,4 +1,4 @@
-import { db } from '@/lib/prismaDB'
+import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 import { tipoDocumentoSchema } from './schema'
 
