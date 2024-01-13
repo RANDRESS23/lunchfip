@@ -103,15 +103,12 @@ export async function POST (request: Request) {
 
     const { clave: _, ...estudiante } = newEstudiante
 
-    // const tempImagePath = path.join(process.cwd(), 'src/app/api/estudiantes/_python/')
-    const tempImagePath2 = path.join(__dirname, '/_python')
-    console.log(process.cwd())
-    console.log(__dirname)
+    const tempImagePath = path.join(process.cwd(), 'src/app/api/estudiantes/_python/')
 
     const options: Options = {
       mode: 'text',
       pythonPath: 'python',
-      scriptPath: tempImagePath2,
+      scriptPath: tempImagePath,
       args: [body.numero_documento]
     }
 
