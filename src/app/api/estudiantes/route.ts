@@ -103,12 +103,15 @@ export async function POST (request: Request) {
 
     const { clave: _, ...estudiante } = newEstudiante
 
-    const tempImagePath = path.join(process.cwd(), 'src/app/api/estudiantes/_python/')
+    // const tempImagePath = path.join(process.cwd(), 'src/app/api/estudiantes/_python/')
+    const tempImagePath2 = path.join(__dirname, '/_python')
+    console.log(process.cwd())
+    console.log(__dirname)
 
     const options: Options = {
       mode: 'text',
       pythonPath: 'python',
-      scriptPath: tempImagePath,
+      scriptPath: tempImagePath2,
       args: [body.numero_documento]
     }
 
@@ -134,6 +137,9 @@ export async function POST (request: Request) {
       { estudiante, message: '¡Estudiante registrado exitosamente!' },
       { status: 201 }
     )
+    // return NextResponse.json({
+    //   message: '¡Estudiante registrado exitosamente!'
+    // })
   } catch (error: any) {
     console.error({ error })
 
