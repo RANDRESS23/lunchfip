@@ -80,20 +80,18 @@ export const FormSignUp = () => {
         setPendingVerification(true)
       }
     } catch (error: any) {
-      // if (error.response.data !== undefined) {
-      //   const errorsMessages = Object.values(error.response.data)
-      //   let errorsMessagesString = ''
+      if (error.response.data !== undefined) {
+        const errorsMessages = Object.values(error.response.data as Record<string, string>)
+        let errorsMessagesString = ''
 
-      //   errorsMessages.forEach((message: any) => {
-      //     errorsMessagesString += `🔸 ${message} ${'\n'}`
-      //   })
+        errorsMessages.forEach((message: any) => {
+          errorsMessagesString += `${message} ${'\n'}`
+        })
 
-      //   return tosty.error(errorsMessagesString, {
-      //     options: { className: 'text-center' }
-      //   })
-      // }
+        return toast.error(errorsMessagesString)
+      }
 
-      // console.error({ error })
+      console.error({ error })
     } finally {
       setIsLoading(false)
     }

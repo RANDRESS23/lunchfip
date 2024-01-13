@@ -51,7 +51,7 @@ export const FormVerifyCode = () => {
 
     try {
       const code = `${data.firstNumber}${data.secondNumber}${data.thirdNumber}${data.fourthNumber}${data.fifthNumber}${data.sixthNumber}`
-      // verificar esto
+
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code
       })

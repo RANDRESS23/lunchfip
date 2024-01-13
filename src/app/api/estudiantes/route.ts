@@ -3,8 +3,7 @@ import { db } from '@/libs/prismaDB'
 import { estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { PythonShell, type Options } from 'python-shell'
-import { v2 as cloudinary } from 'cloudinary'
-import fs from 'fs'
+import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import path from 'path'
 
 cloudinary.config({
@@ -53,7 +52,7 @@ export async function POST (request: Request) {
 
     if (existingEstudianteDocumento !== null) {
       return NextResponse.json(
-        { messsage: 'Document already exists' },
+        { messsage: '¡El número de documento ya existe en nuestra base de datos!' },
         { status: 400 }
       )
     }
@@ -64,14 +63,14 @@ export async function POST (request: Request) {
 
     if (existingEstudianteEmail !== null) {
       return NextResponse.json(
-        { messsage: 'Email already exists' },
+        { messsage: '¡El correo electrónico ya existe en nuestra base de datos!' },
         { status: 400 }
       )
     }
 
     if (clave !== clave2) {
       return NextResponse.json(
-        { messsage: 'Passwords do not match' },
+        { messsage: '¡Las contraseñas no coinciden!' },
         { status: 400 }
       )
     }
@@ -110,27 +109,29 @@ export async function POST (request: Request) {
       mode: 'text',
       pythonPath: 'python',
       scriptPath: tempImagePath,
-      args: [body.numero_documento, `${tempImagePath}/_codigosQR`]
+      args: [body.numero_documento]
     }
 
-    await PythonShell.run('GenQR.py', options)
+    const [qrBase64Str]: string[] = await PythonShell.run('GenQR.py', options)
+    const buffer = Buffer.from(qrBase64Str, 'base64')
 
-    const result = await cloudinary.uploader.upload(`${tempImagePath}/_codigosQR/${body.numero_documento}.png`)
+    const responseCloudinary: UploadApiResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({}, (error, result) => {
+        if (error !== undefined) reject(error)
+
+        if (result !== undefined) resolve(result)
+      }).end(buffer)
+    })
 
     await db.codigos_QR_Estudiantes.create({
       data: {
         id_estudiante: newEstudiante.id_estudiante,
-        url_codigo_qr: result.secure_url
+        url_codigo_qr: responseCloudinary.secure_url
       }
     })
 
-    fs.readdirSync(`${tempImagePath}/_codigosQR`).forEach((file) => {
-      const filePath = path.join(`${tempImagePath}/_codigosQR`, file)
-      fs.unlinkSync(filePath)
-    })
-
     return NextResponse.json(
-      { estudiante, message: 'Estudiante created successfully' },
+      { estudiante, message: '¡Estudiante registrado exitosamente!' },
       { status: 201 }
     )
   } catch (error: any) {
