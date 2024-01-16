@@ -40,39 +40,9 @@ export async function POST (request: Request) {
       id_programa: idPrograma,
       correo_institucional: correoInstitucional,
       clave,
-      clave_2: clave2,
       id_sexo: idSexo,
       celular
     } = estudianteSchema.parse(body)
-
-    const existingEstudianteDocumento = await db.estudiantes.findUnique({
-      where: { numero_documento: numeroDocumento }
-    })
-
-    if (existingEstudianteDocumento !== null) {
-      return NextResponse.json(
-        { messsage: '¡El número de documento ya existe en nuestra base de datos!' },
-        { status: 400 }
-      )
-    }
-
-    const existingEstudianteEmail = await db.estudiantes.findUnique({
-      where: { correo_institucional: correoInstitucional }
-    })
-
-    if (existingEstudianteEmail !== null) {
-      return NextResponse.json(
-        { messsage: '¡El correo electrónico ya existe en nuestra base de datos!' },
-        { status: 400 }
-      )
-    }
-
-    if (clave !== clave2) {
-      return NextResponse.json(
-        { messsage: '¡Las contraseñas no coinciden!' },
-        { status: 400 }
-      )
-    }
 
     const hashedPassword = await encryptPassword(clave)
     const newEstudiante = await db.estudiantes.create({
@@ -107,7 +77,7 @@ export async function POST (request: Request) {
     const buffer = Buffer.from(qrStr, 'base64')
 
     const responseCloudinary: UploadApiResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({}, (error, result) => {
+      cloudinary.uploader.upload_stream({ folder: 'codigos_qr_estudiantes' }, (error, result) => {
         if (error !== undefined) reject(error)
 
         if (result !== undefined) resolve(result)

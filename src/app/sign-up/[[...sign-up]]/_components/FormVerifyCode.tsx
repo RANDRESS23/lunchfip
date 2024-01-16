@@ -1,12 +1,17 @@
 import { type KeyboardEvent, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { useSignUp } from '@clerk/nextjs'
+import api from '@/libs/api'
 import { useRouter } from 'next/navigation'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { toast } from 'sonner'
 
-export const FormVerifyCode = () => {
+interface FormVerifyCodeProps {
+  dataEstudiante: FieldValues
+}
+
+export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
@@ -34,12 +39,20 @@ export const FormVerifyCode = () => {
     }
   }
 
-  const keyUp = (e: KeyboardEvent<HTMLInputElement>, nextInputName: string) => {
-    if ((e.target as HTMLInputElement).value.length > 0) {
+  const keyUp = (e: KeyboardEvent<HTMLInputElement>, nextInputName?: string, previousInputName?: string) => {
+    if ((e.target as HTMLInputElement).value.length > 0 && nextInputName !== undefined) {
       const nextInput: HTMLInputElement | null = document.querySelector(`input[name=${nextInputName}]`)
 
       if (nextInput !== null) {
         nextInput.focus()
+      }
+    }
+
+    if (e.key === 'Backspace' && (e.target as HTMLInputElement).value.length === 0 && previousInputName !== undefined) {
+      const previousInput: HTMLInputElement | null = document.querySelector(`input[name=${previousInputName}]`)
+
+      if (previousInput !== null) {
+        previousInput.focus()
       }
     }
   }
@@ -57,6 +70,7 @@ export const FormVerifyCode = () => {
       })
 
       if (completeSignUp.status === 'complete') {
+        await api.post('/estudiantes', dataEstudiante)
         await setActive({ session: completeSignUp.createdSessionId })
         toast.success('Te registraste exitosamente!')
         router.push('/profile/student/home')
@@ -103,6 +117,7 @@ export const FormVerifyCode = () => {
           errors={errors}
           className="w-10"
           classNamesInput={['text-3xl text-center']}
+          previousInputName="firstNumber"
           nextInputName="thirdNumber"
           keyDown={keyDown}
           keyUp={keyUp}
@@ -116,6 +131,7 @@ export const FormVerifyCode = () => {
           errors={errors}
           className="w-10"
           classNamesInput={['text-3xl text-center']}
+          previousInputName="secondNumber"
           nextInputName="fourthNumber"
           keyDown={keyDown}
           keyUp={keyUp}
@@ -129,6 +145,7 @@ export const FormVerifyCode = () => {
           errors={errors}
           className="w-10"
           classNamesInput={['text-3xl text-center']}
+          previousInputName="thirdNumber"
           nextInputName="fifthNumber"
           keyDown={keyDown}
           keyUp={keyUp}
@@ -142,6 +159,7 @@ export const FormVerifyCode = () => {
           errors={errors}
           className="w-10"
           classNamesInput={['text-3xl text-center']}
+          previousInputName="fourthNumber"
           nextInputName="sixthNumber"
           keyDown={keyDown}
           keyUp={keyUp}
@@ -155,6 +173,7 @@ export const FormVerifyCode = () => {
           errors={errors}
           className="w-10"
           classNamesInput={['text-3xl text-center']}
+          previousInputName="fifthNumber"
           keyDown={keyDown}
           keyUp={keyUp}
         />

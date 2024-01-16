@@ -26,6 +26,7 @@ export const FormSignUp = () => {
   const [passwordVisible2, setPasswordVisible2] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [pendingVerification, setPendingVerification] = useState(false)
+  const [dataEstudiante, setDataEstudiante] = useState<FieldValues>({})
   const { tiposDocumento, loadingTiposDocumento } = useTiposDocumento()
   const { facultades, loadingFacultades } = useFacultades()
   const { programas, loadingProgramas } = useProgramas()
@@ -65,9 +66,11 @@ export const FormSignUp = () => {
     setIsLoading(true)
 
     try {
-      const response = await api.post('/estudiantes', data)
+      const response = await api.post('/estudiantes/verificar', data)
 
-      if (response.status === 201) {
+      if (response.status === 200) {
+        setDataEstudiante(data)
+
         await signUp.create({
           emailAddress: data.correo_institucional,
           password: data.clave
@@ -293,7 +296,7 @@ export const FormSignUp = () => {
         )
       }
       {
-        pendingVerification && <FormVerifyCode />
+        pendingVerification && <FormVerifyCode dataEstudiante={dataEstudiante} />
       }
     </div>
   )

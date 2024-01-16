@@ -16,13 +16,14 @@ interface InputProps {
   errors: FieldErrors<FieldValues>
   className?: string
   classNamesInput?: string[]
+  previousInputName?: string
   nextInputName?: string
   keyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
-  keyUp?: (event: React.KeyboardEvent<HTMLInputElement>, nextInputName: string) => void
+  keyUp?: (event: React.KeyboardEvent<HTMLInputElement>, nextInputName?: string, previousInputName?: string) => void
 }
 
 export const Input = (
-  { type, label, isRequired, name, variant, endContent, register, errors, className, classNamesInput, nextInputName, keyDown, keyUp }: InputProps
+  { type, label, isRequired, name, variant, endContent, register, errors, className, classNamesInput, previousInputName, nextInputName, keyDown, keyUp }: InputProps
 ) => {
   return (
     <>
@@ -37,9 +38,11 @@ export const Input = (
         classNames={{
           input: classNamesInput
         }}
-        onKeyDown={keyDown}
+        onKeyDown={(e) => {
+          if (keyDown !== undefined) keyDown(e)
+        }}
         onKeyUp={(e) => {
-          if (keyUp !== undefined && nextInputName !== undefined) keyUp(e, nextInputName)
+          if (keyUp !== undefined) keyUp(e, nextInputName, previousInputName)
         }}
       />
       {
