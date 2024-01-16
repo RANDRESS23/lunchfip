@@ -2,9 +2,8 @@ import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
 import { estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
-import { PythonShell, type Options } from 'python-shell'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
-import path from 'path'
+import QRCode from 'qrcode'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -103,17 +102,9 @@ export async function POST (request: Request) {
 
     const { clave: _, ...estudiante } = newEstudiante
 
-    const tempImagePath = path.join(process.cwd(), 'src/app/api/estudiantes/_python/')
-
-    const options: Options = {
-      mode: 'text',
-      pythonPath: 'python',
-      scriptPath: tempImagePath,
-      args: [body.numero_documento]
-    }
-
-    const [qrBase64Str]: string[] = await PythonShell.run('GenQR.py', options)
-    const buffer = Buffer.from(qrBase64Str, 'base64')
+    const qrBase64Str = await QRCode.toDataURL(numeroDocumento, { version: 2 })
+    const qrStr = qrBase64Str.split(',')[1]
+    const buffer = Buffer.from(qrStr, 'base64')
 
     const responseCloudinary: UploadApiResponse = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream({}, (error, result) => {
@@ -134,9 +125,6 @@ export async function POST (request: Request) {
       { estudiante, message: '¡Estudiante registrado exitosamente!' },
       { status: 201 }
     )
-    // return NextResponse.json({
-    //   message: '¡Estudiante registrado exitosamente!'
-    // })
   } catch (error: any) {
     console.error({ error })
 
