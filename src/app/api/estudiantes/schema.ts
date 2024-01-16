@@ -40,3 +40,12 @@ export const estudianteSchema = z.object({
   message: 'Las contraseñas no coinciden.',
   path: ['clave_2']
 })
+
+export const signInSchema = z.object({
+  correo_institucional: z.string().refine(value => emailRegex.test(value), {
+    message: 'Debes usar un correo institucional. (@itfip.edu.co)'
+  }),
+  clave: z.string().refine(value => passwordRegex.test(value), {
+    message: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.'
+  })
+})

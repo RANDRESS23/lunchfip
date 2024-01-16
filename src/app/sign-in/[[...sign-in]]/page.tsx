@@ -1,7 +1,9 @@
+import { FormSignIn } from './_components/FormSignIn'
+
 export default function Page () {
   return (
-    <div className="text-4xl mt-40">
-      Sign In
+    <div className='container py-28 mx-auto'>
+      <FormSignIn />
     </div>
   )
 }

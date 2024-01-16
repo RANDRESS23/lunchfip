@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server'
 import { authMiddleware, redirectToSignIn } from '@clerk/nextjs'
 // import { NextResponse } from 'next/server'
 
@@ -8,10 +9,20 @@ export default authMiddleware({
   publicRoutes: ['/', '/api/facultades', '/api/programas', '/api/tipos-documento', '/api/sexos', '/api/estudiantes', '/api/estudiantes/verificar', '/api/estados'],
 
   afterAuth (auth, req) {
-    // console.log({ auth, req })
+    const isPublicRoute = auth.isPublicRoute
+    const pathStudentHome = '/profile/student/home'
 
     if (auth.userId === null && !auth.isPublicRoute) {
       return redirectToSignIn({ returnBackUrl: req.url })
+    }
+    console.log(auth.userId, auth.orgId, isPublicRoute)
+
+    if (auth.userId !== null &&
+      (auth.orgId === null || auth.orgId === undefined) &&
+      isPublicRoute
+    ) {
+      const pathStudentHomeURL = new URL(pathStudentHome, req.url)
+      return NextResponse.redirect(pathStudentHomeURL)
     }
   }
   // afterAuth (auth, req) {

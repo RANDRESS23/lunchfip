@@ -78,7 +78,7 @@ export const FormSignUp = () => {
 
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
 
-        toast.success('Código de verificación enviado exitosamente!')
+        toast.success('¡Código de verificación enviado exitosamente!')
 
         setPendingVerification(true)
       }
