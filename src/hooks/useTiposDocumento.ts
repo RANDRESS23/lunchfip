@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import api from '@/libs/api'
-import { type TiposDocumento } from '@/types/tiposDocumento'
+import { type TipoDocumento } from '@/types/tiposDocumento'
 
 export default function useTiposDocumento () {
-  const [tiposDocumento, setTiposDocumento] = useState<TiposDocumento[]>([])
+  const [tiposDocumento, setTiposDocumento] = useState<TipoDocumento[]>([])
   const [loadingTiposDocumento, setLoadingTiposDocumento] = useState(false)
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function useTiposDocumento () {
         setLoadingTiposDocumento(true)
 
         const response = await api.get('/tipos-documento')
-        setTiposDocumento(response.data as TiposDocumento[])
+        setTiposDocumento(response.data as TipoDocumento[])
       } catch (error) {
         console.log(error)
       } finally {

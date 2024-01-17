@@ -11,11 +11,13 @@ import { Button } from '@/components/Button'
 import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
+import useEmailsEmpleados from '@/hooks/useEmailsEmpleados'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { isLoaded, signIn, setActive } = useSignIn()
+  const { emailsEmpleados } = useEmailsEmpleados()
   const router = useRouter()
 
   const {
@@ -24,7 +26,7 @@ export const FormSignIn = () => {
     formState: { errors }
   } = useForm<FieldValues>({
     defaultValues: {
-      correo_institucional: '',
+      correo: '',
       clave: ''
     },
     resolver: zodResolver(signInSchema)
@@ -39,15 +41,20 @@ export const FormSignIn = () => {
 
     try {
       const result = await signIn.create({
-        identifier: data.correo_institucional,
+        identifier: data.correo,
         password: data.clave
       })
+      const isEmpleado = emailsEmpleados.includes(data.correo as string)
 
-      console.log({ result })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
         toast.success('¡Inicio de sesión exitosamente!')
-        router.push('/profile/student/home')
+
+        if (isEmpleado) {
+          router.push('/profile/employee/home')
+        } else {
+          router.push('/profile/student/home')
+        }
       }
     } catch (error: any) {
       return toast.error('!El correo institucional o la contraseña son incorrectos!')
@@ -70,7 +77,7 @@ export const FormSignIn = () => {
           type="email"
           label="Correo institucional"
           isRequired
-          name="correo_institucional"
+          name="correo"
           register={register}
           endContent={
             <div className="pointer-events-none flex items-center h-full">

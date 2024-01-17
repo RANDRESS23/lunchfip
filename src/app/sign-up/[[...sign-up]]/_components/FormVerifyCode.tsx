@@ -70,7 +70,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       })
 
       if (completeSignUp.status === 'complete') {
-        await api.post('/estudiantes', dataEstudiante)
+        await api.post('/estudiantes', { ...dataEstudiante, createdUserId: completeSignUp.createdUserId })
         await setActive({ session: completeSignUp.createdSessionId })
         toast.success('Te registraste exitosamente!')
         router.push('/profile/student/home')

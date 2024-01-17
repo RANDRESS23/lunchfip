@@ -52,7 +52,8 @@ export const FormSignUp = () => {
       clave: '',
       clave_2: '',
       id_sexo: '',
-      celular: ''
+      celular: '',
+      createdUserId: ''
     },
     resolver: zodResolver(estudianteSchema)
   })
@@ -74,6 +75,18 @@ export const FormSignUp = () => {
         await signUp.create({
           emailAddress: data.correo_institucional,
           password: data.clave
+        }).catch(error => {
+          const { errors } = error
+          let errorsMessagesString = ''
+
+          errors.forEach((errorClerk: any) => {
+            if (errorClerk.code === 'form_password_pwned') {
+              errorsMessagesString += '¡La contraseña es muy insegura, por favor intente con otra!. \n'
+            }
+          })
+
+          toast.error(errorsMessagesString)
+          console.log({ error })
         })
 
         await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })

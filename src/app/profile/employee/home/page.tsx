@@ -12,7 +12,7 @@ export default function HomePage () {
 
   return (
     <button className='mt-40' onClick={async () => { await signOut(() => { router.push('/') }) }}>
-      Sign out Student
+      Sign out Employee
     </button>
   )
 }

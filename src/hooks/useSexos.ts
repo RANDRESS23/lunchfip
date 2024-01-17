@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import api from '@/libs/api'
-import { type Sexos } from '@/types/sexos'
+import { type Sexo } from '@/types/sexos'
 
 export default function useSexos () {
-  const [sexos, setSexos] = useState<Sexos[]>([])
+  const [sexos, setSexos] = useState<Sexo[]>([])
   const [loadingSexos, setLoadingSexos] = useState(false)
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function useSexos () {
         setLoadingSexos(true)
 
         const response = await api.get('/sexos')
-        setSexos(response.data as Sexos[])
+        setSexos(response.data as Sexo[])
       } catch (error) {
         console.log(error)
       } finally {

@@ -2,10 +2,9 @@ import { z } from 'zod'
 
 const nameRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+$/
 const nameOptionalRegex = /^$|^[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+$/
-const emailRegex = /^[A-Za-z0-9._%+-]+@itfip\.edu\.co$/
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
 
-export const estudianteSchema = z.object({
+export const empleadosSchema = z.object({
   primer_nombre: z.string().refine(value => nameRegex.test(value), {
     message: 'El primer nombre solo puede contener letras.'
   }),
@@ -24,9 +23,8 @@ export const estudianteSchema = z.object({
   }).max(12, {
     message: 'El número de documento debe tener máximo 12 caracteres.'
   }),
-  id_programa: z.string(),
-  correo_institucional: z.string().refine(value => emailRegex.test(value), {
-    message: 'Debes usar un correo institucional. (@itfip.edu.co)'
+  correo: z.string().email({
+    message: 'El correo debe ser válido.'
   }),
   clave: z.string().refine(value => passwordRegex.test(value), {
     message: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.'
@@ -35,18 +33,8 @@ export const estudianteSchema = z.object({
   id_sexo: z.string(),
   celular: z.string().length(10, {
     message: 'El número de celular debe tener 10 caracteres.'
-  }),
-  createdUserId: z.string()
+  })
 }).required().refine(data => data.clave === data.clave_2, {
   message: 'Las contraseñas no coinciden.',
   path: ['clave_2']
-})
-
-export const signInSchema = z.object({
-  correo: z.string().email({
-    message: 'El correo debe ser válido.'
-  }),
-  clave: z.string().refine(value => passwordRegex.test(value), {
-    message: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.'
-  })
 })

@@ -4,6 +4,7 @@ import { estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
+import { clerkClient } from '@clerk/nextjs/server'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -41,7 +42,8 @@ export async function POST (request: Request) {
       correo_institucional: correoInstitucional,
       clave,
       id_sexo: idSexo,
-      celular
+      celular,
+      createdUserId
     } = estudianteSchema.parse(body)
 
     const hashedPassword = await encryptPassword(clave)
@@ -90,6 +92,14 @@ export async function POST (request: Request) {
         url_codigo_qr: responseCloudinary.secure_url
       }
     })
+    const params = {
+      firstName: `${primerNombre} ${segundoNombre !== '' ? segundoNombre : ''}`,
+      lastName: `${primerApellido} ${segundoApellido !== '' ? segundoApellido : ''}`
+    }
+
+    if (createdUserId !== null) {
+      await clerkClient.users.updateUser(createdUserId, params)
+    }
 
     return NextResponse.json(
       { estudiante, message: '¡Estudiante registrado exitosamente!' },
