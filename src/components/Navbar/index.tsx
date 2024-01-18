@@ -5,9 +5,14 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, Navba
 // import { AcmeLogo } from './AcmeLogo.jsx'
 import Link from 'next/link.js'
 import { ThemeSwitcher } from '../ThemeSwitcher'
+import { useClerk, useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, isSignedIn, isLoaded } = useUser()
+  const { signOut } = useClerk()
+  const router = useRouter()
 
   const menuItems = [
     {
@@ -19,9 +24,10 @@ export const NavBar = () => {
       href: '/sign-up'
     }
   ]
+  console.log({ user, isSignedIn, isLoaded })
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed'>
+    <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed' isBordered>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -54,14 +60,33 @@ export const NavBar = () => {
         <NavbarItem className='bg-blue'>
           <ThemeSwitcher />
         </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Link href="/sign-in">Login</Link>
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">
-          <Button as={Link} color="primary" href="/sign-up" variant="flat">
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {
+          isSignedIn ?? false
+            ? (
+                <NavbarItem className="hidden lg:flex">
+                  <Button
+                    color="primary"
+                    href="/sign-up"
+                    variant="flat"
+                    onClick={async () => { await signOut(() => { router.push('/') }) }}
+                  >
+                    Sign Out
+                  </Button>
+                </NavbarItem>
+              )
+            : (
+                <>
+                  <NavbarItem className="hidden lg:flex">
+                    <Link href="/sign-in">Login</Link>
+                  </NavbarItem>
+                  <NavbarItem className="hidden lg:flex">
+                    <Button as={Link} color="primary" href="/sign-up" variant="flat">
+                      Sign Up
+                    </Button>
+                  </NavbarItem>
+                </>
+              )
+        }
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map(({ title, href }, index) => (

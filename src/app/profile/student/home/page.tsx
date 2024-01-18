@@ -1,18 +1,40 @@
-'use client'
+import { currentUser, auth } from '@clerk/nextjs'
+import { type Empleado } from '@/types/empleados'
+import { redirect } from 'next/navigation'
 
-import { useSession, useClerk } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+const URL_LOCALHOST = 'http://localhost:3000'
 
-export default function HomePage () {
-  const { session } = useSession()
-  const { signOut } = useClerk()
-  const router = useRouter()
+const getEmployeeEmails = async ({ baseURL }: { baseURL: string }) => {
+  let employeeEmails: string[] = []
 
-  console.log({ session })
+  try {
+    const response = await fetch(`${baseURL}/api/empleados`)
+    const data = await response.json()
+
+    const emails: string[] = data.map((empleado: Empleado) => empleado.correo)
+
+    employeeEmails = emails
+  } catch (error) {
+    console.log(error)
+  }
+
+  return employeeEmails
+}
+
+export default async function HomePage () {
+  const auth2 = auth()
+  console.log({ auth2 })
+
+  const baseURL = auth2.sessionClaims?.azp ?? URL_LOCALHOST
+  const user = await currentUser()
+  const employeeEmails = await getEmployeeEmails({ baseURL })
+  const isEmployee = user !== null && employeeEmails.includes(user.emailAddresses[0].emailAddress)
+
+  if (isEmployee) redirect('/profile/employee/home')
 
   return (
-    <button className='mt-40' onClick={async () => { await signOut(() => { router.push('/') }) }}>
-      Sign out Student
-    </button>
+    <div>
+      Student Home
+    </div>
   )
 }

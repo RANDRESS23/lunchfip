@@ -57,7 +57,7 @@ export const FormSignIn = () => {
         }
       }
     } catch (error: any) {
-      return toast.error('!El correo institucional o la contraseña son incorrectos!')
+      return toast.error('!El correo electrónico o la contraseña son incorrectos!')
     } finally {
       setIsLoading(false)
     }
