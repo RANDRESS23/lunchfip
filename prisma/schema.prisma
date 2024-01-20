@@ -307,20 +307,20 @@ model Empleados_Recargas {
 
 model Almuerzos {
   id_almuerzo           String      @id @default(uuid())
-  fecha                 DateTime    @default(now())
+  fecha                 DateTime    @db.Date @unique
   total_almuerzos       Int
 
   almuerzos_entregados  Almuerzos_Entregados[]
   almuerzos_reservados  Almuerzos_Reservados[]
 
   createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  updatedAt             DateTime    @updatedAt  
 }
 
 model Almuerzos_Entregados {
   id_almuerzos_entregados  String      @id @default(uuid())
 
-  id_almuerzo              String
+  id_almuerzo              String      @unique
   almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   cantidad                 Int
@@ -334,7 +334,7 @@ model Almuerzos_Entregados {
 model Almuerzos_Reservados {
   id_almuerzos_reservados  String      @id @default(uuid())
 
-  id_almuerzo              String
+  id_almuerzo              String      @unique
   almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   cantidad                 Int

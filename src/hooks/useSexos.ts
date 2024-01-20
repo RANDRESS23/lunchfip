@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Sexo } from '@/types/sexos'
 
-export default function useSexos () {
+export const useSexos = () => {
   const [sexos, setSexos] = useState<Sexo[]>([])
   const [loadingSexos, setLoadingSexos] = useState(false)
 

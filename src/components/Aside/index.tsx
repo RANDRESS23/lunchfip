@@ -1,6 +1,7 @@
 import { BiSolidBookContent as DashboardIcon } from 'react-icons/bi'
 import { FaUsersRectangle as MemebersIcon } from 'react-icons/fa6'
 import { PiNotePencilFill } from 'react-icons/pi'
+import { IoFastFoodSharp } from 'react-icons/io5'
 import {
   RiPieChartBoxLine as PosttestStatisticIcon,
   RiPieChartBoxFill as PretestStatisticIcon
@@ -18,6 +19,13 @@ export const Aside = () => {
         <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
           <div className="flex-1 px-3 divide-y space-y-1">
             <ul className="space-y-2 pb-2">
+              <ItemList
+                href="/profile/employee/lunch"
+                icon={
+                  <IoFastFoodSharp className="text-2xl dark:text-gray-400 text-gray-600" />
+                }
+                title="Definir Almuerzos"
+              />
               <ItemList
                 href="/profile/employee/reserve"
                 icon={

@@ -23,8 +23,6 @@ const getEmployeeEmails = async ({ baseURL }: { baseURL: string }) => {
 
 export default async function HomePage () {
   const auth2 = auth()
-  console.log({ auth2 })
-
   const baseURL = auth2.sessionClaims?.azp ?? URL_LOCALHOST
   const user = await currentUser()
   const employeeEmails = await getEmployeeEmails({ baseURL })
@@ -33,7 +31,7 @@ export default async function HomePage () {
   if (!isEmployee) redirect('/profile/student/home')
 
   return (
-    <div className='bg-blue-200 lg:ml-[290px] mt-16'>
+    <div className='bg-blue-200 lg:ml-[290px] mt-16 mr-8'>
       Employee Home
     </div>
   )

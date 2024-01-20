@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
 
-export default function useEmailsEmpleados () {
+export const useEmailsEmpleados = () => {
   const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
   const [loadingEmailsEmpleados, setLoadingEmailsEmpleados] = useState(false)
 

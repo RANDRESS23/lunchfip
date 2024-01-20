@@ -10,7 +10,10 @@ interface InputProps {
   label?: string
   isRequired: boolean
   name: string
+  size?: 'sm' | 'md' | 'lg'
+  value?: string
   variant?: 'flat' | 'bordered' | 'underlined' | 'faded'
+  disabled?: boolean
   endContent?: React.ReactNode
   register: UseFormRegister<FieldValues>
   errors: FieldErrors<FieldValues>
@@ -23,7 +26,7 @@ interface InputProps {
 }
 
 export const Input = (
-  { type, label, isRequired, name, variant, endContent, register, errors, className, classNamesInput, previousInputName, nextInputName, keyDown, keyUp }: InputProps
+  { type, label, isRequired, name, size, value, variant, disabled, endContent, register, errors, className, classNamesInput, previousInputName, nextInputName, keyDown, keyUp }: InputProps
 ) => {
   return (
     <>
@@ -32,6 +35,9 @@ export const Input = (
         label={label}
         isRequired={isRequired}
         variant={variant}
+        isDisabled={disabled}
+        size={size}
+        defaultValue={value}
         {...register(name)}
         endContent={endContent}
         className={className}

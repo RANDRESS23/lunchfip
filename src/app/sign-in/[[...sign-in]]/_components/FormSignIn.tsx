@@ -11,7 +11,7 @@ import { Button } from '@/components/Button'
 import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import useEmailsEmpleados from '@/hooks/useEmailsEmpleados'
+import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)

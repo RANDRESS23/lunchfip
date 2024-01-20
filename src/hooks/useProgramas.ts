@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Programa } from '@/types/programas'
 
-export default function useProgramas () {
+export const useProgramas = () => {
   const [programas, setProgramas] = useState<Programa[]>([])
   const [loadingProgramas, setLoadingProgramas] = useState(false)
 

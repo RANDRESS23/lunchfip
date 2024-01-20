@@ -5,9 +5,10 @@ interface ButtonProps {
   type: 'button' | 'submit' | 'reset'
   text: string
   disabled: boolean
+  onClick?: () => void
 }
 
-export const Button = ({ type, text, disabled }: ButtonProps) => {
+export const Button = ({ type, text, disabled, onClick }: ButtonProps) => {
   return (
     <ButtonUI
       type={type}
@@ -16,6 +17,7 @@ export const Button = ({ type, text, disabled }: ButtonProps) => {
         disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-current hover:bg-clip-inherit'
       )}
       disabled={disabled}
+      onClick={onClick}
     >
       {text}
     </ButtonUI>

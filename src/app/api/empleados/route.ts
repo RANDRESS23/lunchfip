@@ -1,6 +1,6 @@
 import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
-import { empleadosSchema } from './shema'
+import { empleadosSchema } from './schema'
 import { NextResponse } from 'next/server'
 
 export async function GET () {

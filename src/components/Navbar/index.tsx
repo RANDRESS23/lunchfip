@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user, isSignedIn, isLoaded } = useUser()
+  const { isSignedIn } = useUser()
   const { signOut } = useClerk()
   const router = useRouter()
 
@@ -24,7 +24,6 @@ export const NavBar = () => {
       href: '/sign-up'
     }
   ]
-  console.log({ user, isSignedIn, isLoaded })
 
   return (
     <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed' isBordered>

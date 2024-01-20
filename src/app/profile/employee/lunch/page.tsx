@@ -1,6 +1,9 @@
 import { currentUser, auth } from '@clerk/nextjs'
 import { type Empleado } from '@/types/empleados'
 import { redirect } from 'next/navigation'
+import { DefineLunches } from './_components/DefineLunches'
+import { TablesDefineLunches } from './_components/TablesDefineLunches'
+import getNextDate from '@/libs/nextDate'
 
 const URL_LOCALHOST = 'http://localhost:3000'
 
@@ -21,7 +24,7 @@ const getEmployeeEmails = async ({ baseURL }: { baseURL: string }) => {
   return employeeEmails
 }
 
-export default async function ReservePage () {
+export default async function LunchPage () {
   const auth2 = auth()
   const baseURL = auth2.sessionClaims?.azp ?? URL_LOCALHOST
   const user = await currentUser()
@@ -30,9 +33,17 @@ export default async function ReservePage () {
 
   if (!isEmployee) redirect('/profile/student/home')
 
+  const { nextDate, nextFullDate } = getNextDate()
+
   return (
-    <div className='bg-blue-200 lg:ml-[290px] mt-16 mr-8'>
-      ReservePage
+    <div className='lg:ml-[290px] pt-24 pb-7 mr-8 flex gap-28 h-screen'>
+      <DefineLunches
+        nextDate={nextDate}
+        nextFullDate={nextFullDate}
+      />
+      <TablesDefineLunches
+        nextDate={nextDate}
+      />
     </div>
   )
 }
