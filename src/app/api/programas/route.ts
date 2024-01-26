@@ -37,10 +37,16 @@ export async function POST (request: Request) {
       )
     }
 
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
     const newFacultad = await db.programas.create({
       data: {
         programa,
-        id_facultad: idFacultad
+        id_facultad: idFacultad,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
 

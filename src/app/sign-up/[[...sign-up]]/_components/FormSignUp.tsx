@@ -13,7 +13,8 @@ import { FormVerifyCode } from './FormVerifyCode'
 import { Input } from '@/components/Input'
 import { IoEyeOff } from 'react-icons/io5'
 import { MdPhoneIphone } from 'react-icons/md'
-import { FaEye, FaUserTag } from 'react-icons/fa'
+import { FaEye } from 'react-icons/fa'
+import { HiIdentification } from 'react-icons/hi2'
 import { Button } from '@/components/Button'
 import { Select } from '@/components/Select'
 import { Checkbox } from '@/components/Checkbox'
@@ -180,7 +181,7 @@ export const FormSignUp = () => {
               register={register}
               endContent={
                 <div className="h-full flex justify-center items-center">
-                  <FaUserTag className="text-2xl text-default-400 pointer-events-none" />
+                  <HiIdentification className="text-2xl text-default-400 pointer-events-none" />
                 </div>
               }
               errors={errors}

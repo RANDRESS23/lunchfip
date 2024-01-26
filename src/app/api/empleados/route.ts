@@ -65,6 +65,10 @@ export async function POST (request: Request) {
       )
     }
 
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
     const hashedPassword = await encryptPassword(clave)
     const newEmpleado = await db.empleados.create({
       data: {
@@ -77,7 +81,9 @@ export async function POST (request: Request) {
         correo,
         clave: hashedPassword,
         id_sexo: idSexo,
-        celular
+        celular,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
 

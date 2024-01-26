@@ -12,12 +12,16 @@ import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { useEmpleadosStore } from '@/store/empleados'
+import api from '@/libs/api'
+import { type EmpleadoSignIn } from '@/types/empleados'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { isLoaded, signIn, setActive } = useSignIn()
   const { emailsEmpleados } = useEmailsEmpleados()
+  const setEmpleado = useEmpleadosStore(state => state.setEmpleado)
   const router = useRouter()
 
   const {
@@ -51,6 +55,12 @@ export const FormSignIn = () => {
         toast.success('¡Inicio de sesión exitosamente!')
 
         if (isEmpleado) {
+          const response = await api.post('/empleados/info', {
+            correo: data.correo
+          })
+
+          setEmpleado(response.data.empleado as EmpleadoSignIn)
+
           router.push('/profile/employee/home')
         } else {
           router.push('/profile/student/home')

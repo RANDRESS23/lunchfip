@@ -46,6 +46,10 @@ export async function POST (request: Request) {
       createdUserId
     } = estudianteSchema.parse(body)
 
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
     const hashedPassword = await encryptPassword(clave)
     const newEstudiante = await db.estudiantes.create({
       data: {
@@ -59,7 +63,9 @@ export async function POST (request: Request) {
         correo_institucional: correoInstitucional,
         clave: hashedPassword,
         id_sexo: idSexo,
-        celular
+        celular,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
 
@@ -68,13 +74,15 @@ export async function POST (request: Request) {
     await db.estados_Estudiantes.create({
       data: {
         id_estudiante: newEstudiante.id_estudiante,
-        id_estado: estados[0].id_estado
+        id_estado: estados[0].id_estado,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
 
     const { clave: _, ...estudiante } = newEstudiante
 
-    const qrBase64Str = await QRCode.toDataURL(numeroDocumento, { version: 2 })
+    const qrBase64Str = await QRCode.toDataURL(newEstudiante.id_estudiante, { version: 3 })
     const qrStr = qrBase64Str.split(',')[1]
     const buffer = Buffer.from(qrStr, 'base64')
 
@@ -89,9 +97,12 @@ export async function POST (request: Request) {
     await db.codigos_QR_Estudiantes.create({
       data: {
         id_estudiante: newEstudiante.id_estudiante,
-        url_codigo_qr: responseCloudinary.secure_url
+        url_codigo_qr: responseCloudinary.secure_url,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
+
     const params = {
       firstName: `${primerNombre} ${segundoNombre !== '' ? segundoNombre : ''}`,
       lastName: `${primerApellido} ${segundoApellido !== '' ? segundoApellido : ''}`

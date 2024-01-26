@@ -20,6 +20,7 @@
     "cloudinary": "^1.41.1",
     "clsx": "^2.1.0",
     "framer-motion": "^10.16.16",
+    "html5-qrcode": "^2.3.8",
     "next": "^13.4.19",
     "next-themes": "^0.2.1",
     "qrcode": "^1.5.3",

@@ -36,9 +36,15 @@ export async function POST (request: Request) {
       )
     }
 
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
     const newEstado = await db.estados.create({
       data: {
-        estado
+        estado,
+        createdAt: currentDate,
+        updatedAt: currentDate
       }
     })
 

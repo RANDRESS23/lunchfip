@@ -196,6 +196,9 @@ model Reservas {
 
   id_empleado           String
   empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+  
+  id_almuerzo           String
+  almuerzo              Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   fecha                 DateTime    @default(now())
 
@@ -312,6 +315,7 @@ model Almuerzos {
 
   almuerzos_entregados  Almuerzos_Entregados[]
   almuerzos_reservados  Almuerzos_Reservados[]
+  reservas  Reservas[]
 
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt  

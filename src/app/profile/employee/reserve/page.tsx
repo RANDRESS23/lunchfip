@@ -1,6 +1,7 @@
 import { currentUser, auth } from '@clerk/nextjs'
 import { type Empleado } from '@/types/empleados'
 import { redirect } from 'next/navigation'
+import { ScannerQRCode } from './_components/ScannerQRCode'
 
 const URL_LOCALHOST = 'http://localhost:3000'
 
@@ -31,8 +32,12 @@ export default async function ReservePage () {
   if (!isEmployee) redirect('/profile/student/home')
 
   return (
-    <div className='bg-blue-200 lg:ml-[290px] mt-16 mr-8'>
-      ReservePage
+    <div className='bg-blue-200 lg:ml-[290px] pt-24 pb-10 h-screen relative'>
+      <h1 className='flex items-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
+        Reservar
+        <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>Almuerzo</span>
+      </h1>
+      <ScannerQRCode />
     </div>
   )
 }

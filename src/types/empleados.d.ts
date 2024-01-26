@@ -12,3 +12,9 @@ export interface Empleado {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface EmpleadoSignIn extends Empleado {
+  id_empleado: string
+  tipo_documento: string
+  sexo: string
+}

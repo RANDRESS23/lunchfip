@@ -1,0 +1,127 @@
+import { db } from '@/libs/prismaDB'
+import { NextResponse } from 'next/server'
+import { reservasSchema } from './schema'
+import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
+import QRCode from 'qrcode'
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+export async function GET () {
+  try {
+    const reservas = await db.reservas.findMany()
+
+    return NextResponse.json(reservas)
+  } catch (error) {
+    console.error({ error })
+
+    return NextResponse.json(
+      { message: 'Something went wrong.', error },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST (request: Request) {
+  const body = await request.json()
+
+  try {
+    const {
+      id_empleado: idEmpleado,
+      id_estudiante: idEstudiante,
+      id_almuerzo: idAlmuerzo
+    } = reservasSchema.parse(body)
+
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
+    const newReserva = await db.reservas.create({
+      data: {
+        id_empleado: idEmpleado,
+        id_almuerzo: idAlmuerzo,
+        fecha: currentDate,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      }
+    })
+
+    const estados = await db.estados.findMany()
+
+    await db.estados_Reservas.create({
+      data: {
+        id_reserva: newReserva.id_reserva,
+        id_estado: estados[0].id_estado
+      }
+    })
+
+    const newEstudianteReserva = await db.estudiantes_Reservas.create({
+      data: {
+        id_reserva: newReserva.id_reserva,
+        id_estudiante: idEstudiante,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      }
+    })
+
+    const qrBase64Str = await QRCode.toDataURL(newEstudianteReserva.id_estudiante_reserva, { version: 3 })
+    const qrStr = qrBase64Str.split(',')[1]
+    const buffer = Buffer.from(qrStr, 'base64')
+
+    const responseCloudinary: UploadApiResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ folder: 'codigos_qr_reservas' }, (error, result) => {
+        if (error !== undefined) reject(error)
+
+        if (result !== undefined) resolve(result)
+      }).end(buffer)
+    })
+
+    await db.codigos_QR_Reservas.create({
+      data: {
+        id_reserva: newReserva.id_reserva,
+        url_codigo_qr: responseCloudinary.secure_url
+      }
+    })
+
+    const updatedAlmuerzosReservados = await db.almuerzos_Reservados.update({
+      data: {
+        cantidad: { increment: 1 },
+        updatedAt: currentDate
+      },
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    return NextResponse.json(
+      {
+        almuerzosReservados: updatedAlmuerzosReservados,
+        message: '¡Reserva realizada exitosamente!'
+      },
+      { status: 201 }
+    )
+  } catch (error: any) {
+    console.error({ error })
+
+    if (error?.errors !== null) {
+      const errorsMessages: Record<string, string> = {}
+      const { errors } = error
+
+      errors.forEach(
+        ({ message, path }: { message: string, path: string[] }) => {
+          if (!Object.values(errorsMessages).includes(message)) {
+            errorsMessages[path.join('')] = message
+          }
+        }
+      )
+
+      return NextResponse.json(errorsMessages, { status: 500 })
+    }
+
+    return NextResponse.json(
+      { message: 'Something went wrong.', error },
+      { status: 500 }
+    )
+  }
+}
