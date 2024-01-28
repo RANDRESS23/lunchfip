@@ -1,8 +1,7 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
-import { reservasSchema } from './schema'
-import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
-import QRCode from 'qrcode'
+import { entregasSchema } from './schema'
+import { v2 as cloudinary } from 'cloudinary'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,9 +11,9 @@ cloudinary.config({
 
 export async function GET () {
   try {
-    const reservas = await db.reservas.findMany()
+    const entregas = await db.entregas.findMany()
 
-    return NextResponse.json(reservas)
+    return NextResponse.json(entregas)
   } catch (error) {
     console.error({ error })
 
@@ -33,13 +32,24 @@ export async function POST (request: Request) {
       id_empleado: idEmpleado,
       id_estudiante: idEstudiante,
       id_almuerzo: idAlmuerzo
-    } = reservasSchema.parse(body)
+    } = entregasSchema.parse(body)
+
+    const estudianteReserva = await db.estudiantes_Reservas.findFirst({
+      where: { id_estudiante: idEstudiante }
+    })
+
+    if (estudianteReserva === null) {
+      return NextResponse.json(
+        { message: '¡No existe reserva disponible para el código QR escaneado!' },
+        { status: 400 }
+      )
+    }
 
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
 
-    const newReserva = await db.reservas.create({
+    const newEntrega = await db.entregas.create({
       data: {
         id_empleado: idEmpleado,
         id_almuerzo: idAlmuerzo,
@@ -51,46 +61,42 @@ export async function POST (request: Request) {
 
     const estados = await db.estados.findMany()
 
-    await db.estados_Reservas.create({
+    await db.estados_Reservas.updateMany({
       data: {
-        id_reserva: newReserva.id_reserva,
-        id_estado: estados[0].id_estado,
+        id_estado: estados[1].id_estado,
+        updatedAt: currentDate
+      },
+      where: { id_reserva: estudianteReserva.id_reserva }
+    })
+
+    await db.estudiantes_Entregas.create({
+      data: {
+        id_entrega: newEntrega.id_entrega,
+        id_estudiante_reserva: estudianteReserva.id_estudiante_reserva,
         createdAt: currentDate,
         updatedAt: currentDate
       }
     })
 
-    const newEstudianteReserva = await db.estudiantes_Reservas.create({
-      data: {
-        id_reserva: newReserva.id_reserva,
-        id_estudiante: idEstudiante,
-        createdAt: currentDate,
-        updatedAt: currentDate
-      }
+    const codigoQRReserva = await db.codigos_QR_Reservas.findFirst({
+      where: { id_reserva: estudianteReserva.id_reserva }
     })
 
-    const qrBase64Str = await QRCode.toDataURL(newEstudianteReserva.id_estudiante_reserva, { version: 3 })
-    const qrStr = qrBase64Str.split(',')[1]
-    const buffer = Buffer.from(qrStr, 'base64')
+    if (codigoQRReserva === null) {
+      return NextResponse.json(
+        { message: '¡No existe código QR disponible para la reserva!' },
+        { status: 400 }
+      )
+    }
 
-    const responseCloudinary: UploadApiResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ folder: 'codigos_qr_reservas' }, (error, result) => {
-        if (error !== undefined) reject(error)
+    const CLOUDINARY_URL = codigoQRReserva.url_codigo_qr
+    const urlArr = CLOUDINARY_URL.split('/')
+    const nameCodigoQR = urlArr[urlArr.length - 1]
+    const [idCodigoQR] = nameCodigoQR.split('.')
 
-        if (result !== undefined) resolve(result)
-      }).end(buffer)
-    })
+    await cloudinary.uploader.destroy(idCodigoQR)
 
-    await db.codigos_QR_Reservas.create({
-      data: {
-        id_reserva: newReserva.id_reserva,
-        url_codigo_qr: responseCloudinary.secure_url,
-        createdAt: currentDate,
-        updatedAt: currentDate
-      }
-    })
-
-    const updatedAlmuerzosReservados = await db.almuerzos_Reservados.update({
+    const updatedAlmuerzosEntregados = await db.almuerzos_Entregados.update({
       data: {
         cantidad: { increment: 1 },
         updatedAt: currentDate
@@ -100,8 +106,8 @@ export async function POST (request: Request) {
 
     return NextResponse.json(
       {
-        almuerzosReservados: updatedAlmuerzosReservados,
-        message: '¡Reserva realizada exitosamente!'
+        almuerzosEntregados: updatedAlmuerzosEntregados,
+        message: 'Entrega realizada exitosamente!'
       },
       { status: 201 }
     )

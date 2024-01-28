@@ -2,6 +2,7 @@ import { BiSolidBookContent as DashboardIcon } from 'react-icons/bi'
 import { FaUsersRectangle as MemebersIcon } from 'react-icons/fa6'
 import { PiNotePencilFill } from 'react-icons/pi'
 import { IoFastFoodSharp } from 'react-icons/io5'
+import { GiBowlOfRice } from 'react-icons/gi'
 import {
   RiPieChartBoxLine as PosttestStatisticIcon,
   RiPieChartBoxFill as PretestStatisticIcon
@@ -32,6 +33,13 @@ export const Aside = () => {
                   <PiNotePencilFill className="text-2xl dark:text-gray-400 text-gray-600" />
                 }
                 title="Reservar Almuerzo"
+              />
+              <ItemList
+                href="/profile/employee/deliver"
+                icon={
+                  <GiBowlOfRice className="text-2xl dark:text-gray-400 text-gray-600" />
+                }
+                title="Entregar Almuerzo"
               />
               <ItemList
                 href="/profile/admin/dashboard/statistics/pre-test"

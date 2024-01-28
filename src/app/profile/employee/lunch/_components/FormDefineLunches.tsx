@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import api from '@/libs/api'
@@ -20,11 +20,15 @@ interface FormDefineLunchesProps {
 
 export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [editAmount, setEditAmount] = useState(true)
   const setAlmuerzosTotales = useAlmuerzosStore(state => state.setAlmuerzosTotales)
   const setAlmuerzosReservados = useAlmuerzosStore(state => state.setAlmuerzosReservados)
   const setAlmuerzosEntregados = useAlmuerzosStore(state => state.setAlmuerzosEntregados)
   const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const [editAmount, setEditAmount] = useState(true)
+
+  useEffect(() => {
+    setEditAmount(almuerzosTotales?.id_almuerzo === '')
+  }, [almuerzosTotales])
 
   const {
     register,
@@ -112,38 +116,48 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
           }
         </div>
 
-        <Input
-          type="number"
-          label="Cantidad de Almuerzos"
-          isRequired
-          name="total_almuerzos"
-          size="lg"
-          value={almuerzosTotales?.id_almuerzo !== '' ? almuerzosTotales?.total_almuerzos.toString() : ''}
-          disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '' || loadingAlmuerzosTotales) && !editAmount}
-          register={register}
-          endContent={
-            <div className="h-full flex justify-center items-center">
-              <FaSortAmountUpAlt className="text-2xl text-default-400 pointer-events-none" />
-            </div>
-          }
-          errors={errors}
-        />
-
-        <Button
-          type="submit"
-          text={almuerzosTotales?.id_almuerzo !== '' ? 'Actualizar' : 'Registrar'}
-          disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '' || loadingAlmuerzosTotales) && !editAmount}
-        />
-
         {
-          (almuerzosTotales?.id_almuerzo !== '' && !editAmount) && (
-            <Button
-              type="button"
-              text='Editar cantidad de almuerzos'
-              disabled={false}
-              onClick={() => { setEditAmount(true) }}
-            />
-          )
+          !loadingAlmuerzosTotales
+            ? (
+                <>
+                  <Input
+                    type="number"
+                    label="Cantidad de Almuerzos"
+                    isRequired
+                    name="total_almuerzos"
+                    size="lg"
+                    value={almuerzosTotales?.id_almuerzo !== '' ? almuerzosTotales?.total_almuerzos.toString() : ''}
+                    disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '') && !editAmount}
+                    register={register}
+                    endContent={
+                      <div className="h-full flex justify-center items-center">
+                        <FaSortAmountUpAlt className="text-2xl text-default-400 pointer-events-none" />
+                      </div>
+                    }
+                    errors={errors}
+                  />
+
+                  <Button
+                    type="submit"
+                    text={almuerzosTotales?.id_almuerzo !== '' ? 'Actualizar' : 'Registrar'}
+                    disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '') && !editAmount}
+                  />
+
+                  {
+                    (almuerzosTotales?.id_almuerzo !== '' && !editAmount) && (
+                      <Button
+                        type="button"
+                        text='Editar cantidad de almuerzos'
+                        disabled={false}
+                        onClick={() => { setEditAmount(true) }}
+                      />
+                    )
+                  }
+                </>
+              )
+            : (
+                <div>Cargando...</div>
+              )
         }
       </form>
     </div>

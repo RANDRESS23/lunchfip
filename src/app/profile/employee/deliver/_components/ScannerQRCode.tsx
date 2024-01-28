@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode'
-import { ModalConfirmReservation } from './ModalConfirmReservation'
+import { ModalDeliveryLunch } from './ModalDeliveryLunch'
 import { useDisclosure } from '@nextui-org/react'
 import api from '@/libs/api'
 import { useEstudiantesStore } from '@/store/estudiantes'
@@ -35,8 +35,9 @@ export const ScannerQRCode = () => {
       scanner.clear()
 
       try {
-        const response = await api.post('/almuerzos/reservas/verificar', {
-          id_estudiante: data,
+        const response = await api.post('/almuerzos/entregas/verificar', {
+          id_estudiante_reserva: data,
+          id_estudiante: '',
           id_empleado: '',
           id_almuerzo: ''
         })
@@ -69,7 +70,7 @@ export const ScannerQRCode = () => {
   return (
     <section className='w-full h-full flex flex-col justify-center items-center'>
       <div id="reader" />
-      <ModalConfirmReservation
+      <ModalDeliveryLunch
         numeroDocumento={estudiante.numero_documento}
         nombreCompleto={`${estudiante.primer_nombre} ${estudiante.segundo_nombre} ${estudiante.primer_apellido} ${estudiante.segundo_apellido}`}
         tipoDocumento={estudiante.tipo_documento}
