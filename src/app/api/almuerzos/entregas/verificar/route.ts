@@ -45,6 +45,17 @@ export async function POST (request: Request) {
       )
     }
 
+    const [estadoEstudiante] = await db.estados_Estudiantes.findMany({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
+    if (estadoEstudiante.id_estado !== estados[0].id_estado) {
+      return NextResponse.json(
+        { message: '¡El estudiante no se encuentra activo en LunchFip!' },
+        { status: 400 }
+      )
+    }
+
     const programa = await db.programas.findUnique({
       where: { id_programa: estudiante.id_programa }
     })

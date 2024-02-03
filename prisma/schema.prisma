@@ -82,7 +82,7 @@ model Empleados {
 
   reservas               Reservas[]
   entregas               Entregas[]
-  empleados_recargas     Empleados_Recargas[]
+  recargas               Recargas[]
 
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
@@ -93,11 +93,14 @@ model Empleados {
 
 model Recargas {
   id_recarga            String      @id @default(uuid())
+
+  id_empleado           String
+  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+
   saldo                 Int         @default(0)
   fecha                 DateTime    @default(now())
 
   estudiantes_recargas  Estudiantes_Recargas[]
-  empleados_recargas    Empleados_Recargas[]
 
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
@@ -292,22 +295,6 @@ model Estudiantes_Recargas {
   updatedAt              DateTime     @updatedAt
 
   @@index([id_estudiante])
-  @@index([id_recarga])
-}
-
-model Empleados_Recargas {
-  id_empleado_recarga    String       @id @default(uuid())
-
-  id_empleado            String
-  empleado               Empleados    @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
-  
-  id_recarga             String
-  recarga                Recargas     @relation(fields: [id_recarga], references: [id_recarga], onDelete: Cascade)
-
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-
-  @@index([id_empleado])
   @@index([id_recarga])
 }
 

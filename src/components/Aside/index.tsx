@@ -1,12 +1,7 @@
-import { BiSolidBookContent as DashboardIcon } from 'react-icons/bi'
-import { FaUsersRectangle as MemebersIcon } from 'react-icons/fa6'
+import { FaMoneyBill1Wave } from 'react-icons/fa6'
 import { PiNotePencilFill } from 'react-icons/pi'
 import { IoFastFoodSharp } from 'react-icons/io5'
 import { GiBowlOfRice } from 'react-icons/gi'
-import {
-  RiPieChartBoxLine as PosttestStatisticIcon,
-  RiPieChartBoxFill as PretestStatisticIcon
-} from 'react-icons/ri'
 import { ItemList } from './ItemList'
 
 export const Aside = () => {
@@ -42,41 +37,13 @@ export const Aside = () => {
                 title="Entregar Almuerzo"
               />
               <ItemList
-                href="/profile/admin/dashboard/statistics/pre-test"
+                href="/profile/employee/recharge"
                 icon={
-                  <PretestStatisticIcon className="text-2xl dark:text-gray-400 text-gray-600" />
+                  <FaMoneyBill1Wave className="text-2xl dark:text-gray-400 text-gray-600" />
                 }
-                title="Inst: Pre-Test"
-              />
-              <ItemList
-                href="/profile/admin/dashboard/statistics/post-test"
-                icon={
-                  <PosttestStatisticIcon className="text-2xl dark:text-gray-400 text-gray-600" />
-                }
-                title="Inst: Post-Test"
-              />
-              <ItemList
-                href="/profile/admin/dashboard/page-content"
-                icon={
-                  <DashboardIcon className="text-2xl dark:text-gray-400 text-gray-600" />
-                }
-                title="Contenido"
-              />
-              <ItemList
-                href="/profile/admin/dashboard/teamMembers"
-                icon={
-                  <MemebersIcon className="text-2xl dark:text-gray-400 text-gray-600" />
-                }
-                title="Miembros Equipo"
+                title="Recargar Saldo"
               />
             </ul>
-            {/* <div className="space-y-2 pt-2">
-              <ItemList
-                href="/profile/admin/dashboard/help"
-                Icon={HelpIcon}
-                title="Ayuda"
-              />
-            </div> */}
           </div>
         </div>
       </div>
