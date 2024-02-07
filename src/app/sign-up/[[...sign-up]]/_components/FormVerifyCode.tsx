@@ -13,6 +13,7 @@ interface FormVerifyCodeProps {
 
 export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isConfirmResponse, setIsConfirmResponse] = useState(false)
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
 
@@ -72,13 +73,14 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       if (completeSignUp.status === 'complete') {
         await api.post('/estudiantes', { ...dataEstudiante, createdUserId: completeSignUp.createdUserId })
         await setActive({ session: completeSignUp.createdSessionId })
+        setIsConfirmResponse(true)
 
-        toast.success('Te registraste exitosamente!')
+        toast.success('¡Te registraste exitosamente!')
         router.push('/profile/student/home')
       }
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2))
-      toast.error('Ocurrió un error al confirmar tu registro, verifica que el código sea correcto.')
+      toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
     } finally {
       setIsLoading(false)
     }
@@ -183,7 +185,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       <Button
         type="submit"
         text='Confirmar'
-        disabled={isLoading}
+        disabled={isLoading || isConfirmResponse}
       />
     </form>
   )

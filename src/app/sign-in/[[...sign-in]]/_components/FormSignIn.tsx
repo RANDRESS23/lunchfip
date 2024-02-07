@@ -15,10 +15,12 @@ import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
 import { useEmpleadosStore } from '@/store/empleados'
 import api from '@/libs/api'
 import { type EmpleadoSignIn } from '@/types/empleados'
+import Link from 'next/link'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isConfirmResponse, setIsConfirmResponse] = useState(false)
   const { isLoaded, signIn, setActive } = useSignIn()
   const { emailsEmpleados } = useEmailsEmpleados()
   const setEmpleado = useEmpleadosStore(state => state.setEmpleado)
@@ -60,6 +62,7 @@ export const FormSignIn = () => {
           })
 
           setEmpleado(response.data.empleado as EmpleadoSignIn)
+          setIsConfirmResponse(true)
 
           router.push('/profile/employee/home')
         } else {
@@ -116,12 +119,30 @@ export const FormSignIn = () => {
           }
           errors={errors}
         />
+        <div className='flex justify-start items-center mb-2'>
+          <Link
+            href="/forgot-password"
+            className='text-sm text-primary hover:opacity-80 cursor-pointer transition-all'
+          >
+            ¿Has olvidado tu contraseña?
+          </Link>
+        </div>
 
         <Button
           type="submit"
           text='Iniciar Sesión'
-          disabled={isLoading}
+          disabled={isLoading || isConfirmResponse}
         />
+
+        <div className='flex justify-center items-center gap-2'>
+          <span className='text-sm'>¿No estás registrado?</span>
+          <Link
+            href="/"
+            className='text-sm text-primary hover:opacity-80 cursor-pointer transition-all'
+          >
+            Registrarme
+          </Link>
+        </div>
       </form>
     </div>
   )
