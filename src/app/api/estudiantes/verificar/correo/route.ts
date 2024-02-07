@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 const emailRegex = /^[A-Za-z0-9._%+-]+@itfip\.edu\.co$/
 
-export const correoInstitucionalSchema = z.object({
+const correoInstitucionalSchema = z.object({
   correo_institucional: z.string().refine(value => emailRegex.test(value), {
     message: 'Debes usar un correo institucional. (@itfip.edu.co)'
   })
