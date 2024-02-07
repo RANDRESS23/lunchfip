@@ -5,7 +5,7 @@ import { encryptPassword } from '@/libs/bcrypt'
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
 
-export const cambioClaveSchema = z.object({
+const cambioClaveSchema = z.object({
   numero_documento: z.string().min(7, {
     message: 'El número de documento debe tener al menos 7 caracteres.'
   }).max(12, {
