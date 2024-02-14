@@ -103,6 +103,15 @@ export async function POST (request: Request) {
       }
     })
 
+    await db.imagenes_Perfil_Estudiantes.create({
+      data: {
+        id_estudiante: newEstudiante.id_estudiante,
+        url_imagen_perfil: `https://guia.itfip.edu.co/sgacampus/images/dynamic/foto/1/${numeroDocumento}/${numeroDocumento}.jpg?width=1000&cut=1`,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      }
+    })
+
     const params = {
       firstName: `${primerNombre} ${segundoNombre !== '' ? segundoNombre : ''}`,
       lastName: `${primerApellido} ${segundoApellido !== '' ? segundoApellido : ''}`
@@ -112,8 +121,31 @@ export async function POST (request: Request) {
       await clerkClient.users.updateUser(createdUserId, params)
     }
 
+    const tipoDocumento = await db.tipos_Documento.findUnique({
+      where: { id_tipo_documento: newEstudiante.id_tipo_documento }
+    })
+
+    const sexo = await db.sexos.findUnique({
+      where: { id_sexo: newEstudiante.id_sexo }
+    })
+
+    const programa = await db.programas.findUnique({
+      where: { id_programa: newEstudiante.id_programa }
+    })
+
+    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
+    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
     return NextResponse.json(
-      { estudiante, message: '¡Estudiante registrado exitosamente!' },
+      {
+        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
+        message: '¡Estudiante registrado exitosamente!'
+      },
       { status: 201 }
     )
   } catch (error: any) {

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import { toast } from 'sonner'
+import { type Estudiante } from '@/types/estudiantes'
+import { useEstudiante } from '@/hooks/useEstudiante'
 
 interface FormVerifyCodeProps {
   dataEstudiante: FieldValues
@@ -15,6 +17,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
   const { isLoaded, signUp, setActive } = useSignUp()
+  const { setEstudiante } = useEstudiante()
   const router = useRouter()
 
   const {
@@ -71,8 +74,10 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       })
 
       if (completeSignUp.status === 'complete') {
-        await api.post('/estudiantes', { ...dataEstudiante, createdUserId: completeSignUp.createdUserId })
+        const response = await api.post('/estudiantes', { ...dataEstudiante, createdUserId: completeSignUp.createdUserId })
         await setActive({ session: completeSignUp.createdSessionId })
+
+        setEstudiante(response.data.estudiante as Estudiante)
         setIsConfirmResponse(true)
 
         toast.success('¡Te registraste exitosamente!')

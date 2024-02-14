@@ -6,6 +6,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "guia.itfip.edu.co",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
       }
     ],
   },

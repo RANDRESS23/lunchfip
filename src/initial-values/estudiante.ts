@@ -1,0 +1,21 @@
+export const ESTUDIANTE_INITIAL_VALUES = {
+  id_estudiante: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  id_tipo_documento: '',
+  tipo_documento: '',
+  numero_documento: '',
+  id_programa: '',
+  programa: '',
+  correo_institucional: '',
+  id_sexo: '',
+  sexo: '',
+  celular: '',
+  saldo: 0,
+  imageUrl: '',
+  codigoUrl: '',
+  createdAt: new Date(),
+  updatedAt: new Date()
+}

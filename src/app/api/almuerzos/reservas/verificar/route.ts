@@ -56,9 +56,17 @@ export async function POST (request: Request) {
       where: { id_sexo: estudiante.id_sexo }
     })
 
+    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
+    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
     return NextResponse.json(
       {
-        estudiante: { ...estudiante, programa: programa?.programa, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo },
+        estudiante: { ...estudiante, programa: programa?.programa, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
         message: `¡Se verificó que ${estudiante.primer_nombre} se encuentre registrado y no tenga reserva pendiente en el día!`
       },
       { status: 200 }

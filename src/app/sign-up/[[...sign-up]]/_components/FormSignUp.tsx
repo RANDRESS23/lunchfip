@@ -84,6 +84,10 @@ export const FormSignUp = () => {
             if (errorClerk.code === 'form_password_pwned') {
               errorsMessagesString += '¡La contraseña es muy insegura, por favor intente con otra!. \n'
             }
+
+            if (errorClerk.code === 'form_identifier_exists') {
+              errorsMessagesString += '¡El correo institucional a registrar ya existe en LunchFip!. \n'
+            }
           })
 
           toast.error(errorsMessagesString)

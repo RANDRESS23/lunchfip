@@ -50,8 +50,8 @@ export const NavBar = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Integrations
+          <Link color="foreground" href="/profile/student/info">
+            Perfil
           </Link>
         </NavbarItem>
       </NavbarContent>

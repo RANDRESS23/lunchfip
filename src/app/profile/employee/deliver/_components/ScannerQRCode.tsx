@@ -5,15 +5,14 @@ import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from 'html5-qrcode'
 import { ModalDeliveryLunch } from './ModalDeliveryLunch'
 import { useDisclosure } from '@nextui-org/react'
 import api from '@/libs/api'
-import { useEstudiantesStore } from '@/store/estudiantes'
 import { type Estudiante } from '@/types/estudiantes'
 import { toast } from 'sonner'
+import { useEstudiante } from '@/hooks/useEstudiante'
 
 export const ScannerQRCode = () => {
   const [repeatScann, setRepeatScann] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const estudiante = useEstudiantesStore(state => state.estudiante)
-  const setEstudiante = useEstudiantesStore(state => state.setEstudiante)
+  const { estudiante, setEstudiante } = useEstudiante()
 
   const handleOpen = () => { onOpen() }
 

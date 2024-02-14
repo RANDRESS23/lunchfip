@@ -1,41 +1,22 @@
-import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
-import { recargasSchema } from '../schema'
+import { db } from '@/libs/prismaDB'
 
 export async function POST (request: Request) {
   const body = await request.json()
 
   try {
-    const {
-      id_estudiante: idEstudiante
-    } = recargasSchema.parse(body)
+    const { correo_institucional: correoInstitucional } = body
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { correo_institucional: correoInstitucional }
     })
 
     if (estudiante === null) {
       return NextResponse.json(
-        { message: '¡El estudiante no se encuentra registrado en LunchFip!' },
-        { status: 400 }
+        { message: '¡El correo ingresado no está registrado!' },
+        { status: 404 }
       )
     }
-
-    const estados = await db.estados.findMany()
-    const [estadoEstudiante] = await db.estados_Estudiantes.findMany({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    if (estadoEstudiante.id_estado !== estados[0].id_estado) {
-      return NextResponse.json(
-        { message: '¡El estudiante no se encuentra activo en LunchFip!' },
-        { status: 400 }
-      )
-    }
-
-    const programa = await db.programas.findUnique({
-      where: { id_programa: estudiante.id_programa }
-    })
 
     const tipoDocumento = await db.tipos_Documento.findUnique({
       where: { id_tipo_documento: estudiante.id_tipo_documento }
@@ -43,6 +24,10 @@ export async function POST (request: Request) {
 
     const sexo = await db.sexos.findUnique({
       where: { id_sexo: estudiante.id_sexo }
+    })
+
+    const programa = await db.programas.findUnique({
+      where: { id_programa: estudiante.id_programa }
     })
 
     const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
@@ -53,10 +38,12 @@ export async function POST (request: Request) {
       where: { id_estudiante: estudiante.id_estudiante }
     })
 
+    const { clave: _, ...infoEstudiante } = estudiante
+
     return NextResponse.json(
       {
-        estudiante: { ...estudiante, programa: programa?.programa, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
-        message: `¡Se verificó que ${estudiante.primer_nombre} se encuentre registrado y está activo en LunchFip!`
+        estudiante: { ...infoEstudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
+        message: '¡Datos validados correctamente!'
       },
       { status: 200 }
     )

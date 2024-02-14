@@ -7,10 +7,9 @@ import { BsCashCoin } from 'react-icons/bs'
 import { FaUniversity } from 'react-icons/fa'
 import { toast } from 'sonner'
 import api from '@/libs/api'
-import { useEstudiantesStore } from '@/store/estudiantes'
-import { useEmpleadoSignIn } from '@/hooks/useEmpleadoSignIn'
-import { useUser } from '@clerk/nextjs'
 import { useState } from 'react'
+import { useEstudiante } from '@/hooks/useEstudiante'
+import { useEmpleado } from '@/hooks/useEmpleado'
 
 interface ModalRechargeProps {
   numeroDocumento: string
@@ -29,9 +28,8 @@ export const ModalRecharge = ({
 }: ModalRechargeProps) => {
   const [loadingRechargeBalance, setRechargeBalance] = useState(false)
   const [newSaldo, setNewSaldo] = useState(0)
-  const { user } = useUser()
-  const { empleado } = useEmpleadoSignIn({ correo: user?.primaryEmailAddress?.emailAddress ?? '' })
-  const estudiante = useEstudiantesStore(state => state.estudiante)
+  const { empleado } = useEmpleado()
+  const { estudiante } = useEstudiante()
 
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)

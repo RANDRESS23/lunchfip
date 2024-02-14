@@ -26,11 +26,12 @@ export interface Estudiante {
   id_programa: string
   programa: string
   correo_institucional: string
-  clave: string
   id_sexo: string
   sexo: string
   celular: string
   saldo: number
+  imageUrl: string
+  codigoUrl: string
   createdAt: Date
   updatedAt: Date
 }

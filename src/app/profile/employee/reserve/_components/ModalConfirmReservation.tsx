@@ -7,14 +7,13 @@ import { BsCashCoin } from 'react-icons/bs'
 import { FaUniversity } from 'react-icons/fa'
 import { toast } from 'sonner'
 import api from '@/libs/api'
-import { useEstudiantesStore } from '@/store/estudiantes'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 import { type AlmuerzosReservados } from '@/types/almuerzos'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
 import getNextDate from '@/libs/nextDate'
-import { useEmpleadoSignIn } from '@/hooks/useEmpleadoSignIn'
-import { useUser } from '@clerk/nextjs'
 import { useState } from 'react'
+import { useEstudiante } from '@/hooks/useEstudiante'
+import { useEmpleado } from '@/hooks/useEmpleado'
 
 interface ModalConfirmReservationProps {
   numeroDocumento: string
@@ -32,9 +31,8 @@ export const ModalConfirmReservation = ({
   numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose
 }: ModalConfirmReservationProps) => {
   const [loadingReservation, setLoadingReservation] = useState(false)
-  const { user } = useUser()
-  const { empleado } = useEmpleadoSignIn({ correo: user?.primaryEmailAddress?.emailAddress ?? '' })
-  const estudiante = useEstudiantesStore(state => state.estudiante)
+  const { empleado } = useEmpleado()
+  const { estudiante } = useEstudiante()
 
   const { nextDate } = getNextDate()
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })

@@ -12,10 +12,12 @@ import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
-import { useEmpleadosStore } from '@/store/empleados'
 import api from '@/libs/api'
 import { type EmpleadoSignIn } from '@/types/empleados'
 import Link from 'next/link'
+import { type Estudiante } from '@/types/estudiantes'
+import { useEstudiante } from '@/hooks/useEstudiante'
+import { useEmpleado } from '@/hooks/useEmpleado'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -23,7 +25,8 @@ export const FormSignIn = () => {
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
   const { isLoaded, signIn, setActive } = useSignIn()
   const { emailsEmpleados } = useEmailsEmpleados()
-  const setEmpleado = useEmpleadosStore(state => state.setEmpleado)
+  const { setEmpleado } = useEmpleado()
+  const { setEstudiante } = useEstudiante()
   const router = useRouter()
 
   const {
@@ -66,6 +69,13 @@ export const FormSignIn = () => {
 
           router.push('/profile/employee/home')
         } else {
+          const response = await api.post('/estudiantes/info', {
+            correo_institucional: data.correo
+          })
+
+          setEstudiante(response.data.estudiante as Estudiante)
+          setIsConfirmResponse(true)
+
           router.push('/profile/student/home')
         }
       }

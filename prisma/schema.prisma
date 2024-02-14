@@ -8,40 +8,55 @@ datasource db {
 }
 
 model Estudiantes {
-  id_estudiante          String          @id @default(uuid())
-  primer_nombre          String          @db.VarChar(50)
-  segundo_nombre         String?         @db.VarChar(50)
-  primer_apellido        String          @db.VarChar(50)
-  segundo_apellido       String?         @db.VarChar(50)
+  id_estudiante               String          @id @default(uuid())
+  primer_nombre               String          @db.VarChar(50)
+  segundo_nombre              String?         @db.VarChar(50)
+  primer_apellido             String          @db.VarChar(50)
+  segundo_apellido            String?         @db.VarChar(50)
   
-  id_tipo_documento      String
-  tipo_documento         Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
+  id_tipo_documento           String
+  tipo_documento              Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
 
-  numero_documento       String          @db.VarChar(20) @unique
+  numero_documento            String          @db.VarChar(20) @unique
 
-  id_programa            String
-  programa               Programas       @relation(fields: [id_programa], references: [id_programa], onDelete: Cascade)
+  id_programa                 String
+  programa                    Programas       @relation(fields: [id_programa], references: [id_programa], onDelete: Cascade)
 
-  correo_institucional   String          @db.VarChar(50) @unique
-  clave                  String 
+  correo_institucional        String          @db.VarChar(50) @unique
+  clave                       String 
 
-  id_sexo                String
-  sexo                   Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
+  id_sexo                     String
+  sexo                        Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
 
-  celular                String          @db.VarChar(20) @unique
-  saldo                  Int             @default(0)
+  celular                     String          @db.VarChar(20) @unique
+  saldo                       Int             @default(0)
 
-  estados_estudiantes    Estados_Estudiantes[]
-  codigos_qr_estudiantes Codigos_QR_Estudiantes[]
-  estudiantes_reservas   Estudiantes_Reservas[]
-  estudiantes_recargas   Estudiantes_Recargas[]
+  estados_estudiantes         Estados_Estudiantes[]
+  codigos_qr_estudiantes      Codigos_QR_Estudiantes[]
+  estudiantes_reservas        Estudiantes_Reservas[]
+  estudiantes_recargas        Estudiantes_Recargas[]
+  imagenes_perfil_estudiantes Imagenes_Perfil_Estudiantes[]
 
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
+  createdAt                   DateTime        @default(now())
+  updatedAt                   DateTime        @updatedAt
 
   @@index([id_tipo_documento])
   @@index([id_programa])
   @@index([id_sexo])
+}
+
+model Imagenes_Perfil_Estudiantes {
+  id_imagen_perfil_estudiante   String      @id @default(uuid())
+
+  id_estudiante                 String
+  estudiante                    Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+
+  url_imagen_perfil             String      @db.Text
+
+  createdAt                     DateTime    @default(now())
+  updatedAt                     DateTime    @updatedAt
+
+  @@index([id_estudiante])
 }
 
 model Estados_Estudiantes {
