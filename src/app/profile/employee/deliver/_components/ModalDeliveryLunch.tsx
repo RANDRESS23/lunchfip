@@ -41,7 +41,7 @@ export const ModalDeliveryLunch = ({
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
   const saldoParsed2 = saldoString.slice(saldoString.length - 3)
-  const saldoParsed3 = `$ ${saldoParsed}.${saldoParsed2}`
+  const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
 
   const deliveryLunch = async () => {
     try {

@@ -16,6 +16,7 @@ export const ESTUDIANTE_INITIAL_VALUES = {
   saldo: 0,
   imageUrl: '',
   codigoUrl: '',
+  // codigoUrlReserva: '',
   createdAt: new Date(),
   updatedAt: new Date()
 }

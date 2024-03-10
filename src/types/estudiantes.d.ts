@@ -32,6 +32,7 @@ export interface Estudiante {
   saldo: number
   imageUrl: string
   codigoUrl: string
+  // codigoUrlReserva: string
   createdAt: Date
   updatedAt: Date
 }

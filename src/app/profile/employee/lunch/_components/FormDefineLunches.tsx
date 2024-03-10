@@ -153,6 +153,17 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
                       />
                     )
                   }
+
+                  {
+                    (almuerzosTotales?.id_almuerzo !== '' && editAmount) && (
+                      <Button
+                        type="button"
+                        text='Cancelar'
+                        disabled={false}
+                        onClick={() => { setEditAmount(false) }}
+                      />
+                    )
+                  }
                 </>
               )
             : (

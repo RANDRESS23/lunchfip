@@ -112,6 +112,24 @@ export async function PATCH (request: Request) {
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
 
+    const almuerzosReservados = await db.almuerzos_Reservados.findUnique({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    if (almuerzosReservados === null) {
+      return NextResponse.json(
+        { message: '¡No se encontró el registro de almuerzos reservados para la fecha seleccionada!' },
+        { status: 400 }
+      )
+    }
+
+    if (almuerzosReservados.cantidad > Number(cantidad)) {
+      return NextResponse.json(
+        { message: '¡La cantidad de almuerzos reservados es mayor a la cantidad establecida por el usuario!' },
+        { status: 400 }
+      )
+    }
+
     const almuerzoAmountUpdated = await db.almuerzos.update({
       data: { total_almuerzos: Number(cantidad), updatedAt: currentDate },
       where: { id_almuerzo: idAlmuerzo }
