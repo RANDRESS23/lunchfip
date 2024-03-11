@@ -14,6 +14,8 @@ import getNextDate from '@/libs/nextDate'
 import { useState } from 'react'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
+import Realistic from 'react-canvas-confetti/dist/presets/realistic'
+import { useConfetti } from '@/hooks/useConfetti'
 
 interface ModalDeliveryLunchProps {
   numeroDocumento: string
@@ -25,10 +27,11 @@ interface ModalDeliveryLunchProps {
   saldo: number
   isOpen: boolean
   onClose: () => void
+  reset?: () => void
 }
 
 export const ModalDeliveryLunch = ({
-  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose
+  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose, reset
 }: ModalDeliveryLunchProps) => {
   const [loadingReservation, setLoadingReservation] = useState(false)
   const { empleado } = useEmpleado()
@@ -42,6 +45,8 @@ export const ModalDeliveryLunch = ({
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
   const saldoParsed2 = saldoString.slice(saldoString.length - 3)
   const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
+
+  const { onInitHandler, onShoot } = useConfetti()
 
   const deliveryLunch = async () => {
     try {
@@ -59,7 +64,10 @@ export const ModalDeliveryLunch = ({
 
         setAlmuerzosEntregados(almuerzosEntregados as AlmuerzosEntregados)
 
+        onShoot()
         toast.success('¡Entrega realizada exitosamente!')
+
+        if (reset !== undefined) reset()
         onClose()
       }
     } catch (error: any) {
@@ -79,7 +87,7 @@ export const ModalDeliveryLunch = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Reservar Almuerzo</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Entregar Almuerzo</ModalHeader>
               <ModalBody>
                 <div className='flex gap-5'>
                   <section className='w-2/5 flex justify-center items-center'>
@@ -162,6 +170,7 @@ export const ModalDeliveryLunch = ({
           )}
         </ModalContent>
       </Modal>
+      <Realistic onInit={onInitHandler} />
     </>
   )
 }

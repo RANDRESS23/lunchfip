@@ -10,6 +10,8 @@ import api from '@/libs/api'
 import { useState } from 'react'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
+import Realistic from 'react-canvas-confetti/dist/presets/realistic'
+import { useConfetti } from '@/hooks/useConfetti'
 
 interface ModalRechargeProps {
   numeroDocumento: string
@@ -21,10 +23,11 @@ interface ModalRechargeProps {
   saldo: number
   isOpen: boolean
   onClose: () => void
+  reset?: () => void
 }
 
 export const ModalRecharge = ({
-  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose
+  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose, reset
 }: ModalRechargeProps) => {
   const [loadingRechargeBalance, setRechargeBalance] = useState(false)
   const [newSaldo, setNewSaldo] = useState(0)
@@ -35,6 +38,8 @@ export const ModalRecharge = ({
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
   const saldoParsed2 = saldoString.slice(saldoString.length - 3)
   const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
+
+  const { onInitHandler, onShoot } = useConfetti()
 
   const rechargeBalance = async () => {
     try {
@@ -52,7 +57,10 @@ export const ModalRecharge = ({
       })
 
       if (response.status === 201) {
+        onShoot()
         toast.success('¡Recarga realizada exitosamente!')
+
+        if (reset !== undefined) reset()
         onClose()
       }
     } catch (error: any) {
@@ -166,6 +174,7 @@ export const ModalRecharge = ({
           )}
         </ModalContent>
       </Modal>
+      <Realistic onInit={onInitHandler} />
     </>
   )
 }

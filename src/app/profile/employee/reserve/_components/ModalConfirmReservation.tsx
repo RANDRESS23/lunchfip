@@ -14,6 +14,8 @@ import getNextDate from '@/libs/nextDate'
 import { useState } from 'react'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
+import Realistic from 'react-canvas-confetti/dist/presets/realistic'
+import { useConfetti } from '@/hooks/useConfetti'
 
 interface ModalConfirmReservationProps {
   numeroDocumento: string
@@ -25,10 +27,11 @@ interface ModalConfirmReservationProps {
   saldo: number
   isOpen: boolean
   onClose: () => void
+  reset?: () => void
 }
 
 export const ModalConfirmReservation = ({
-  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose
+  numeroDocumento, nombreCompleto, tipoDocumento, programa, correoInstitucional, celular, saldo, isOpen, onClose, reset
 }: ModalConfirmReservationProps) => {
   const [loadingReservation, setLoadingReservation] = useState(false)
   const { empleado } = useEmpleado()
@@ -42,6 +45,8 @@ export const ModalConfirmReservation = ({
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
   const saldoParsed2 = saldoString.slice(saldoString.length - 3)
   const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
+
+  const { onInitHandler, onShoot } = useConfetti()
 
   const saveReservation = async () => {
     try {
@@ -58,7 +63,10 @@ export const ModalConfirmReservation = ({
 
         setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
 
+        onShoot()
         toast.success('¡Reserva realizada exitosamente!')
+
+        if (reset !== undefined) reset()
         onClose()
       }
     } catch (error: any) {
@@ -161,6 +169,7 @@ export const ModalConfirmReservation = ({
           )}
         </ModalContent>
       </Modal>
+      <Realistic onInit={onInitHandler} />
     </>
   )
 }

@@ -2,7 +2,7 @@
 
 import { Tabs, Tab, Card, CardBody } from '@nextui-org/react'
 import { ScannerQRCode } from './ScannerQRCode'
-import { FormReserve } from './FormReserve'
+import { FormDeliver } from './FormDeliver'
 
 export const TabSections = () => {
   return (
@@ -17,7 +17,7 @@ export const TabSections = () => {
       <Tab key="digitar" title="Digitar">
         <Card>
           <CardBody className='flex justify-center items-center py-10'>
-            <FormReserve />
+            <FormDeliver />
           </CardBody>
         </Card>
       </Tab>

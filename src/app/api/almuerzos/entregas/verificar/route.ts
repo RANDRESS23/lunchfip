@@ -18,7 +18,7 @@ export async function POST (request: Request) {
 
     if (estudianteReserva === null) {
       return NextResponse.json(
-        { message: '¡No existe reserva disponible para el código QR escaneado!' },
+        { message: '¡No existe reserva disponible para el estudiante!' },
         { status: 400 }
       )
     }
