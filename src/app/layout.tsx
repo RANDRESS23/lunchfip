@@ -6,7 +6,10 @@ import NextUIProviderContext from '@/providers/NextUIProvider'
 import { NavBar } from '@/components/Navbar'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter'
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,7 +37,7 @@ export default function RootLayout ({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.variable} font-sans`}>
         <ClerkProvider>
           <NextUIProviderContext>
             <Toaster />

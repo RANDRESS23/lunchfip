@@ -11,10 +11,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'inter-sans': ['var(--font-inter)']
+      },
       colors: {
         'color-primary': '#00aaff',
         'color-secondary': '#ff3366',
-        morado: '#cc00ff',
         'p-dark': '#ffffffb2',
         'p-light': '#00000095'
       },
