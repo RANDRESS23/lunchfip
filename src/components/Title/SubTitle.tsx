@@ -1,27 +1,11 @@
-'use client'
+import { TextGenerateEffect } from '../ui/text-generate-effect'
+import { words } from '@/constants/wordsSubtitleHome'
 
-import { cn } from '@/libs/utils'
-import { useTheme } from 'next-themes'
-import { useState, useEffect } from 'react'
-
-interface SubTitleProps {
-  description: string
-}
-
-export const SubTitle = ({ description }: SubTitleProps) => {
-  const { theme } = useTheme()
-  const [themeFocus, setThemeFocus] = useState('')
-
-  useEffect(() => {
-    if (theme !== undefined) setThemeFocus(theme)
-  }, [theme])
-
+export const SubTitle = () => {
   return (
-    <p className={cn(
-      'text-lg text-center container flex justify-center items-center flex-wrap italic lg:max-w-2xl',
-      themeFocus === 'dark' ? 'text-[#888888]' : 'text-[#666666]'
-    )}>
-      {description}
-    </p>
+    <TextGenerateEffect
+      className='flex justify-center items-center text-center text-lg lg:max-w-2xl z-10 text-p-light dark:text-p-dark font-light italic'
+      words={words}
+    />
   )
 }
