@@ -1,119 +1,137 @@
 'use client'
 
-import { useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button, Divider } from '@nextui-org/react'
-// import { AcmeLogo } from './AcmeLogo.jsx'
+import { useEffect, useState } from 'react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, Button } from '@nextui-org/react'
 import Link from 'next/link.js'
 import { ThemeSwitcher } from '../ThemeSwitcher'
 import { useClerk, useUser } from '@clerk/nextjs'
 import { useRouter, usePathname } from 'next/navigation'
+import Image from 'next/image'
+import { useTheme } from 'next-themes'
+import { NavBarContentCenter } from './NavBarContentCenter'
+import { menuItems, menuItemsEmployee, menuItemsStudent } from '@/constants/itemsNavBar'
+import { ButtonsCard } from '../ui/tailwindcss-buttons'
+import { cn } from '@/libs/utils'
+import { NavBarMobile } from './NavBarMobile'
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { isSignedIn } = useUser()
+  const { theme } = useTheme()
   const { signOut } = useClerk()
   const router = useRouter()
   const pathname = usePathname()
 
-  const menuItems = [
-    {
-      title: 'Inicio',
-      href: '/'
-    }
-  ]
+  useEffect(() => {
+    const $boxNavBar = document.createElement('div')
+    $boxNavBar.id = 'boxNavBar'
 
-  const menuItemsStudent = [
-    {
-      title: 'Inicio',
-      href: '/profile/student/home'
-    },
-    {
-      title: 'Reservas',
-      href: '/profile/student/reservation'
-    },
-    {
-      title: 'Perfil',
-      href: '/profile/student/info'
-    }
-  ]
+    if (theme === 'dark') $boxNavBar.style.backgroundColor = '#3f3f4666'
+    if (theme === 'light') $boxNavBar.style.backgroundColor = '#e6e6e6'
 
-  const menuItemsEmployee = [
-    {
-      title: 'Definir Almuerzos',
-      href: '/profile/employee/lunch'
-    },
-    {
-      title: 'Reservar Almuerzo',
-      href: '/profile/employee/reserve'
-    },
-    {
-      title: 'Entregar Almuerzo',
-      href: '/profile/employee/deliver'
-    },
-    {
-      title: 'Recargar Saldo',
-      href: '/profile/employee/recharge'
+    $boxNavBar.style.position = 'absolute'
+    $boxNavBar.style.width = 'var(--box--width)'
+    $boxNavBar.style.height = 'var(--box--height)'
+    $boxNavBar.style.top = 'var(--box--top)'
+    $boxNavBar.style.left = 'var(--box--left)'
+    $boxNavBar.style.borderRadius = '10px'
+    $boxNavBar.style.transitionDuration = '500ms'
+    $boxNavBar.style.transitionTimingFunction = 'cubic-bezier(0.4, 0, 0.2, 1)'
+    $boxNavBar.style.transitionProperty = 'all'
+    $boxNavBar.style.opacity = '0'
+    $boxNavBar.style.zIndex = '-10'
+    $boxNavBar.style.backdropFilter = 'blur(16px)'
+
+    const $itemsNavBar = document.querySelectorAll('#itemsNavBar')
+    const $itemsNavBarStudent = document.querySelectorAll('#itemsNavBarStudent')
+
+    const totalItemsNavBar = [...Array.from($itemsNavBar), ...Array.from($itemsNavBarStudent)]
+
+    // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+    const $navBar = document.querySelector('#navBar') as HTMLElement
+    $navBar.appendChild($boxNavBar)
+
+    totalItemsNavBar.forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        const { width, height, left, top } = item.getBoundingClientRect()
+        const { left: leftNavBar } = $navBar.getBoundingClientRect()
+
+        $boxNavBar.style.setProperty('--box--left', `${left - leftNavBar}px`)
+        $boxNavBar.style.setProperty('--box--top', `${top}px`)
+        $boxNavBar.style.setProperty('--box--width', `${width}px`)
+        $boxNavBar.style.setProperty('--box--height', `${height}px`)
+
+        $boxNavBar.style.opacity = '1'
+        $boxNavBar.style.visibility = 'visible'
+      })
+
+      item.addEventListener('mouseleave', () => {
+        $boxNavBar.style.opacity = '0'
+        $boxNavBar.style.visibility = 'hidden'
+      })
+    })
+
+    return () => {
+      $itemsNavBar.forEach(item => {
+        item.removeEventListener('mouseenter', () => {})
+        item.removeEventListener('mouseleave', () => {})
+      })
     }
-  ]
+  }, [])
+
+  useEffect(() => {
+    const $boxNavBar = document.getElementById('boxNavBar')
+
+    if ($boxNavBar !== null && theme === 'dark') $boxNavBar.style.backgroundColor = '#3f3f4666'
+
+    if ($boxNavBar !== null && theme === 'light') $boxNavBar.style.backgroundColor = '#e6e6e6'
+  }, [theme])
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed font-inter-sans' isBordered>
+    <Navbar onMenuOpenChange={setIsMenuOpen} isMenuOpen={isMenuOpen} className='fixed font-inter-sans' isBordered id='navBar'>
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
         />
         <NavbarBrand>
-          {/* <AcmeLogo /> */}
           <Link
-            color="foreground"
-            className='font-bold'
             href='/'
+            className='flex justify-center items-center'
           >
-            LUNCHFIP
+            <Image
+              src='/svgs/logo-lunchfip-dark.svg'
+              alt='logo lunchfip'
+              width={130}
+              height={130}
+              className='hidden dark:flex'
+            />
+            <Image
+              src='/svgs/logo-lunchfip-light.svg'
+              alt='logo lunchfip'
+              width={130}
+              height={130}
+              className='flex dark:hidden'
+            />
           </Link>
         </NavbarBrand>
       </NavbarContent>
 
       {
         (!pathname.includes('/profile/employee') && pathname.includes('/profile/student'))
-          ? (
-              <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                {
-                  menuItemsStudent.map(({ title, href }, index) => (
-                    <NavbarItem
-                      key={`${title}-${index}`}
-                      isActive={pathname === href}
-                    >
-                      <Link color="foreground" href={href}>
-                        {title}
-                      </Link>
-                    </NavbarItem>
-                  ))
-                }
-              </NavbarContent>
-            )
+          ? <NavBarContentCenter
+              items={menuItemsStudent}
+              pathname={pathname}
+            />
           : (!pathname.includes('/profile/employee') && !pathname.includes('/profile/student'))
-              ? (
-                  <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                    {
-                      menuItems.map(({ title, href }, index) => (
-                        <NavbarItem
-                          key={`${title}-${index}`}
-                          isActive={pathname === href}
-                        >
-                          <Link color="foreground" href={href}>
-                            {title}
-                          </Link>
-                        </NavbarItem>
-                      ))
-                    }
-                  </NavbarContent>
-                )
+              ? <NavBarContentCenter
+                  items={menuItems}
+                  pathname={pathname}
+                />
               : null
       }
-      <NavbarContent justify="end">
-        <NavbarItem className='bg-blue'>
+      <NavbarContent justify="end" className='gap-2'>
+        <NavbarItem>
           <ThemeSwitcher />
         </NavbarItem>
         {
@@ -132,12 +150,28 @@ export const NavBar = () => {
             : (
                 <>
                   <NavbarItem className="hidden lg:flex">
-                    <Link href="/sign-in">Iniciar Sesión</Link>
+                    <Link
+                      href="/sign-in"
+                      className={cn(
+                        'flex text-sm h-full w-full px-3 py-2.5 rounded-lg hover:text-black hover:bg-[#e6e6e6] dark:hover:bg-[#3f3f4666] dark:hover:text-white transition-all',
+                        pathname === '/sign-in' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+                      )}
+                    >
+                      Iniciar Sesión
+                    </Link>
                   </NavbarItem>
                   <NavbarItem className="hidden lg:flex">
-                    <Button as={Link} color="primary" href="/sign-up" variant="flat">
-                      Registrarse
-                    </Button>
+                    <ButtonsCard>
+                      <Link href="/sign-up" className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px]">
+                        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
+                        <span className={cn(
+                          'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-white dark:bg-black px-3 py-1 text-sm font-medium hover:text-black dark:hover:text-white backdrop-blur-3xl transition-all',
+                          pathname === '/sign-up' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark')}
+                        >
+                          Registrarse
+                        </span>
+                      </Link>
+                    </ButtonsCard>
                   </NavbarItem>
                 </>
               )
@@ -146,119 +180,25 @@ export const NavBar = () => {
       <NavbarMenu>
         {
           (!pathname.includes('/profile/employee') && pathname.includes('/profile/student'))
-            ? (
-                <>
-                  {
-                    menuItemsStudent.map(({ title, href }, index) => (
-                      <NavbarMenuItem isActive={pathname === href} key={`${title}-${index}`}>
-                        <Link
-                          className="w-full"
-                          href={href}
-                          onClick={() => { setIsMenuOpen(false) }}
-                        >
-                          {title}
-                        </Link>
-                        <Divider className='mt-2' />
-
-                        {
-                          index === menuItemsStudent.length - 1 && (
-                            <>
-                              <button
-                                className='mt-2 text-primary font-normal'
-                                onClick={async () => {
-                                  setIsMenuOpen(false)
-                                  await signOut(() => { router.push('/') })
-                                }}
-                              >
-                                Cerrar Sesión
-                              </button>
-                              <Divider className='mt-2' />
-                            </>
-                          )
-                        }
-                      </NavbarMenuItem>
-                    ))
-                  }
-                </>
-              )
+            ? <NavBarMobile
+                items={menuItemsStudent}
+                pathname={pathname}
+                setIsMenuOpen={setIsMenuOpen}
+                isMenuItemsGeneral={false}
+              />
             : (pathname.includes('/profile/employee') && !pathname.includes('/profile/student'))
-                ? (
-                    <>
-                      {
-                        menuItemsEmployee.map(({ title, href }, index) => (
-                          <NavbarMenuItem isActive={pathname === href} key={`${title}-${index}`}>
-                            <Link
-                              className="w-full"
-                              href={href}
-                              onClick={() => { setIsMenuOpen(false) }}
-                            >
-                              {title}
-                            </Link>
-                            <Divider className='mt-2' />
-
-                            {
-                              index === menuItemsEmployee.length - 1 && (
-                                <>
-                                  <button
-                                    className='mt-2 text-primary font-normal'
-                                    onClick={async () => {
-                                      setIsMenuOpen(false)
-                                      await signOut(() => { router.push('/') })
-                                    }}
-                                  >
-                                    Cerrar Sesión
-                                  </button>
-                                  <Divider className='mt-2' />
-                                </>
-                              )
-                            }
-                          </NavbarMenuItem>
-                        ))
-                      }
-                    </>
-                  )
-                : (
-                    <>
-                      {
-                        menuItems.map(({ title, href }, index) => (
-                          <NavbarMenuItem isActive={pathname === href} key={`${title}-${index}`}>
-                            <Link
-                              className="w-full"
-                              href={href}
-                              onClick={() => { setIsMenuOpen(false) }}
-                            >
-                              {title}
-                            </Link>
-                            <Divider className='mt-2' />
-
-                            {
-                              index === menuItems.length - 1 && (
-                                <>
-                                  <Link
-                                    className="w-full text-primary font-normal"
-                                    href='/sign-in'
-                                    onClick={() => { setIsMenuOpen(false) }}
-                                  >
-                                    Iniciar Sesión
-                                  </Link>
-                                  <Divider className='mt-2' />
-
-                                  <Link
-                                    className="w-full text-secondary font-normal"
-                                    href='/sign-up'
-                                    onClick={() => { setIsMenuOpen(false) }}
-                                  >
-                                    Registrarse
-                                  </Link>
-                                  <Divider className='mt-2' />
-                                </>
-                              )
-                            }
-                          </NavbarMenuItem>
-                        ))
-                      }
-                    </>
-                  )
+                ? <NavBarMobile
+                    items={menuItemsEmployee}
+                    pathname={pathname}
+                    setIsMenuOpen={setIsMenuOpen}
+                    isMenuItemsGeneral={false}
+                  />
+                : <NavBarMobile
+                    items={menuItems}
+                    pathname={pathname}
+                    setIsMenuOpen={setIsMenuOpen}
+                    isMenuItemsGeneral={true}
+                  />
         }
       </NavbarMenu>
     </Navbar>

@@ -4,7 +4,7 @@ import { words } from '@/constants/wordsSubtitleHome'
 export const SubTitle = () => {
   return (
     <TextGenerateEffect
-      className='flex justify-center items-center text-center text-lg lg:max-w-2xl z-10 text-p-light dark:text-p-dark font-light italic'
+      className='flex justify-center items-center text-center text-lg lg:max-w-2xl z-10 text-p-light dark:text-p-dark font-normal italic transition-all'
       words={words}
     />
   )
