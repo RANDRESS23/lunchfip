@@ -5,6 +5,8 @@ import type {
   UseFormRegister
 } from 'react-hook-form'
 import { MySelect } from './SelectExtend'
+import { cn } from '@/libs/utils'
+import { usePathname } from 'next/navigation'
 
 interface SelectProps {
   label: string
@@ -19,6 +21,8 @@ interface SelectProps {
 export const Select = (
   { label, isRequired, name, options, disabled, register, errors }: SelectProps
 ) => {
+  const pathname = usePathname()
+
   return (
     <>
       <div className='relative overflow-hidden p-[1px] rounded-xl'>
@@ -38,7 +42,12 @@ export const Select = (
           }
         </MySelect>
 
-        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10" />
+        <span
+          className={cn(
+            'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10',
+            pathname === '/sign-up' ? 'lg:animate-[spin_2s_linear_infinite]' : 'animate-[spin_2s_linear_infinite]'
+          )}
+        />
       </div>
       {
         errors[name]?.message !== undefined && (
