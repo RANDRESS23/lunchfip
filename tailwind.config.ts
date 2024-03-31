@@ -105,6 +105,14 @@ const config: Config = {
             opacity: '1',
             transform: 'translate(-50%,-40%) scale(1)'
           }
+        },
+        shimmer: {
+          from: {
+            backgroundPosition: '0 0'
+          },
+          to: {
+            backgroundPosition: '-200% 0'
+          }
         }
       },
       animation: {
@@ -113,7 +121,8 @@ const config: Config = {
         'color-cycle-3': 'animation-title-3 10s ease-in-out infinite',
         'color-cycle-4': 'animation-button 12s ease-in-out infinite',
         'color-cycle-5': 'animation-title-4 12s ease-in-out infinite',
-        spotlight: 'spotlight 2s ease .75s 1 forwards'
+        spotlight: 'spotlight 2s ease .75s 1 forwards',
+        shimmer: 'shimmer 2s linear infinite'
       }
     }
   },

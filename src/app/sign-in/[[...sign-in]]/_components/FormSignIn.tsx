@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { type Estudiante } from '@/types/estudiantes'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
+import { TitleAnimated } from '@/components/TitleAnimated'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -87,14 +88,15 @@ export const FormSignIn = () => {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-xl mx-auto w-11/12 flex flex-col gap-5'>
-        <div className='mb-5'>
-          <h2 className='flex justify-center items-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
-            Iniciar Sesión en
-            <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>LunchFip</span>
-          </h2>
-        </div>
+    <div className='relative bg-grid-black dark:bg-grid-white py-10 font-inter-sans flex flex-col justify-center items-center'>
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
+
+      <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-[590px] mx-auto w-11/12 flex flex-col gap-5'>
+
+        <TitleAnimated
+          text1='Iniciar sesión en'
+          text2='Lunchfip'
+        />
 
         <Input
           type="email"
@@ -129,7 +131,7 @@ export const FormSignIn = () => {
           }
           errors={errors}
         />
-        <div className='flex justify-start items-center mb-2'>
+        <div className='flex justify-start items-center mb-4 z-10'>
           <Link
             href="/forgot-password"
             className='text-sm text-primary hover:opacity-80 cursor-pointer transition-all'
@@ -140,14 +142,14 @@ export const FormSignIn = () => {
 
         <Button
           type="submit"
-          text='Iniciar Sesión'
+          text='Iniciar sesión'
           disabled={isLoading || isConfirmResponse}
         />
 
-        <div className='flex justify-center items-center gap-2'>
+        <div className='flex justify-center items-center gap-2 z-10'>
           <span className='text-sm'>¿No estás registrado?</span>
           <Link
-            href="/"
+            href="/sign-up"
             className='text-sm text-primary hover:opacity-80 cursor-pointer transition-all'
           >
             Registrarme

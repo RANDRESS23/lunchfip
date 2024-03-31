@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, Button } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu } from '@nextui-org/react'
 import Link from 'next/link.js'
 import { ThemeSwitcher } from '../ThemeSwitcher'
 import { useClerk, useUser } from '@clerk/nextjs'
@@ -72,12 +72,14 @@ export const NavBar = () => {
     })
 
     return () => {
-      $itemsNavBar.forEach(item => {
+      totalItemsNavBar.forEach(item => {
         item.removeEventListener('mouseenter', () => {})
         item.removeEventListener('mouseleave', () => {})
       })
+
+      $navBar.removeChild($boxNavBar)
     }
-  }, [])
+  }, [isSignedIn])
 
   useEffect(() => {
     const $boxNavBar = document.getElementById('boxNavBar')
@@ -122,11 +124,13 @@ export const NavBar = () => {
           ? <NavBarContentCenter
               items={menuItemsStudent}
               pathname={pathname}
+              id='itemsNavBarStudent'
             />
           : (!pathname.includes('/profile/employee') && !pathname.includes('/profile/student'))
               ? <NavBarContentCenter
                   items={menuItems}
                   pathname={pathname}
+                  id='itemsNavBar'
                 />
               : null
       }
@@ -138,13 +142,17 @@ export const NavBar = () => {
           isSignedIn ?? false
             ? (
                 <NavbarItem className="hidden lg:flex">
-                  <Button
-                    color="primary"
-                    variant="flat"
-                    onClick={async () => { await signOut(() => { router.push('/') }) }}
-                  >
-                    Cerrar Sesión
-                  </Button>
+                    <ButtonsCard>
+                      <button className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px]" onClick={async () => { await signOut(() => { router.push('/') }) }}>
+                        <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
+                        <span className={cn(
+                          'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-white dark:bg-black px-3 py-1 text-sm font-medium hover:text-black dark:hover:text-white backdrop-blur-3xl transition-all',
+                          pathname === '/sign-up' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark')}
+                        >
+                          Cerrar Sesión
+                        </span>
+                      </button>
+                    </ButtonsCard>
                 </NavbarItem>
               )
             : (
@@ -153,7 +161,7 @@ export const NavBar = () => {
                     <Link
                       href="/sign-in"
                       className={cn(
-                        'flex text-sm h-full w-full px-3 py-2.5 rounded-lg hover:text-black hover:bg-[#e6e6e6] dark:hover:bg-[#3f3f4666] dark:hover:text-white transition-all',
+                        'flex text-sm h-full w-full px-3 py-2.5 rounded-lg hover:text-black hover:bg-[#e6e6e6] dark:hover:bg-[#3f3f4666] dark:hover:text-white transition-all duration-500',
                         pathname === '/sign-in' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
                       )}
                     >

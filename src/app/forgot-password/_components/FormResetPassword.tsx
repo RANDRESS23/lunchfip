@@ -10,6 +10,7 @@ import { Button } from '@/components/Button'
 import { toast } from 'sonner'
 import { IoEyeOff } from 'react-icons/io5'
 import { FaEye } from 'react-icons/fa'
+import { TitleAnimated } from '@/components/TitleAnimated'
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
 
@@ -134,17 +135,17 @@ export const FormResetPassword = ({ dataEstudiante }: FormResetPasswordProps) =>
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-lg mx-auto w-11/12 flex flex-col gap-5'>
-      <div className='mb-5'>
-        <h2 className='flex justify-center items-center text-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
-          Confirmar cambio de contraseña en
-          <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>LunchFip</span>
-        </h2>
-        <p className='mt-5 text-center'>
-          Para confirmar tu cambio de contraseña escribe el código de verificación que te enviamos a tu correo institucional.
-        </p>
-      </div>
-      <div className='flex flex-col justify-center items-center gap-7'>
+    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-[690px] mx-auto w-11/12 flex flex-col gap-5'>
+
+      <TitleAnimated
+        text1='Confirmar cambio de contraseña en'
+        text2='Lunchfip'
+      />
+      <p className='-mt-3 text-center z-10 text-p-light dark:text-p-dark'>
+        Para confirmar tu cambio de contraseña escribe el código de verificación que te enviamos a tu correo institucional.
+      </p>
+
+      <div className='flex flex-col justify-center items-center gap-7 mt-5 w-full'>
         <div className='w-full flex flex-col justify-center items-center gap-5'>
           <Input
             type={passwordVisible ? 'text' : 'password'}
@@ -186,7 +187,12 @@ export const FormResetPassword = ({ dataEstudiante }: FormResetPasswordProps) =>
             errors={errors}
           />
         </div>
-        <div className='flex justify-center items-center gap-5'>
+
+        <p className='mt-3 -mb-5 w-full text-left z-10 text-p-light dark:text-p-dark'>
+          Códgio de verificación:
+        </p>
+
+        <div className='flex justify-center items-center gap-3 lg:gap-5 mb-6'>
           <Input
             type="number"
             isRequired

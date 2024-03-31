@@ -20,6 +20,7 @@ import { Select } from '@/components/Select'
 import { Checkbox } from '@/components/Checkbox'
 import { estudianteSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
+import { TitleAnimated } from '@/components/TitleAnimated'
 
 export const FormSignUp = () => {
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -119,16 +120,17 @@ export const FormSignUp = () => {
   }
 
   return (
-    <div>
+    <div className='relative bg-grid-black dark:bg-grid-white py-10 font-inter-sans flex flex-col justify-center items-center'>
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
       {
         !pendingVerification && (
-          <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-xl mx-auto w-11/12 flex flex-col gap-5'>
-            <div className='mb-5'>
-              <h2 className='flex justify-center items-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
-                Registrarse en
-                <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>LunchFip</span>
-              </h2>
-            </div>
+          <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-[590px] mx-auto w-11/12 flex flex-col gap-5'>
+
+            <TitleAnimated
+              text1='Registrarse en'
+              text2='Lunchfip'
+            />
+
             <Input
               type="text"
               label="Primer nombre"
@@ -303,6 +305,7 @@ export const FormSignUp = () => {
               onChange={() => {
                 setTermsAccepted(!termsAccepted)
               }}
+              className='mb-5'
             />
 
             <Button

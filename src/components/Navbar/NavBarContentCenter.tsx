@@ -7,9 +7,10 @@ import Link from 'next/link.js'
 interface NavBarContentCenterProps {
   items: Array<{ title: string, href: string }>
   pathname: string
+  id: string
 }
 
-export const NavBarContentCenter = ({ items, pathname }: NavBarContentCenterProps) => {
+export const NavBarContentCenter = ({ items, pathname, id }: NavBarContentCenterProps) => {
   return (
     <NavbarContent className="relative hidden sm:flex -gap-4" justify="center">
       {
@@ -18,7 +19,7 @@ export const NavBarContentCenter = ({ items, pathname }: NavBarContentCenterProp
             key={`${title}-${index}`}
             isActive={pathname === href}
             className='flex text-sm'
-            id='itemsNavBarStudent'
+            id={id}
           >
             <Link
               href={href}

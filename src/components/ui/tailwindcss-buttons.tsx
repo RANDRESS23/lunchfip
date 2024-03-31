@@ -15,10 +15,12 @@ export const ButtonsCard = ({
     <div
       onClick={onClick}
       className={cn(
+        'w-full overflow-hidden relative flex items-center justify-center',
         className
       )}
     >
-      <div className="relative z-40">{children}</div>
+      <div className="absolute inset-0" />
+      <div className="relative z-40 w-full">{children}</div>
     </div>
   )
 }

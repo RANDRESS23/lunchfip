@@ -8,6 +8,7 @@ import { Button } from '@/components/Button'
 import { toast } from 'sonner'
 import { type Estudiante } from '@/types/estudiantes'
 import { useEstudiante } from '@/hooks/useEstudiante'
+import { TitleAnimated } from '@/components/TitleAnimated'
 
 interface FormVerifyCodeProps {
   dataEstudiante: FieldValues
@@ -92,17 +93,17 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-lg mx-auto w-11/12 flex flex-col gap-5'>
-      <div className='mb-5'>
-        <h2 className='flex justify-center items-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
-          Confirmar registro en
-          <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>LunchFip</span>
-        </h2>
-        <p className='mt-5 text-center'>
-          Para confirmar tu registro escribe el código de verificación que te enviamos a tu correo institucional.
-        </p>
-      </div>
-      <div className='flex justify-center items-center gap-5'>
+    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-[690px] mx-auto w-11/12 flex flex-col gap-5'>
+
+      <TitleAnimated
+        text1='Confirmar registro en'
+        text2='Lunchfip'
+      />
+      <p className='-mt-3 text-center z-10 text-p-light dark:text-p-dark'>
+        Para confirmar tu registro escribe el código de verificación que te enviamos a tu correo institucional.
+      </p>
+
+      <div className='flex justify-center items-center mb-6 gap-3 lg:w-3/5 lg:mx-auto lg:gap-5'>
         <Input
           type="number"
           isRequired
