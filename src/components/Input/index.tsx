@@ -74,7 +74,7 @@ export const Input = (
       </div>
       {
         errors[name]?.message !== undefined && (
-          <p className='text-red-600'>{String(errors[name]?.message)}</p>
+          <p className='text-color-secondary -mt-3 text-sm z-10'>{String(errors[name]?.message)}</p>
         )
       }
     </>

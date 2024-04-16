@@ -1,8 +1,17 @@
 import { currentUser, auth } from '@clerk/nextjs'
 import { type Empleado } from '@/types/empleados'
 import { redirect } from 'next/navigation'
+import { BgParticles } from './_components/BgParticles'
+import { WelcomeEmployee } from './_components/WelcomeEmployee'
+import { type Metadata } from 'next'
 
 const URL_LOCALHOST = 'http://localhost:3000'
+
+export async function generateMetadata (): Promise<Metadata> {
+  return {
+    title: 'LunchFip | Inicio'
+  }
+}
 
 const getEmployeeEmails = async ({ baseURL }: { baseURL: string }) => {
   let employeeEmails: string[] = []
@@ -31,8 +40,9 @@ export default async function HomePage () {
   if (!isEmployee) redirect('/profile/student/home')
 
   return (
-    <div className='bg-blue-200 lg:ml-[290px] mt-16 mr-8'>
-      Employee Home
+    <div className='lg:ml-[290px] h-screen relative px-9 pr-9 font-inter-sans flex flex-col items-center justify-center'>
+      <BgParticles />
+      <WelcomeEmployee />
     </div>
   )
 }

@@ -84,13 +84,12 @@ export const FormRecharge = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-sm w-11/12 flex flex-col gap-5'>
+    <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-md w-11/12 flex justify-center items-center flex-col gap-5'>
       <Input
         type="number"
         label="Número de identificación"
         isRequired
         name="numero_documento"
-        size="lg"
         disabled={isLoading}
         register={register}
         endContent={

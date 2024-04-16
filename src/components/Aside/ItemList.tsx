@@ -18,8 +18,8 @@ export const ItemList = ({ href, icon, title }: ItemListProps) => {
       <Link
         href={href}
         className={cn(
-          'text-base font-semibold rounded-lg hover:text-sushi-500 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center p-2 group',
-          pathname === href && 'bg-gray-100 dark:bg-slate-800'
+          'text-sm font-semibold rounded-lg hover:text-sushi-500 hover:bg-[#f3f2f2] dark:hover:bg-[#3f3f4666] flex items-center p-2 group hover:text-black dark:hover:text-white transition-all',
+          pathname === href ? 'text-black dark:text-white bg-[#f3f2f2] dark:bg-[#3f3f4666]' : 'text-nav-link-light dark:text-nav-link-dark'
         )}
       >
         {icon}

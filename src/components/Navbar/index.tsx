@@ -161,7 +161,7 @@ export const NavBar = () => {
                     <Link
                       href="/sign-in"
                       className={cn(
-                        'flex text-sm h-full w-full px-3 py-2.5 rounded-lg hover:text-black hover:bg-[#e6e6e6] dark:hover:bg-[#3f3f4666] dark:hover:text-white transition-all duration-500',
+                        'flex text-sm h-full w-full px-3 py-2.5 rounded-lg hover:text-black hover:bg-[#f3f2f2] dark:hover:bg-[#3f3f4666] dark:hover:text-white transition-all duration-500',
                         pathname === '/sign-in' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
                       )}
                     >
