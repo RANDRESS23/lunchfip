@@ -29,6 +29,16 @@ export const MyInput = extendVariants(Input, {
           'dark:placeholder:text-zinc-600'
         ]
       }
+    },
+    isDisabled: {
+      true: {
+        base: [
+          'opacity-1'
+        ],
+        label: [
+          'text-zinc-500'
+        ]
+      }
     }
   }
 })

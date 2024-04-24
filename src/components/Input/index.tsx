@@ -50,7 +50,7 @@ export const Input = (
             className
           )}
           classNames={{
-            input: classNamesInput
+            input: [...(classNamesInput ?? []), 'disabled:text-zinc-500']
           }}
           onKeyDown={(e) => {
             if (keyDown !== undefined) keyDown(e)
