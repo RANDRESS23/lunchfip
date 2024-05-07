@@ -7,8 +7,6 @@ import { BsCashCoin } from 'react-icons/bs'
 import { FaUniversity } from 'react-icons/fa'
 import { toast } from 'sonner'
 import api from '@/libs/api'
-import { useAlmuerzosStore } from '@/store/almuerzos'
-import { type AlmuerzosReservados } from '@/types/almuerzos'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
 import getNextDate from '@/libs/nextDate'
 import { useState } from 'react'
@@ -42,7 +40,6 @@ export const ModalConfirmReservation = ({
 
   const { nextDate } = getNextDate()
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
-  const setAlmuerzosReservados = useAlmuerzosStore(state => state.setAlmuerzosReservados)
 
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
@@ -62,10 +59,6 @@ export const ModalConfirmReservation = ({
       })
 
       if (response.status === 201) {
-        const { almuerzosReservados } = response.data
-
-        setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
-
         onShoot()
         toast.success('¡Reserva realizada exitosamente!')
 

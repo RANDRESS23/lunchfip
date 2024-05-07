@@ -108,7 +108,7 @@ export async function POST (request: Request) {
       }
     })
 
-    const updatedAlmuerzosReservados = await db.almuerzos_Reservados.update({
+    await db.almuerzos_Reservados.update({
       data: {
         cantidad: { increment: 1 },
         updatedAt: currentDate
@@ -118,7 +118,6 @@ export async function POST (request: Request) {
 
     return NextResponse.json(
       {
-        almuerzosReservados: updatedAlmuerzosReservados,
         message: '¡Reserva realizada exitosamente!'
       },
       { status: 201 }

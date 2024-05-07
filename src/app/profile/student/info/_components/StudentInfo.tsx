@@ -49,7 +49,7 @@ export const StudentInfo = () => {
         <h2 className='text-xl font-bold tracking-tighter'>
           Códgio QR Personal
         </h2>
-        <div className='w-[130%] flex justify-center items-center'>
+        <div className='flex justify-center items-center'>
           {
             estudiante.codigoUrl !== ''
               ? (

@@ -10,9 +10,10 @@ interface NavBarContentCenterProps {
   items: Array<{ title: string, href: string }>
   pathname: string
   id: string
+  user: any
 }
 
-export const NavBarContentCenter = ({ items, pathname, id }: NavBarContentCenterProps) => {
+export const NavBarContentCenter = ({ items, pathname, id, user }: NavBarContentCenterProps) => {
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -72,7 +73,7 @@ export const NavBarContentCenter = ({ items, pathname, id }: NavBarContentCenter
 
       $navBar.removeChild($boxNavBar)
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     const $boxNavBar = document.getElementById('boxNavBar')

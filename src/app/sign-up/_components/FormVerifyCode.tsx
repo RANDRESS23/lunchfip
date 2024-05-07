@@ -99,6 +99,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
 
         toast.success('¡Te registraste exitosamente!')
         router.push('/profile/student/home')
+        router.refresh()
       }
     } catch (err: any) {
       console.log({ err })

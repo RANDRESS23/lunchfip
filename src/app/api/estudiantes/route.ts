@@ -87,7 +87,7 @@ export async function POST (request: Request) {
 
     const { clave: _, ...estudiante } = newEstudiante
 
-    const qrBase64Str = await QRCode.toDataURL(newEstudiante.id_estudiante, { version: 3 })
+    const qrBase64Str = await QRCode.toDataURL(newEstudiante.id_estudiante, { version: 10 })
     const qrStr = qrBase64Str.split(',')[1]
     const buffer = Buffer.from(qrStr, 'base64')
 

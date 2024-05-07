@@ -66,8 +66,6 @@ export const FormSignIn = () => {
 
       const isEmpleado = emailsEmpleados.includes(data.correo as string)
 
-      toast.success('¡Inicio de sesión exitosamente!')
-
       if (isEmpleado) {
         const response = await api.post('/empleados/info', {
           correo: data.correo
@@ -76,7 +74,9 @@ export const FormSignIn = () => {
         setEmpleado(response.data.empleado as EmpleadoSignIn)
         setIsConfirmResponse(true)
 
+        toast.success('¡Inicio de sesión exitosamente!')
         router.push('/profile/employee/home')
+        router.refresh()
       } else {
         const response = await api.post('/estudiantes/info', {
           correo_institucional: data.correo
@@ -85,39 +85,10 @@ export const FormSignIn = () => {
         setEstudiante(response.data.estudiante as Estudiante)
         setIsConfirmResponse(true)
 
+        toast.success('¡Inicio de sesión exitosamente!')
         router.push('/profile/student/home')
+        router.refresh()
       }
-
-      // const result = await signIn.create({
-      //   identifier: data.correo,
-      //   password: data.clave
-      // })
-      // const isEmpleado = emailsEmpleados.includes(data.correo as string)
-
-      // if (result.status === 'complete') {
-      //   await setActive({ session: result.createdSessionId })
-      //   toast.success('¡Inicio de sesión exitosamente!')
-
-      // if (isEmpleado) {
-      //   const response = await api.post('/empleados/info', {
-      //     correo: data.correo
-      //   })
-
-      //   setEmpleado(response.data.empleado as EmpleadoSignIn)
-      //   setIsConfirmResponse(true)
-
-      //   router.push('/profile/employee/home')
-      // } else {
-      //   const response = await api.post('/estudiantes/info', {
-      //     correo_institucional: data.correo
-      //   })
-
-      //   setEstudiante(response.data.estudiante as Estudiante)
-      //   setIsConfirmResponse(true)
-
-      //   router.push('/profile/student/home')
-      // }
-      // }
     } catch (error: any) {
       return toast.error('!El correo electrónico o la contraseña son incorrectos!')
     } finally {

@@ -1,13 +1,13 @@
 'use client'
 
-// import { Button } from '@/components/Button'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { BalanceCard } from './BalanceCard'
 import { useState } from 'react'
 import { useConfetti } from '@/hooks/useConfetti'
 import Realistic from 'react-canvas-confetti/dist/presets/realistic'
-// import api from '@/libs/api'
+import api from '@/libs/api'
 import { toast } from 'sonner'
+import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
 
 interface ReserveLunchProps {
   nextDate: Date
@@ -17,6 +17,7 @@ interface ReserveLunchProps {
 export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
   const { estudiante } = useEstudiante()
   const [loadingReservation, setLoadingReservation] = useState(false)
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
 
   const saldoString = estudiante.saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
@@ -29,25 +30,15 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
     try {
       setLoadingReservation(true)
 
-      // -> arreglar despues de agregar la opcion de reserva virtual
+      const response = await api.post('/almuerzos/reservas', {
+        id_estudiante: estudiante.id_estudiante,
+        id_almuerzo: almuerzosTotales.id_almuerzo
+      })
 
-      // const response = await api.post('/almuerzos/reservas', {
-      //   id_empleado: empleado.id_empleado,
-      //   id_estudiante: estudiante.id_estudiante,
-      //   id_almuerzo: almuerzosTotales.id_almuerzo
-      // })
-
-      // if (response.status === 201) {
-      //   const { almuerzosReservados } = response.data
-
-      //   setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
-
-      onShoot()
-      //   toast.success('¡Reserva realizada exitosamente!')
-
-      //   if (reset !== undefined) reset()
-      //   onClose()
-      // }
+      if (response.status === 201) {
+        onShoot()
+        toast.success('¡Reserva realizada exitosamente!')
+      }
     } catch (error: any) {
       if (error.response.data !== undefined) {
         const { message } = error.response.data

@@ -12,21 +12,35 @@ import { ButtonsCard } from '../ui/tailwindcss-buttons'
 import { cn } from '@/libs/utils'
 import { NavBarMobile } from './NavBarMobile'
 import { createClient } from '@/utils/supabase/client'
+import { toast } from 'sonner'
+import { useEstudiante } from '@/hooks/useEstudiante'
+import { useEmpleado } from '@/hooks/useEmpleado'
+import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
+import { EMPLEADO_INITIAL_VALUES } from '@/initial-values/empleado'
 
 interface NavBarAppProps {
   user: any
+  isEmployee: boolean
 }
 
-export const NavBarApp = ({ user }: NavBarAppProps) => {
+export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSignOutButton, setShowSignOutButton] = useState(false)
+  const { setEstudiante } = useEstudiante()
+  const { setEmpleado } = useEmpleado()
   const router = useRouter()
 
   const supabase = createClient()
 
   const signOut = async () => {
     await supabase.auth.signOut()
+
+    setEstudiante(ESTUDIANTE_INITIAL_VALUES)
+    setEmpleado(EMPLEADO_INITIAL_VALUES)
+
+    toast.success('¡Cierre de sesión exitosamente!')
     router.push('/sign-in')
+    router.refresh()
   }
 
   const pathname = usePathname()
@@ -67,17 +81,19 @@ export const NavBarApp = ({ user }: NavBarAppProps) => {
       </NavbarContent>
 
       {
-        (!pathname.includes('/profile/employee') && pathname.includes('/profile/student'))
+        (user && !isEmployee)
           ? <NavBarContentCenter
               items={menuItemsStudent}
               pathname={pathname}
               id='itemsNavBarStudent'
+              user={user}
             />
-          : (!pathname.includes('/profile/employee') && !pathname.includes('/profile/student'))
+          : (!user)
               ? <NavBarContentCenter
                   items={menuItems}
                   pathname={pathname}
                   id='itemsNavBar'
+                  user={user}
                 />
               : null
       }
