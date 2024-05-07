@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSignUp } from '@clerk/nextjs'
 import api from '@/libs/api'
 import { useTiposDocumento } from '@/hooks/useTiposDocumento'
 import { useFacultades } from '@/hooks/useFacultades'
@@ -21,6 +20,7 @@ import { Checkbox } from '@/components/Checkbox'
 import { estudianteSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { TitleAnimated } from '@/components/TitleAnimated'
+import { createClient } from '@/utils/supabase/client'
 
 export const FormSignUp = () => {
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -33,7 +33,6 @@ export const FormSignUp = () => {
   const { facultades, loadingFacultades } = useFacultades()
   const { programas, loadingProgramas } = useProgramas()
   const { sexos, loadingSexos } = useSexos()
-  const { isLoaded, signUp } = useSignUp()
 
   const {
     register,
@@ -42,6 +41,7 @@ export const FormSignUp = () => {
     formState: { errors, dirtyFields }
   } = useForm<FieldValues>({
     defaultValues: {
+      id_estudiante: '',
       primer_nombre: '',
       segundo_nombre: '',
       primer_apellido: '',
@@ -54,8 +54,7 @@ export const FormSignUp = () => {
       clave: '',
       clave_2: '',
       id_sexo: '',
-      celular: '',
-      createdUserId: ''
+      celular: ''
     },
     resolver: zodResolver(estudianteSchema)
   })
@@ -64,8 +63,6 @@ export const FormSignUp = () => {
   const toggleVisibility2 = () => { setPasswordVisible2(!passwordVisible2) }
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    if (!isLoaded) return null
-
     setIsLoading(true)
 
     try {
@@ -74,31 +71,20 @@ export const FormSignUp = () => {
       if (response.status === 200) {
         setDataEstudiante(data)
 
-        await signUp.create({
-          emailAddress: data.correo_institucional,
-          password: data.clave
-        }).catch(error => {
-          const { errors } = error
-          let errorsMessagesString = ''
+        const supabase = createClient()
 
-          errors.forEach((errorClerk: any) => {
-            if (errorClerk.code === 'form_password_pwned') {
-              errorsMessagesString += '¡La contraseña es muy insegura, por favor intente con otra!. \n'
-            }
-
-            if (errorClerk.code === 'form_identifier_exists') {
-              errorsMessagesString += '¡El correo institucional a registrar ya existe en LunchFip!. \n'
-            }
-          })
-
-          toast.error(errorsMessagesString)
-          console.log({ error })
+        const { error } = await supabase.auth.signInWithOtp({
+          email: data.correo_institucional,
+          phone: data.celular
         })
 
-        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+        if (error) {
+          console.log({ error })
 
-        toast.success('¡Código de verificación enviado exitosamente!')
+          return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
+        }
 
+        toast.success(`Código de verificación enviado a ${data.correo_institucional} exitosamente!`)
         setPendingVerification(true)
       }
     } catch (error: any) {

@@ -1,13 +1,13 @@
 import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
-import { empleadosSchema } from './schema'
+import { administradoresSchema } from './schema'
 import { NextResponse } from 'next/server'
 
 export async function GET () {
   try {
-    const empleados = await db.empleados.findMany()
+    const administradores = await db.administradores.findMany()
 
-    return NextResponse.json(empleados)
+    return NextResponse.json(administradores)
   } catch (error) {
     console.error({ error })
 
@@ -34,24 +34,24 @@ export async function POST (request: Request) {
       clave_2: clave2,
       id_sexo: idSexo,
       celular
-    } = empleadosSchema.parse(body)
+    } = administradoresSchema.parse(body)
 
-    const existingEmpleadoDocumento = await db.empleados.findUnique({
+    const existingAdministradorDocumento = await db.administradores.findUnique({
       where: { numero_documento: numeroDocumento }
     })
 
-    if (existingEmpleadoDocumento !== null) {
+    if (existingAdministradorDocumento !== null) {
       return NextResponse.json(
         { messsage: '¡El número de documento ya existe en nuestra base de datos!' },
         { status: 400 }
       )
     }
 
-    const existingEmpleadoEmail = await db.empleados.findUnique({
+    const existingAdministradorEmail = await db.administradores.findUnique({
       where: { correo }
     })
 
-    if (existingEmpleadoEmail !== null) {
+    if (existingAdministradorEmail !== null) {
       return NextResponse.json(
         { messsage: '¡El correo electrónico ya existe en nuestra base de datos!' },
         { status: 400 }
@@ -66,7 +66,7 @@ export async function POST (request: Request) {
     }
 
     const roles = await db.roles.findMany({
-      where: { rol: 'Empleado' }
+      where: { rol: 'Administrador' }
     })
 
     const dateAux = new Date()
@@ -74,7 +74,7 @@ export async function POST (request: Request) {
     const currentDate = new Date(dateAux.toString())
 
     const hashedPassword = await encryptPassword(clave)
-    const newEmpleado = await db.empleados.create({
+    const newAdministrador = await db.administradores.create({
       data: {
         primer_nombre: primerNombre,
         segundo_nombre: segundoNombre,
@@ -92,10 +92,10 @@ export async function POST (request: Request) {
       }
     })
 
-    const { clave: _, ...empleado } = newEmpleado
+    const { clave: _, ...administrador } = newAdministrador
 
     return NextResponse.json(
-      { empleado, message: '¡Empleado registrado exitosamente!' },
+      { administrador, message: '¡Administrador registrado exitosamente!' },
       { status: 201 }
     )
   } catch (error: any) {

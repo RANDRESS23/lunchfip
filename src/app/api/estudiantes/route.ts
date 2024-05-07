@@ -4,7 +4,6 @@ import { estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
-import { clerkClient } from '@clerk/nextjs/server'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -32,6 +31,7 @@ export async function POST (request: Request) {
 
   try {
     const {
+      id_estudiante: idEstudiante,
       primer_nombre: primerNombre,
       segundo_nombre: segundoNombre,
       primer_apellido: primerApellido,
@@ -42,9 +42,12 @@ export async function POST (request: Request) {
       correo_institucional: correoInstitucional,
       clave,
       id_sexo: idSexo,
-      celular,
-      createdUserId
+      celular
     } = estudianteSchema.parse(body)
+
+    const roles = await db.roles.findMany({
+      where: { rol: 'Estudiante' }
+    })
 
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
@@ -53,6 +56,7 @@ export async function POST (request: Request) {
     const hashedPassword = await encryptPassword(clave)
     const newEstudiante = await db.estudiantes.create({
       data: {
+        id_estudiante: idEstudiante,
         primer_nombre: primerNombre,
         segundo_nombre: segundoNombre,
         primer_apellido: primerApellido,
@@ -64,6 +68,7 @@ export async function POST (request: Request) {
         clave: hashedPassword,
         id_sexo: idSexo,
         celular,
+        id_rol: roles[0].id_rol,
         createdAt: currentDate,
         updatedAt: currentDate
       }
@@ -111,15 +116,6 @@ export async function POST (request: Request) {
         updatedAt: currentDate
       }
     })
-
-    const params = {
-      firstName: `${primerNombre} ${segundoNombre !== '' ? segundoNombre : ''}`,
-      lastName: `${primerApellido} ${segundoApellido !== '' ? segundoApellido : ''}`
-    }
-
-    if (createdUserId !== null) {
-      await clerkClient.users.updateUser(createdUserId, params)
-    }
 
     const tipoDocumento = await db.tipos_Documento.findUnique({
       where: { id_tipo_documento: newEstudiante.id_tipo_documento }

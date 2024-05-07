@@ -31,6 +31,9 @@ model Estudiantes {
   celular                     String          @db.VarChar(20) @unique
   saldo                       Int             @default(0)
 
+  id_rol                      String
+  rol                         Roles           @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+
   estados_estudiantes         Estados_Estudiantes[]
   codigos_qr_estudiantes      Codigos_QR_Estudiantes[]
   estudiantes_reservas        Estudiantes_Reservas[]
@@ -43,6 +46,7 @@ model Estudiantes {
   @@index([id_tipo_documento])
   @@index([id_programa])
   @@index([id_sexo])
+  @@index([id_rol])
 }
 
 model Imagenes_Perfil_Estudiantes {
@@ -95,7 +99,10 @@ model Empleados {
 
   celular                String          @db.VarChar(20) @unique
 
-  reservas               Reservas[]
+  id_rol                 String
+  rol                    Roles           @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+
+  reservas_empleados     Reservas_Empleados[]
   entregas               Entregas[]
   recargas               Recargas[]
 
@@ -104,6 +111,38 @@ model Empleados {
 
   @@index([id_tipo_documento])
   @@index([id_sexo])
+  @@index([id_rol])
+}
+
+model Administradores {
+  id_administrador       String          @id @default(uuid())
+  primer_nombre          String          @db.VarChar(50)
+  segundo_nombre         String?         @db.VarChar(50)
+  primer_apellido        String          @db.VarChar(50)
+  segundo_apellido       String?         @db.VarChar(50)
+  
+  id_tipo_documento      String
+  tipo_documento         Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
+
+  numero_documento       String          @db.VarChar(20) @unique
+
+  correo                 String          @db.VarChar(50) @unique
+  clave                  String 
+
+  id_sexo                String
+  sexo                   Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
+
+  celular                String          @db.VarChar(20) @unique
+
+  id_rol                 String
+  rol                    Roles           @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  @@index([id_tipo_documento])
+  @@index([id_sexo])
+  @@index([id_rol])
 }
 
 model Recargas {
@@ -119,6 +158,8 @@ model Recargas {
 
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
+
+  @@index([id_empleado])
 }
 
 model Estados {
@@ -132,15 +173,28 @@ model Estados {
   updatedAt            DateTime    @updatedAt
 }
 
+model Roles {
+  id_rol            String      @id @default(uuid())
+  rol               String      @db.VarChar(20)
+
+  estudiantes       Estudiantes[]
+  empleados         Empleados[]
+  administradores   Administradores[]
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
 model Sexos {
-  id_sexo      String      @id @default(uuid())
-  sexo         String      @db.VarChar(20)
+  id_sexo          String      @id @default(uuid())
+  sexo             String      @db.VarChar(20)
 
-  estudiantes  Estudiantes[]
-  empleados    Empleados[]
+  estudiantes      Estudiantes[]
+  empleados        Empleados[]
+  administradores  Administradores[]
 
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 }
 
 model Tipos_Documento {
@@ -149,6 +203,7 @@ model Tipos_Documento {
 
   estudiantes       Estudiantes[]
   empleados         Empleados[]
+  administradores   Administradores[]
 
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
@@ -211,15 +266,14 @@ model Estados_Reservas {
 
 model Reservas {
   id_reserva            String      @id @default(uuid())
-
-  id_empleado           String
-  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
   
   id_almuerzo           String
   almuerzo              Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   fecha                 DateTime    @default(now())
 
+  reservas_empleados    Reservas_Empleados[]
+  reservas_virtuales    Reservas_Virtuales[]
   estados_reservas      Estados_Reservas[]
   codigos_qr_reservas   Codigos_QR_Reservas[]
   estudiantes_reservas  Estudiantes_Reservas[]
@@ -227,7 +281,35 @@ model Reservas {
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
 
+  @@index([id_almuerzo])
+}
+
+model Reservas_Empleados {
+  id_reserva_empleado   String      @id @default(uuid())
+  
+  id_reserva            String
+  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  
+  id_empleado           String
+  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_reserva])
   @@index([id_empleado])
+}
+
+model Reservas_Virtuales {
+  id_reserva_empleado   String      @id @default(uuid())
+  
+  id_reserva            String
+  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_reserva])
 }
 
 model Entregas {
@@ -247,6 +329,7 @@ model Entregas {
   updatedAt             DateTime    @updatedAt
 
   @@index([id_empleado])
+  @@index([id_almuerzo])
 }
 
 model Codigos_QR_Reservas {

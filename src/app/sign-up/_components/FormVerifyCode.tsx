@@ -1,6 +1,5 @@
 import { type KeyboardEvent, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
-import { useSignUp } from '@clerk/nextjs'
 import api from '@/libs/api'
 import { useRouter } from 'next/navigation'
 import { Input } from '@/components/Input'
@@ -9,6 +8,7 @@ import { toast } from 'sonner'
 import { type Estudiante } from '@/types/estudiantes'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { TitleAnimated } from '@/components/TitleAnimated'
+import { createClient } from '@/utils/supabase/client'
 
 interface FormVerifyCodeProps {
   dataEstudiante: FieldValues
@@ -17,7 +17,6 @@ interface FormVerifyCodeProps {
 export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
-  const { isLoaded, signUp, setActive } = useSignUp()
   const { setEstudiante } = useEstudiante()
   const router = useRouter()
 
@@ -65,18 +64,35 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const onSubmit: SubmitHandler<FieldValues> = async data => {
     setIsLoading(true)
 
-    if (!isLoaded) return
-
     try {
       const code = `${data.firstNumber}${data.secondNumber}${data.thirdNumber}${data.fourthNumber}${data.fifthNumber}${data.sixthNumber}`
 
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code
+      const supabase = createClient()
+
+      const { error } = await supabase.auth.verifyOtp({
+        email: dataEstudiante.correo_institucional,
+        token: code,
+        type: 'email'
       })
 
-      if (completeSignUp.status === 'complete') {
-        const response = await api.post('/estudiantes', { ...dataEstudiante, createdUserId: completeSignUp.createdUserId })
-        await setActive({ session: completeSignUp.createdSessionId })
+      if (error) {
+        console.log({ error })
+
+        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
+      }
+
+      const { data: { user }, error: error2 } = await supabase.auth.updateUser({
+        password: dataEstudiante.clave
+      })
+
+      if (error2) {
+        console.log({ error2 })
+
+        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
+      }
+
+      if (user) {
+        const response = await api.post('/estudiantes', { ...dataEstudiante, id_estudiante: user.id })
 
         setEstudiante(response.data.estudiante as Estudiante)
         setIsConfirmResponse(true)
@@ -85,7 +101,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
         router.push('/profile/student/home')
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2))
+      console.log({ err })
       toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
     } finally {
       setIsLoading(false)

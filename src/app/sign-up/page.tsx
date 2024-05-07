@@ -1,9 +1,16 @@
-import { HomeSection } from '@/components/Title/HomeSection'
-import { getEmployeeEmails } from '@/services/getEmployeeEmails'
+import { type Metadata } from 'next'
+import { FormSignUp } from './_components/FormSignUp'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
+import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 
-export default async function Home () {
+export async function generateMetadata (): Promise<Metadata> {
+  return {
+    title: 'LunchFip | Registrarse'
+  }
+}
+
+export default async function Page () {
   const supabase = createClient()
   const { data } = await supabase.auth.getUser()
 
@@ -17,8 +24,8 @@ export default async function Home () {
   }
 
   return (
-    <main className='w-4/5 mx-auto'>
-      <HomeSection />
-    </main>
+    <div className='container py-20 mx-auto'>
+      <FormSignUp />
+    </div>
   )
 }

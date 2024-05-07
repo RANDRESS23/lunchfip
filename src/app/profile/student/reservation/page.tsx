@@ -3,8 +3,16 @@ import { type Empleado } from '@/types/empleados'
 import { redirect } from 'next/navigation'
 import { ReserveLunch } from './_components/ReserveLunch'
 import getNextDate from '@/libs/nextDate'
+import { TitleAnimated } from '@/components/TitleAnimated'
+import { type Metadata } from 'next'
 
 const URL_LOCALHOST = 'http://localhost:3000'
+
+export async function generateMetadata (): Promise<Metadata> {
+  return {
+    title: 'LunchFip | Reservas'
+  }
+}
 
 const getEmployeeEmails = async ({ baseURL }: { baseURL: string }) => {
   let employeeEmails: string[] = []
@@ -35,11 +43,13 @@ export default async function ReservationPage () {
   const { nextDate, nextFullDate } = getNextDate()
 
   return (
-    <div className='h-screen pt-20 pb-8 px-5'>
-      <h1 className='flex items-center justify-center flex-wrap text-4xl font-extrabold tracking-tighter gap-2'>
-        Reservas de
-        <span className='relative bg-clip-text [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] animate-color-cycle-5'>Almuerzos</span>
-      </h1>
+    <div className='container mx-auto py-[90px] px-6'>
+      <TitleAnimated
+        text1='Reservar mi'
+        text2='Almuerzo'
+        textSize='text-4xl lg:text-5xl'
+      />
+      <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes reservar tu almuerzo con anticipo si cuentas con el saldo suficiente.</p>
       <ReserveLunch
         nextDate={nextDate}
         nextFullDate={nextFullDate}

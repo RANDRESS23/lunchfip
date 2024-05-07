@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useSignIn } from '@clerk/nextjs'
+// import { useSignIn } from '@clerk/nextjs'
 import { Input } from '@/components/Input'
 import { IoEyeOff } from 'react-icons/io5'
 import { FaEye } from 'react-icons/fa'
@@ -19,12 +19,13 @@ import { type Estudiante } from '@/types/estudiantes'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
 import { TitleAnimated } from '@/components/TitleAnimated'
+import { createClient } from '@/utils/supabase/client'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
-  const { isLoaded, signIn, setActive } = useSignIn()
+  // const { isLoaded, signIn, setActive } = useSignIn()
   const { emailsEmpleados } = useEmailsEmpleados()
   const { setEmpleado } = useEmpleado()
   const { setEstudiante } = useEstudiante()
@@ -45,41 +46,78 @@ export const FormSignIn = () => {
   const toggleVisibility = () => { setPasswordVisible(!passwordVisible) }
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    if (!isLoaded) return null
+    // if (!isLoaded) return null
 
     setIsLoading(true)
 
     try {
-      const result = await signIn.create({
-        identifier: data.correo,
+      const supabase = createClient()
+
+      const { error } = await supabase.auth.signInWithPassword({
+        email: data.correo,
         password: data.clave
       })
+
+      if (error) {
+        console.log({ error })
+
+        return toast.error('!El correo electrónico o la contraseña son incorrectos!')
+      }
+
       const isEmpleado = emailsEmpleados.includes(data.correo as string)
 
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        toast.success('¡Inicio de sesión exitosamente!')
+      toast.success('¡Inicio de sesión exitosamente!')
 
-        if (isEmpleado) {
-          const response = await api.post('/empleados/info', {
-            correo: data.correo
-          })
+      if (isEmpleado) {
+        const response = await api.post('/empleados/info', {
+          correo: data.correo
+        })
 
-          setEmpleado(response.data.empleado as EmpleadoSignIn)
-          setIsConfirmResponse(true)
+        setEmpleado(response.data.empleado as EmpleadoSignIn)
+        setIsConfirmResponse(true)
 
-          router.push('/profile/employee/home')
-        } else {
-          const response = await api.post('/estudiantes/info', {
-            correo_institucional: data.correo
-          })
+        router.push('/profile/employee/home')
+      } else {
+        const response = await api.post('/estudiantes/info', {
+          correo_institucional: data.correo
+        })
 
-          setEstudiante(response.data.estudiante as Estudiante)
-          setIsConfirmResponse(true)
+        setEstudiante(response.data.estudiante as Estudiante)
+        setIsConfirmResponse(true)
 
-          router.push('/profile/student/home')
-        }
+        router.push('/profile/student/home')
       }
+
+      // const result = await signIn.create({
+      //   identifier: data.correo,
+      //   password: data.clave
+      // })
+      // const isEmpleado = emailsEmpleados.includes(data.correo as string)
+
+      // if (result.status === 'complete') {
+      //   await setActive({ session: result.createdSessionId })
+      //   toast.success('¡Inicio de sesión exitosamente!')
+
+      // if (isEmpleado) {
+      //   const response = await api.post('/empleados/info', {
+      //     correo: data.correo
+      //   })
+
+      //   setEmpleado(response.data.empleado as EmpleadoSignIn)
+      //   setIsConfirmResponse(true)
+
+      //   router.push('/profile/employee/home')
+      // } else {
+      //   const response = await api.post('/estudiantes/info', {
+      //     correo_institucional: data.correo
+      //   })
+
+      //   setEstudiante(response.data.estudiante as Estudiante)
+      //   setIsConfirmResponse(true)
+
+      //   router.push('/profile/student/home')
+      // }
+      // }
     } catch (error: any) {
       return toast.error('!El correo electrónico o la contraseña son incorrectos!')
     } finally {
