@@ -1,12 +1,13 @@
 'use client'
 
-import { Button } from '@/components/Button'
+// import { Button } from '@/components/Button'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { BalanceCard } from './BalanceCard'
 import { useState } from 'react'
 import { useConfetti } from '@/hooks/useConfetti'
 import Realistic from 'react-canvas-confetti/dist/presets/realistic'
-import api from '@/libs/api'
+// import api from '@/libs/api'
+import { toast } from 'sonner'
 
 interface ReserveLunchProps {
   nextDate: Date
@@ -25,37 +26,37 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
   const { onInitHandler, onShoot } = useConfetti()
 
   const saveReservation = async () => {
-    // try {
-    //   setLoadingReservation(true)
+    try {
+      setLoadingReservation(true)
 
-    //   // -> arreglar despues de agregar la opcion de reserva virtual
+      // -> arreglar despues de agregar la opcion de reserva virtual
 
-    //   const response = await api.post('/almuerzos/reservas', {
-    //     id_empleado: empleado.id_empleado,
-    //     id_estudiante: estudiante.id_estudiante,
-    //     id_almuerzo: almuerzosTotales.id_almuerzo
-    //   })
+      // const response = await api.post('/almuerzos/reservas', {
+      //   id_empleado: empleado.id_empleado,
+      //   id_estudiante: estudiante.id_estudiante,
+      //   id_almuerzo: almuerzosTotales.id_almuerzo
+      // })
 
-    //   if (response.status === 201) {
-    //     const { almuerzosReservados } = response.data
+      // if (response.status === 201) {
+      //   const { almuerzosReservados } = response.data
 
-    //     setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
+      //   setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
 
-    //     onShoot()
-    //     toast.success('¡Reserva realizada exitosamente!')
+      onShoot()
+      //   toast.success('¡Reserva realizada exitosamente!')
 
-    //     if (reset !== undefined) reset()
-    //     onClose()
-    //   }
-    // } catch (error: any) {
-    //   if (error.response.data !== undefined) {
-    //     const { message } = error.response.data
+      //   if (reset !== undefined) reset()
+      //   onClose()
+      // }
+    } catch (error: any) {
+      if (error.response.data !== undefined) {
+        const { message } = error.response.data
 
-    //     toast.error(message as string)
-    //   }
-    // } finally {
-    //   setLoadingReservation(false)
-    // }
+        toast.error(message as string)
+      }
+    } finally {
+      setLoadingReservation(false)
+    }
   }
 
   return (
