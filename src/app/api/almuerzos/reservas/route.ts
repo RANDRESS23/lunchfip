@@ -41,13 +41,31 @@ export async function POST (request: Request) {
 
     const newReserva = await db.reservas.create({
       data: {
-        id_empleado: idEmpleado,
         id_almuerzo: idAlmuerzo,
         fecha: currentDate,
         createdAt: currentDate,
         updatedAt: currentDate
       }
     })
+
+    if (idEmpleado) {
+      await db.reservas_Empleados.create({
+        data: {
+          id_reserva: newReserva.id_reserva,
+          id_empleado: idEmpleado,
+          createdAt: currentDate,
+          updatedAt: currentDate
+        }
+      })
+    } else {
+      await db.reservas_Virtuales.create({
+        data: {
+          id_reserva: newReserva.id_reserva,
+          createdAt: currentDate,
+          updatedAt: currentDate
+        }
+      })
+    }
 
     const estados = await db.estados.findMany()
 
