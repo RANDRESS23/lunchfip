@@ -78,7 +78,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       if (error) {
         console.log({ error })
 
-        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
+        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto y que no haya vencido!.')
       }
 
       const { data: { user }, error: error2 } = await supabase.auth.updateUser({
@@ -88,7 +88,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
       if (error2) {
         console.log({ error2 })
 
-        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto!.')
+        return toast.error('¡Ocurrió un error al confirmar tu registro, verifica que el código sea correcto y que no haya vencido!.')
       }
 
       if (user) {

@@ -1,16 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useSignIn } from '@clerk/nextjs'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Input } from '@/components/Input'
 import { Button } from '@/components/Button'
 import api from '@/libs/api'
-import { FormResetPassword } from './FormResetPassword'
 import { toast } from 'sonner'
 import { TitleAnimated } from '@/components/TitleAnimated'
+import { createClient } from '@/utils/supabase/client'
+import { useEstudiante } from '@/hooks/useEstudiante'
+import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
 
 const emailRegex = /^[A-Za-z0-9._%+-]+@itfip\.edu\.co$/
 
@@ -21,9 +22,9 @@ const correoEstudiantilSchema = z.object({
 })
 
 export const FormForgotPassword = () => {
-  const [dataEstudiante, setDataEstudiante] = useState<FieldValues>({})
   const [isLoading, setIsLoading] = useState(false)
-  const [successfulCreation, setSuccessfulCreation] = useState(false)
+  const [isConfirmSendedEmail, setIsConfirmSendedEmail] = useState(false)
+  const { estudiante, setEstudiante } = useEstudiante()
 
   const {
     register,
@@ -36,46 +37,27 @@ export const FormForgotPassword = () => {
     resolver: zodResolver(correoEstudiantilSchema)
   })
 
-  const { isLoaded, signIn } = useSignIn()
-
-  if (!isLoaded) {
-    return null
-  }
-
   const onSubmit: SubmitHandler<FieldValues> = async data => {
     setIsLoading(true)
 
-    if (!isLoaded) return
-
     try {
       const response = await api.post('/estudiantes/verificar/correo', data)
-      console.log({ response })
 
       if (response.status === 200) {
-        setDataEstudiante({ numero_documento: response.data.numero_documento })
+        setEstudiante({ ...ESTUDIANTE_INITIAL_VALUES, correo_institucional: data.correo_institucional, numero_documento: response.data.numero_documento })
 
-        await signIn
-          ?.create({
-            strategy: 'reset_password_email_code',
-            identifier: data.correo_institucional
-          })
-          .then(_ => {
-            toast.success('¡Código de verificación enviado exitosamente!')
-            setSuccessfulCreation(true)
-          })
-          .catch(error => {
-            const { errors } = error
-            let errorsMessagesString = ''
+        const supabase = createClient()
 
-            errors.forEach((errorClerk: any) => {
-              if (errorClerk.code === 'form_identifier_not_found') {
-                errorsMessagesString += `¡No se pudo encontrar el correo ${data.correo_institucional} en nuestra base de datos!. \n`
-              }
-            })
+        const { error } = await supabase.auth.resetPasswordForEmail(data.correo_institucional as string, { redirectTo: `${window.location.origin}/reset-password` })
 
-            toast.error(errorsMessagesString)
-            console.log({ error })
-          })
+        if (error) {
+          console.log({ error })
+
+          return toast.error('¡Ocurrió un error al momento de enviar el enlace de cambio de contraseña!.')
+        }
+
+        setIsConfirmSendedEmail(true)
+        toast.success('¡Enlace de cambio de contraseña enviado exitosamente!')
       }
     } catch (error: any) {
       if (error.response.data !== undefined) {
@@ -99,40 +81,52 @@ export const FormForgotPassword = () => {
     <div className='relative bg-grid-black dark:bg-grid-white py-10 font-inter-sans flex flex-col justify-center items-center'>
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
       {
-        !successfulCreation && (
-          <form
-            className='lg:max-w-[590px] mx-auto w-11/12 flex flex-col gap-5'
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <TitleAnimated
-              text1='Recuperar contraseña de'
-              text2='Lunchfip'
-            />
+        !isConfirmSendedEmail
+          ? (
+              <form
+                className='lg:max-w-[590px] mx-auto w-11/12 flex flex-col gap-5'
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <TitleAnimated
+                  text1='Recuperar contraseña de'
+                  text2='Lunchfip'
+                />
+                <p className='-mt-5 text-center z-10 text-p-light dark:text-p-dark mb-7'>
+                  Para cambiar tu contraseña escribe tu correo institucional, allí te llegará el enlace para el respectivo cambio de contraseña.
+                </p>
 
-            <Input
-              type="email"
-              label="Correo institucional"
-              isRequired
-              name="correo_institucional"
-              register={register}
-              endContent={
-                <div className="pointer-events-none flex items-center h-full">
-                  <span className="text-default-400 text-small">@itfip.edu.co</span>
-                </div>
-              }
-              errors={errors}
-            />
+                <Input
+                  type="email"
+                  label="Correo institucional"
+                  isRequired
+                  name="correo_institucional"
+                  register={register}
+                  endContent={
+                    <div className="pointer-events-none flex items-center h-full">
+                      <span className="text-default-400 text-small">@itfip.edu.co</span>
+                    </div>
+                  }
+                  errors={errors}
+                />
 
-            <Button
-              type="submit"
-              text='Enviar código de verificación'
-              disabled={isLoading}
-            />
-          </form>
-        )
-      }
-      {
-        successfulCreation && <FormResetPassword dataEstudiante={dataEstudiante} />
+                <Button
+                  type="submit"
+                  text='Enviar enlace de cambio de contraseña'
+                  disabled={isLoading}
+                />
+              </form>
+            )
+          : (
+              <>
+                <TitleAnimated
+                  text1='Enlace de cambio de contraseña enviado'
+                  text2='exitosamente!'
+                />
+                <p className='text-center z-10 text-p-light dark:text-p-dark mb-7'>
+                  Verifica tu correo institucional ({estudiante.correo_institucional}), allí te llegó el enlace para el respectivo cambio de contraseña.
+                </p>
+              </>
+            )
       }
     </div>
   )

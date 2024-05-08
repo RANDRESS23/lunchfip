@@ -15,11 +15,11 @@ export const Button = ({ type, text, disabled, onClick }: ButtonProps) => {
         type={type}
         disabled={disabled}
         onClick={onClick}
-        className="w-full relative inline-flex h-12 overflow-hidden rounded-xl p-[1px]"
+        className="w-full relative inline-flex overflow-hidden rounded-xl p-[1px]"
       >
         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
         <span className={cn(
-          'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-white dark:bg-black px-3 py-1 text-md font-medium backdrop-blur-3xl transition-all text-nav-link-light dark:text-nav-link-dark',
+          'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-white dark:bg-black px-3 py-3 text-md font-medium backdrop-blur-3xl transition-all text-nav-link-light dark:text-nav-link-dark',
           disabled ? 'cursor-not-allowed' : 'hover:text-black dark:hover:text-white'
         )}
         >

@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import { useSignIn } from '@clerk/nextjs'
 import { Input } from '@/components/Input'
 import { IoEyeOff } from 'react-icons/io5'
 import { FaEye } from 'react-icons/fa'
@@ -25,7 +24,6 @@ export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
-  // const { isLoaded, signIn, setActive } = useSignIn()
   const { emailsEmpleados } = useEmailsEmpleados()
   const { setEmpleado } = useEmpleado()
   const { setEstudiante } = useEstudiante()
@@ -46,8 +44,6 @@ export const FormSignIn = () => {
   const toggleVisibility = () => { setPasswordVisible(!passwordVisible) }
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    // if (!isLoaded) return null
-
     setIsLoading(true)
 
     try {
