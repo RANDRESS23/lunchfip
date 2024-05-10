@@ -26,6 +26,7 @@ interface NavBarAppProps {
 export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSignOutButton, setShowSignOutButton] = useState(false)
+  const [isSignOut, setIsSignOut] = useState(false)
   const { setEstudiante } = useEstudiante()
   const { setEmpleado } = useEmpleado()
   const router = useRouter()
@@ -35,6 +36,7 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
   const signOut = async () => {
     await supabase.auth.signOut()
 
+    setIsSignOut(true)
     setEstudiante(ESTUDIANTE_INITIAL_VALUES)
     setEmpleado(EMPLEADO_INITIAL_VALUES)
 
@@ -106,7 +108,7 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
             ? (
                 <NavbarItem className="hidden lg:flex">
                     <ButtonsCard>
-                      <button className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px]" onClick={signOut}>
+                      <button className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px] disabled:cursor-not-allowed" onClick={signOut} disabled={isSignOut}>
                         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
                         <span className={cn(
                           'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-white dark:bg-black px-3 py-1 text-sm font-medium hover:text-black dark:hover:text-white backdrop-blur-3xl transition-all',

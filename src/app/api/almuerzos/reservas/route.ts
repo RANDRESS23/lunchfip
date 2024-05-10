@@ -35,6 +35,13 @@ export async function POST (request: Request) {
       id_almuerzo: idAlmuerzo
     } = reservasSchema.parse(body)
 
+    if (idAlmuerzo === '') {
+      return NextResponse.json(
+        { message: '¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!.' },
+        { status: 404 }
+      )
+    }
+
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())

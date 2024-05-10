@@ -9,7 +9,7 @@ export async function GET (_: Request, { params }: { params: { id_almuerzo: stri
 
     if (almuerzoReservado === null) {
       return NextResponse.json(
-        { message: 'No se encontró la cantidad de almuerzos reservados para el dia correspondiente.' },
+        { message: '¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!.', almuerzoReservado },
         { status: 404 }
       )
     }

@@ -8,6 +8,9 @@ import Realistic from 'react-canvas-confetti/dist/presets/realistic'
 import api from '@/libs/api'
 import { toast } from 'sonner'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
+import { AvailableLunchs } from './AvailableLunchs'
+import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
+import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
 
 interface ReserveLunchProps {
   nextDate: Date
@@ -18,6 +21,8 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
   const { estudiante } = useEstudiante()
   const [loadingReservation, setLoadingReservation] = useState(false)
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { almuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
+  const { almuerzosEntregados } = useAlmuerzosEntregados({ nextDate: nextDate.toString() })
 
   const saldoString = estudiante.saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
@@ -52,12 +57,25 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
 
   return (
     <div className='flex flex-col items-center justify-center -mt-7'>
-      <BalanceCard
-        nextFullDate={nextFullDate}
-        saldoParsed={saldoParsed3}
-        loadingReservation={loadingReservation}
-        saveReservation={saveReservation}
-      />
+      {
+        almuerzosTotales.id_almuerzo === '' && (
+          <p className='w-full z-10 mt-12 italic text-center text-color-secondary'>⚠ ¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!. ⚠</p>
+        )
+      }
+      <div className='flex flex-col md:flex-row items-center justify-center md:gap-10 -mt-10'>
+        <AvailableLunchs
+          amounthLunch={almuerzosReservados.cantidad - almuerzosEntregados.cantidad}
+          nextFullDate={nextFullDate}
+          isAvailableReserve={almuerzosTotales.id_almuerzo !== ''}
+        />
+        <BalanceCard
+          nextFullDate={nextFullDate}
+          saldoParsed={saldoParsed3}
+          loadingReservation={loadingReservation}
+          isAvailableReserve={almuerzosTotales.id_almuerzo !== ''}
+          saveReservation={saveReservation}
+        />
+      </div>
       <Realistic onInit={onInitHandler} />
     </div>
   )

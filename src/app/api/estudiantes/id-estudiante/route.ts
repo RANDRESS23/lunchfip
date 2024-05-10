@@ -26,7 +26,7 @@ export async function POST (request: Request) {
 
     if (almuerzosDisponibles === null) {
       return NextResponse.json(
-        { message: '¡No hay almuerzos disponibles para reservar!' },
+        { message: '¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!.' },
         { status: 404 }
       )
     }

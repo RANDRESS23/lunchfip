@@ -9,6 +9,7 @@ import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
 import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
 import { EMPLEADO_INITIAL_VALUES } from '@/initial-values/empleado'
+import { useState } from 'react'
 
 interface NavBarMobileProps {
   items: Array<{ title: string, href: string }>
@@ -20,6 +21,7 @@ interface NavBarMobileProps {
 export const NavBarMobile = (
   { items, pathname, setIsMenuOpen, isMenuItemsGeneral }: NavBarMobileProps
 ) => {
+  const [isSignOut, setIsSignOut] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const { setEstudiante } = useEstudiante()
@@ -28,6 +30,7 @@ export const NavBarMobile = (
   const signOut = async () => {
     await supabase.auth.signOut()
 
+    setIsSignOut(true)
     setEstudiante(ESTUDIANTE_INITIAL_VALUES)
     setEmpleado(EMPLEADO_INITIAL_VALUES)
 
@@ -61,6 +64,7 @@ export const NavBarMobile = (
                               setIsMenuOpen(false)
                               signOut()
                             }}
+                            disabled={isSignOut}
                           >
                             Cerrar Sesión
                           </button>

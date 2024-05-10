@@ -18,6 +18,7 @@ export default async function ReservationPage () {
   const employeeEmails = await getEmployeeEmails()
   const isEmployee = employeeEmails.includes(data?.user?.email ?? '')
 
+  if (!data.user) redirect('/')
   if (isEmployee) redirect('/profile/employee/home')
 
   const { nextDate, nextFullDate } = getNextDate()
