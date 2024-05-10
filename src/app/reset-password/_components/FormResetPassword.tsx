@@ -169,7 +169,7 @@ export const FormResetPassword = ({ token }: { token: string }) => {
 
         <Button
           type="submit"
-          text='Confirmar cambio de contraseña'
+          text={isLoading || isConfirmResponse ? 'Cargando...' : 'Confirmar cambio de contraseña'}
           disabled={isLoading || isConfirmResponse}
         />
       </form>

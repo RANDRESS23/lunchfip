@@ -207,7 +207,7 @@ export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
 
       <Button
         type="submit"
-        text='Confirmar'
+        text={isLoading || isConfirmResponse ? 'Cargando...' : 'Confirmar'}
         disabled={isLoading || isConfirmResponse}
       />
     </form>

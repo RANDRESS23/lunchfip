@@ -147,7 +147,7 @@ export const FormSignIn = () => {
 
         <Button
           type="submit"
-          text='Iniciar sesión'
+          text={isLoading || isConfirmResponse ? 'Cargando...' : 'Iniciar sesión'}
           disabled={isLoading || isConfirmResponse}
         />
 

@@ -296,7 +296,7 @@ export const FormSignUp = () => {
 
             <Button
               type="submit"
-              text='Registrarse'
+              text={isLoading ? 'Cargando...' : 'Registrarse'}
               disabled={!termsAccepted || isLoading}
             />
           </form>
