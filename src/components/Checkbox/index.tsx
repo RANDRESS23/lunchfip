@@ -13,6 +13,7 @@ export const Checkbox = ({ option, checked, className, onChange }: CheckboxProps
       checked={checked}
       onChange={onChange}
       className={className}
+      color='danger'
     >
       {option}
     </CheckboxUI>

@@ -36,10 +36,13 @@ export const MySelect = extendVariants(Select, {
           'opacity-1'
         ],
         label: [
-          'text-zinc-500'
+          'text-zinc-400 dark:text-zinc-500'
         ],
         selectorIcon: [
-          'text-zinc-500'
+          'text-zinc-400 dark:text-zinc-500'
+        ],
+        value: [
+          'text-zinc-400 dark:text-zinc-500'
         ]
       }
     }

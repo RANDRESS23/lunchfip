@@ -4,6 +4,13 @@ import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { TitleAnimated } from '@/components/TitleAnimated'
 import { TabSections } from './_components/TabSections'
+import { type Metadata } from 'next'
+
+export async function generateMetadata (): Promise<Metadata> {
+  return {
+    title: 'LunchFip | Información De Perfil'
+  }
+}
 
 export default async function InfoPage () {
   const supabase = createClient()
@@ -15,7 +22,7 @@ export default async function InfoPage () {
   if (isEmployee) redirect('/profile/employee/home')
 
   return (
-    <div className='container md:w-2/4 mx-auto py-[90px] px-6'>
+    <div className='container md:w-2/4 mx-auto py-[90px] px-6 font-inter-sans'>
       <TitleAnimated
         text1='Mi'
         text2='Perfil'

@@ -16,9 +16,9 @@ export const StudentStats = () => {
   } = useEstudianteEstadisticas({ idEstudiante })
 
   return (
-    <section className="flex flex-col justify-center items-center gap-7">
-      <p className='w-full z-10 -mt-2 text-center italic text-p-light dark:text-p-dark'>Aqui encontrarás la cantidad total de almuerzos que has reservado o reclamado hasta la actualidad, así como también la cantidad total de almuerzos que no has reclamado.</p>
-      <div className='grid grid-cols-1 md:grid-cols-2 place-items-center gap-5'>
+    <section className="flex flex-col justify-center items-center gap-7 font-inter-sans">
+      <p className='w-full text-sm z-10 -mt-2 text-center italic text-p-light dark:text-p-dark'>Aqui encontrarás la cantidad total de almuerzos que has reservado o reclamado hasta la actualidad, así como también la cantidad total de almuerzos que no has reclamado.</p>
+      <div className='grid grid-cols-1 lg:grid-cols-2 place-items-center gap-5'>
         <StatCard
           label="Total Almuerzos Reservados"
           value={cantidadReservas}

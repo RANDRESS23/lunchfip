@@ -24,7 +24,7 @@ export default async function ReservationPage () {
   const { nextDate, nextFullDate } = getNextDate()
 
   return (
-    <div className='container mx-auto py-[90px] px-6'>
+    <div className='container mx-auto py-[90px] px-6 font-inter-sans'>
       <TitleAnimated
         text1='Reservar mi'
         text2='Almuerzo'

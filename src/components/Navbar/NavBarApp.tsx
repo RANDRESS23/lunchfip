@@ -69,14 +69,14 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
               alt='logo lunchfip'
               width={130}
               height={130}
-              className='hidden dark:flex'
+              className='hidden dark:flex w-32'
             />
             <Image
               src='/svgs/logo-lunchfip-light.svg'
               alt='logo lunchfip'
               width={130}
               height={130}
-              className='flex dark:hidden'
+              className='flex dark:hidden w-32'
             />
           </Link>
         </NavbarBrand>

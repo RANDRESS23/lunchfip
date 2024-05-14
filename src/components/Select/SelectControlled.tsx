@@ -1,8 +1,8 @@
 import { SelectItem } from '@nextui-org/react'
-import type {
-  FieldErrors,
-  FieldValues,
-  UseFormRegister
+import {
+  Controller,
+  type FieldErrors,
+  type FieldValues
 } from 'react-hook-form'
 import { MySelect } from './SelectExtend'
 import { cn } from '@/libs/utils'
@@ -12,14 +12,16 @@ interface SelectProps {
   label: string
   isRequired: boolean
   name: string
+  control: any
+  value: Set<any>
   options: Array<{ label: string, value: string }>
   disabled?: boolean
-  register: UseFormRegister<FieldValues>
   errors: FieldErrors<FieldValues>
+  setValue: (keys: any) => any
 }
 
-export const Select = (
-  { label, isRequired, name, options, disabled, register, errors }: SelectProps
+export const SelectControlled = (
+  { label, isRequired, name, control, value, options, disabled, errors, setValue }: SelectProps
 ) => {
   const pathname = usePathname()
 
@@ -28,21 +30,31 @@ export const Select = (
   return (
     <>
       <div className='relative overflow-hidden p-[1px] rounded-xl'>
-      <MySelect
-        label={label}
-        isRequired={isRequired}
-        isDisabled={disabled}
-        color='stone'
-        {...register(name)}
-      >
-        {
-          options.map(({ label, value }) => (
-            <SelectItem key={value} value={value}>
-              {label}
-            </SelectItem>
-          ))
-        }
-      </MySelect>
+        <Controller
+          render={({ field }) => (
+            <MySelect
+              {...field}
+              label={label}
+              isRequired={isRequired}
+              isDisabled={disabled}
+              selectedKeys={value}
+              onSelectionChange={setValue}
+              color='stone'
+            >
+              {
+                options.map(({ label, value }) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))
+              }
+            </MySelect>
+          )}
+          name={name}
+          rules={{ required: isRequired }}
+          control={control}
+          disabled={disabled}
+        />
 
         <span
           className={cn(

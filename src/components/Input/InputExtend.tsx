@@ -36,7 +36,10 @@ export const MyInput = extendVariants(Input, {
           'opacity-1'
         ],
         label: [
-          'text-zinc-500'
+          'text-zinc-400 dark:text-zinc-500'
+        ],
+        input: [
+          'text-zinc-400 dark:text-zinc-500'
         ]
       }
     }

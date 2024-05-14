@@ -5,7 +5,7 @@ export const getEmployeeEmails = async () => {
   let employeeEmails: string[] = []
 
   try {
-    const { data } = await api.get('/api/empleados')
+    const { data } = await api.get('/empleados')
     const emails: string[] = data.map((empleado: Empleado) => empleado.correo)
 
     employeeEmails = emails

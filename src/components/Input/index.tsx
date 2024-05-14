@@ -50,7 +50,7 @@ export const Input = (
             className
           )}
           classNames={{
-            input: [...(classNamesInput ?? []), 'disabled:text-zinc-500']
+            input: [...(classNamesInput ?? [])]
           }}
           onKeyDown={(e) => {
             if (keyDown !== undefined) keyDown(e)
@@ -66,7 +66,7 @@ export const Input = (
             <span
               className={cn(
                 'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10',
-                pathname === '/sign-up' ? 'lg:animate-[spin_2s_linear_infinite]' : 'animate-[spin_2s_linear_infinite]'
+                (pathname === '/sign-up' || pathname === '/profile/student/info') ? 'lg:animate-[spin_2s_linear_infinite]' : 'animate-[spin_2s_linear_infinite]'
               )}
             />
           )

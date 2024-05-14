@@ -147,7 +147,7 @@ export async function PATCH (request: Request) {
 
     if (almuerzoAmountUpdated === null || updatedAlmuerzosReservados === null || updatedAlmuerzosEntregados === null) {
       return NextResponse.json({
-        message: 'No se pudo actualizar la cantidad de almuerzos para la fecha seleccionada.'
+        message: '¡No se pudo actualizar la cantidad de almuerzos para la fecha seleccionada!'
       })
     }
 

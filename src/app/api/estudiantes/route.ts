@@ -1,6 +1,6 @@
 import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
-import { estudianteSchema } from './schema'
+import { estudianteDataSchema, estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
@@ -143,6 +143,95 @@ export async function POST (request: Request) {
         message: '¡Estudiante registrado exitosamente!'
       },
       { status: 201 }
+    )
+  } catch (error: any) {
+    console.error({ error })
+
+    if (error?.errors !== null) {
+      const errorsMessages: Record<string, string> = {}
+      const { errors } = error
+
+      errors.forEach(
+        ({ message, path }: { message: string, path: string[] }) => {
+          if (!Object.values(errorsMessages).includes(message)) {
+            errorsMessages[path.join('')] = message
+          }
+        }
+      )
+
+      return NextResponse.json(errorsMessages, { status: 500 })
+    }
+
+    return NextResponse.json(
+      { message: 'Something went wrong.', error },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT (request: Request) {
+  const body = await request.json()
+
+  try {
+    const {
+      id_estudiante: idEstudiante,
+      primer_nombre: primerNombre,
+      segundo_nombre: segundoNombre,
+      primer_apellido: primerApellido,
+      segundo_apellido: segundoApellido,
+      id_tipo_documento: idTipoDocumento,
+      numero_documento: numeroDocumento,
+      id_programa: idPrograma,
+      celular
+    } = estudianteDataSchema.parse(body)
+
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
+    const updatedEstudiante = await db.estudiantes.update({
+      data: {
+        primer_nombre: primerNombre,
+        segundo_nombre: segundoNombre,
+        primer_apellido: primerApellido,
+        segundo_apellido: segundoApellido,
+        id_tipo_documento: idTipoDocumento,
+        numero_documento: numeroDocumento,
+        id_programa: idPrograma,
+        celular,
+        updatedAt: currentDate
+      },
+      where: { id_estudiante: idEstudiante }
+    })
+
+    const tipoDocumento = await db.tipos_Documento.findUnique({
+      where: { id_tipo_documento: updatedEstudiante.id_tipo_documento }
+    })
+
+    const sexo = await db.sexos.findUnique({
+      where: { id_sexo: updatedEstudiante.id_sexo }
+    })
+
+    const programa = await db.programas.findUnique({
+      where: { id_programa: updatedEstudiante.id_programa }
+    })
+
+    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
+      where: { id_estudiante: updatedEstudiante.id_estudiante }
+    })
+
+    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
+      where: { id_estudiante: updatedEstudiante.id_estudiante }
+    })
+
+    const { clave: _, ...estudiante } = updatedEstudiante
+
+    return NextResponse.json(
+      {
+        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
+        message: '¡Estudiante actualizado exitosamente!'
+      },
+      { status: 200 }
     )
   } catch (error: any) {
     console.error({ error })
