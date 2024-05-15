@@ -46,3 +46,10 @@ export const menuItemsEmployee = [
     href: '/profile/employee/recharge'
   }
 ]
+
+export const menuItemsAdmin = [
+  {
+    title: 'Registrar Empleados',
+    href: '/profile/admin/register-employee'
+  }
+]

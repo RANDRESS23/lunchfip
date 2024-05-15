@@ -1,6 +1,6 @@
 import { Aside } from '@/components/Aside'
 
-export default function EmployeeLayout ({
+export default function AdminLayout ({
   children
 }: {
   children: React.ReactNode

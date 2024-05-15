@@ -1,5 +1,5 @@
-export interface Empleado {
-  id_empleado: string
+export interface Administrador {
+  id_administrador: string
   primer_nombre: string
   segundo_nombre: string
   primer_apellido: string

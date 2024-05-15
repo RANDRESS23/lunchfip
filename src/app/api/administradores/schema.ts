@@ -5,6 +5,7 @@ const nameOptionalRegex = /^$|^[A-Za-záéíóúÁÉÍÓÚñÑüÜ\s]+$/
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
 
 export const administradoresSchema = z.object({
+  id_administrador: z.string(),
   primer_nombre: z.string().refine(value => nameRegex.test(value), {
     message: 'El primer nombre solo puede contener letras.'
   }),

@@ -7,11 +7,11 @@ export async function POST (request: Request) {
   try {
     const { correo } = body
 
-    const empleado = await db.empleados.findUnique({
+    const administrador = await db.administradores.findUnique({
       where: { correo }
     })
 
-    if (empleado === null) {
+    if (administrador === null) {
       return NextResponse.json(
         { message: '¡El correo ingresado no está registrado!' },
         { status: 404 }
@@ -19,18 +19,18 @@ export async function POST (request: Request) {
     }
 
     const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: empleado.id_tipo_documento }
+      where: { id_tipo_documento: administrador.id_tipo_documento }
     })
 
     const sexo = await db.sexos.findUnique({
-      where: { id_sexo: empleado.id_sexo }
+      where: { id_sexo: administrador.id_sexo }
     })
 
-    const { clave: _, ...empleadoWithoutClave } = empleado
+    const { clave: _, ...administradorWithoutClave } = administrador
 
     return NextResponse.json(
       {
-        empleado: { ...empleadoWithoutClave, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo },
+        administrador: { ...administradorWithoutClave, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo },
         message: '¡Datos validados correctamente!'
       },
       { status: 200 }

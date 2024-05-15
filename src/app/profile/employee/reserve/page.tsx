@@ -6,6 +6,7 @@ import getNextDate from '@/libs/nextDate'
 import { type Metadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
+import { getAdminEmails } from '@/services/getAdminEmails'
 
 export async function generateMetadata (): Promise<Metadata> {
   return {
@@ -17,10 +18,13 @@ export default async function ReservePage () {
   const supabase = createClient()
   const { data } = await supabase.auth.getUser()
   const employeeEmails = await getEmployeeEmails()
+  const adminEmails = await getAdminEmails()
   const isEmployee = employeeEmails.includes(data?.user?.email ?? '')
+  const isAdmin = adminEmails.includes(data?.user?.email ?? '')
 
-  if (!data.user) redirect('/')
-  if (!isEmployee) redirect('/profile/student/home')
+  if (!data.user) return redirect('/')
+  if (isAdmin) return redirect('/profile/admin/home')
+  if (!isEmployee) return redirect('/profile/student/home')
 
   const { nextDate, nextFullDate } = getNextDate()
 

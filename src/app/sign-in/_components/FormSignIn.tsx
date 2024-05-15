@@ -12,20 +12,25 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
 import api from '@/libs/api'
-import { type EmpleadoSignIn } from '@/types/empleados'
+import { type Empleado } from '@/types/empleados'
 import Link from 'next/link'
 import { type Estudiante } from '@/types/estudiantes'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
 import { TitleAnimated } from '@/components/TitleAnimated'
 import { createClient } from '@/utils/supabase/client'
+import { useEmailsAdmin } from '@/hooks/useEmailsAdmin'
+import { useAdministrador } from '@/hooks/useAdministrador'
+import { type Administrador } from '@/types/administradores'
 
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
   const { emailsEmpleados } = useEmailsEmpleados()
+  const { emailsAdmin } = useEmailsAdmin()
   const { setEmpleado } = useEmpleado()
+  const { setAdministrador } = useAdministrador()
   const { setEstudiante } = useEstudiante()
   const router = useRouter()
 
@@ -61,17 +66,29 @@ export const FormSignIn = () => {
       }
 
       const isEmpleado = emailsEmpleados.includes(data.correo as string)
+      const isAdmin = emailsAdmin.includes(data.correo as string)
 
       if (isEmpleado) {
         const response = await api.post('/empleados/info', {
           correo: data.correo
         })
 
-        setEmpleado(response.data.empleado as EmpleadoSignIn)
+        setEmpleado(response.data.empleado as Empleado)
         setIsConfirmResponse(true)
 
         toast.success('¡Inicio de sesión exitosamente!')
         router.push('/profile/employee/home')
+        router.refresh()
+      } else if (isAdmin) {
+        const response = await api.post('/administradores/info', {
+          correo: data.correo
+        })
+
+        setAdministrador(response.data.administrador as Administrador)
+        setIsConfirmResponse(true)
+
+        toast.success('¡Inicio de sesión exitosamente!')
+        router.push('/profile/admin/home')
         router.refresh()
       } else {
         const response = await api.post('/estudiantes/info', {

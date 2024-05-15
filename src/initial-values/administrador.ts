@@ -1,5 +1,5 @@
-export const EMPLEADO_INITIAL_VALUES = {
-  id_empleado: '',
+export const ADMINISTRADOR_INITIAL_VALUES = {
+  id_administrador: '',
   primer_nombre: '',
   segundo_nombre: '',
   primer_apellido: '',

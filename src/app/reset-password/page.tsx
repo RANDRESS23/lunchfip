@@ -3,6 +3,7 @@ import { FormResetPassword } from './_components/FormResetPassword'
 import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { redirect } from 'next/navigation'
+import { getAdminEmails } from '@/services/getAdminEmails'
 
 export async function generateMetadata (): Promise<Metadata> {
   return {
@@ -19,11 +20,14 @@ export default async function ForgotPassword ({
   const { data } = await supabase.auth.getUser()
 
   const employeeEmails = await getEmployeeEmails()
+  const adminEmails = await getAdminEmails()
 
   if (data.user) {
     const isEmployee = employeeEmails.includes(data?.user?.email ?? '')
+    const isAdmin = adminEmails.includes(data?.user?.email ?? '')
 
-    if (isEmployee) redirect('/profile/employee/home')
+    if (isEmployee) return redirect('/profile/employee/home')
+    else if (isAdmin) return redirect('/profile/admin/home')
     else return redirect('/profile/student/home')
   }
 

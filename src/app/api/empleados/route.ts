@@ -23,6 +23,7 @@ export async function POST (request: Request) {
 
   try {
     const {
+      id_empleado: idEmpleado,
       primer_nombre: primerNombre,
       segundo_nombre: segundoNombre,
       primer_apellido: primerApellido,
@@ -76,6 +77,7 @@ export async function POST (request: Request) {
     const hashedPassword = await encryptPassword(clave)
     const newEmpleado = await db.empleados.create({
       data: {
+        id_empleado: idEmpleado,
         primer_nombre: primerNombre,
         segundo_nombre: segundoNombre,
         primer_apellido: primerApellido,

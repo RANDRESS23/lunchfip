@@ -1,4 +1,5 @@
 import { HomeSection } from '@/components/Title/HomeSection'
+import { getAdminEmails } from '@/services/getAdminEmails'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
@@ -8,11 +9,14 @@ export default async function Home () {
   const { data } = await supabase.auth.getUser()
 
   const employeeEmails = await getEmployeeEmails()
+  const adminEmails = await getAdminEmails()
 
   if (data.user) {
     const isEmployee = employeeEmails.includes(data?.user?.email ?? '')
+    const isAdmin = adminEmails.includes(data?.user?.email ?? '')
 
-    if (isEmployee) redirect('/profile/employee/home')
+    if (isEmployee) return redirect('/profile/employee/home')
+    else if (isAdmin) return redirect('/profile/admin/home')
     else return redirect('/profile/student/home')
   }
 

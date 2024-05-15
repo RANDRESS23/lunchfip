@@ -1,9 +1,16 @@
 import { redirect } from 'next/navigation'
 import { BgParticles } from './_components/BgParticles'
-import { WelcomeStudent } from './_components/WelcomeStudent'
+import { WelcomeAdmin } from './_components/WelcomeAdmin'
+import { type Metadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { getAdminEmails } from '@/services/getAdminEmails'
+
+export async function generateMetadata (): Promise<Metadata> {
+  return {
+    title: 'LunchFip | Inicio'
+  }
+}
 
 export default async function HomePage () {
   const supabase = createClient()
@@ -15,12 +22,12 @@ export default async function HomePage () {
 
   if (!data.user) return redirect('/')
   if (isEmployee) return redirect('/profile/employee/home')
-  if (isAdmin) return redirect('/profile/admin/home')
+  if (!isAdmin) return redirect('/profile/student/home')
 
   return (
-    <div className='h-screen relative font-inter-sans flex flex-col items-center justify-center'>
+    <div className='lg:ml-[290px] h-screen relative px-9 pr-9 font-inter-sans flex flex-col items-center justify-center'>
       <BgParticles />
-      <WelcomeStudent />
+      <WelcomeAdmin />
     </div>
   )
 }

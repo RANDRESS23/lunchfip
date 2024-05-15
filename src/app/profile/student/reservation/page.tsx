@@ -5,6 +5,7 @@ import { TitleAnimated } from '@/components/TitleAnimated'
 import { type Metadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
+import { getAdminEmails } from '@/services/getAdminEmails'
 
 export async function generateMetadata (): Promise<Metadata> {
   return {
@@ -16,10 +17,13 @@ export default async function ReservationPage () {
   const supabase = createClient()
   const { data } = await supabase.auth.getUser()
   const employeeEmails = await getEmployeeEmails()
+  const adminEmails = await getAdminEmails()
   const isEmployee = employeeEmails.includes(data?.user?.email ?? '')
+  const isAdmin = adminEmails.includes(data?.user?.email ?? '')
 
-  if (!data.user) redirect('/')
-  if (isEmployee) redirect('/profile/employee/home')
+  if (!data.user) return redirect('/')
+  if (isEmployee) return redirect('/profile/employee/home')
+  if (isAdmin) return redirect('/profile/admin/home')
 
   const { nextDate, nextFullDate } = getNextDate()
 

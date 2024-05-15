@@ -7,7 +7,7 @@ import { ThemeSwitcher } from '../ThemeSwitcher'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { NavBarContentCenter } from './NavBarContentCenter'
-import { menuItems, menuItemsEmployee, menuItemsStudent } from '@/constants/itemsNavBar'
+import { menuItems, menuItemsAdmin, menuItemsEmployee, menuItemsStudent } from '@/constants/itemsNavBar'
 import { ButtonsCard } from '../ui/tailwindcss-buttons'
 import { cn } from '@/libs/utils'
 import { NavBarMobile } from './NavBarMobile'
@@ -17,18 +17,22 @@ import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
 import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
 import { EMPLEADO_INITIAL_VALUES } from '@/initial-values/empleado'
+import { useAdministrador } from '@/hooks/useAdministrador'
+import { ADMINISTRADOR_INITIAL_VALUES } from '@/initial-values/administrador'
 
 interface NavBarAppProps {
   user: any
   isEmployee: boolean
+  isAdmin: boolean
 }
 
-export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
+export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSignOutButton, setShowSignOutButton] = useState(false)
   const [isSignOut, setIsSignOut] = useState(false)
   const { setEstudiante } = useEstudiante()
   const { setEmpleado } = useEmpleado()
+  const { setAdministrador } = useAdministrador()
   const router = useRouter()
 
   const supabase = createClient()
@@ -39,6 +43,7 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
     setIsSignOut(true)
     setEstudiante(ESTUDIANTE_INITIAL_VALUES)
     setEmpleado(EMPLEADO_INITIAL_VALUES)
+    setAdministrador(ADMINISTRADOR_INITIAL_VALUES)
 
     toast.success('¡Cierre de sesión exitosamente!')
     router.push('/sign-in')
@@ -83,7 +88,7 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
       </NavbarContent>
 
       {
-        (user && !isEmployee)
+        (user && !isEmployee && !isAdmin)
           ? <NavBarContentCenter
               items={menuItemsStudent}
               pathname={pathname}
@@ -152,26 +157,33 @@ export const NavBarApp = ({ user, isEmployee }: NavBarAppProps) => {
       </NavbarContent>
       <NavbarMenu>
         {
-          (!pathname.includes('/profile/employee') && pathname.includes('/profile/student'))
+          (pathname.includes('/profile/student'))
             ? <NavBarMobile
                 items={menuItemsStudent}
                 pathname={pathname}
                 setIsMenuOpen={setIsMenuOpen}
                 isMenuItemsGeneral={false}
               />
-            : (pathname.includes('/profile/employee') && !pathname.includes('/profile/student'))
+            : (pathname.includes('/profile/employee'))
                 ? <NavBarMobile
                     items={menuItemsEmployee}
                     pathname={pathname}
                     setIsMenuOpen={setIsMenuOpen}
                     isMenuItemsGeneral={false}
                   />
-                : <NavBarMobile
-                    items={menuItems}
-                    pathname={pathname}
-                    setIsMenuOpen={setIsMenuOpen}
-                    isMenuItemsGeneral={true}
-                  />
+                : (pathname.includes('/profile/admin'))
+                    ? <NavBarMobile
+                        items={menuItemsAdmin}
+                        pathname={pathname}
+                        setIsMenuOpen={setIsMenuOpen}
+                        isMenuItemsGeneral={false}
+                      />
+                    : <NavBarMobile
+                        items={menuItems}
+                        pathname={pathname}
+                        setIsMenuOpen={setIsMenuOpen}
+                        isMenuItemsGeneral={true}
+                      />
         }
       </NavbarMenu>
     </Navbar>

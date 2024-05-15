@@ -23,6 +23,7 @@ export async function POST (request: Request) {
 
   try {
     const {
+      id_administrador: idAdministrador,
       primer_nombre: primerNombre,
       segundo_nombre: segundoNombre,
       primer_apellido: primerApellido,
@@ -76,6 +77,7 @@ export async function POST (request: Request) {
     const hashedPassword = await encryptPassword(clave)
     const newAdministrador = await db.administradores.create({
       data: {
+        id_administrador: idAdministrador,
         primer_nombre: primerNombre,
         segundo_nombre: segundoNombre,
         primer_apellido: primerApellido,
