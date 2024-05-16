@@ -1,4 +1,5 @@
 import { Aside } from '@/components/Aside'
+import { menuItemsAdmin } from '@/constants/itemsNavBar'
 
 export default function AdminLayout ({
   children
@@ -7,7 +8,7 @@ export default function AdminLayout ({
 }) {
   return (
     <main>
-      <Aside />
+      <Aside items={menuItemsAdmin} />
       {children}
     </main>
   )

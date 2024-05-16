@@ -1,4 +1,5 @@
 import { Aside } from '@/components/Aside'
+import { menuItemsEmployee } from '@/constants/itemsNavBar'
 
 export default function EmployeeLayout ({
   children
@@ -7,7 +8,7 @@ export default function EmployeeLayout ({
 }) {
   return (
     <main>
-      <Aside />
+      <Aside items={menuItemsEmployee} />
       {children}
     </main>
   )
