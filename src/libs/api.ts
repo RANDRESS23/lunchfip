@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-console.log('PROCESS: ->', process.env.NEXT_PUBLIC_VERCEL_URL)
+const productDomain = process.env.PRODUCTION_DOMAIN_API ?? process.env.PREVIEW_DOMAIN_API
 
 export default axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://lunchfip.vercel.app/api'
+  baseURL: process.env.NODE_ENV === 'development' ? process.env.DEVELOPMENT_DOMAIN_API : productDomain
 })
