@@ -56,9 +56,9 @@ export const FormRegisterEmployee = ({ onClose, onShoot, supabaseUrl, serviceRol
   const toggleVisibility2 = () => { setPasswordVisible2(!passwordVisible2) }
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    setIsLoading(true)
-
     try {
+      setIsLoading(true)
+
       const response = await api.post('/empleados/verificar', data)
 
       if (response.status === 200) {

@@ -39,3 +39,30 @@ export const empleadosSchema = z.object({
   message: 'Las contraseñas no coinciden.',
   path: ['clave_2']
 })
+
+export const empleadosDataSchema = z.object({
+  id_empleado: z.string(),
+  primer_nombre: z.string().refine(value => nameRegex.test(value), {
+    message: 'El primer nombre solo puede contener letras.'
+  }),
+  segundo_nombre: z.string().optional().refine((value = '') => nameOptionalRegex.test(value), {
+    message: 'El segundo nombre solo puede contener letras.'
+  }),
+  primer_apellido: z.string().refine(value => nameRegex.test(value), {
+    message: 'El primer apellido solo puede contener letras.'
+  }),
+  segundo_apellido: z.string().optional().refine((value = '') => nameOptionalRegex.test(value), {
+    message: 'El segundo apellido solo puede contener letras.'
+  }),
+  numero_documento: z.string().min(7, {
+    message: 'El número de documento debe tener al menos 7 caracteres.'
+  }).max(12, {
+    message: 'El número de documento debe tener máximo 12 caracteres.'
+  }),
+  correo: z.string().email({
+    message: 'El correo debe ser válido.'
+  }),
+  celular: z.string().length(10, {
+    message: 'El número de celular debe tener 10 caracteres.'
+  })
+}).required()

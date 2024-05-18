@@ -185,6 +185,36 @@ export async function PUT (request: Request) {
       celular
     } = estudianteDataSchema.parse(body)
 
+    const currentStudent = await db.estudiantes.findUnique({
+      where: { id_estudiante: idEstudiante }
+    })
+
+    if (currentStudent?.numero_documento !== numeroDocumento) {
+      const existingEstudianteDocumento = await db.estudiantes.findUnique({
+        where: { numero_documento: numeroDocumento }
+      })
+
+      if (existingEstudianteDocumento !== null) {
+        return NextResponse.json(
+          { messsage: '¡El número de documento ya existe en nuestra base de datos!' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (currentStudent?.celular !== celular) {
+      const existingEstudianteCelular = await db.estudiantes.findUnique({
+        where: { celular }
+      })
+
+      if (existingEstudianteCelular !== null) {
+        return NextResponse.json(
+          { messsage: '¡El número de celular ya existe en nuestra base de datos!' },
+          { status: 400 }
+        )
+      }
+    }
+
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())

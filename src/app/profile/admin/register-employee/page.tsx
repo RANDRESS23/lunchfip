@@ -41,7 +41,10 @@ export default async function RegisterEmployeePage () {
         supabaseUrl={supabaseUrl}
         serviceRolKey={serviceRolKey}
       />
-      <EmployeeTable />
+      <EmployeeTable
+        supabaseUrl={supabaseUrl}
+        serviceRolKey={serviceRolKey}
+      />
     </div>
   )
 }

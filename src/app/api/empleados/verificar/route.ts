@@ -10,6 +10,7 @@ export async function POST (request: Request) {
       numero_documento: numeroDocumento,
       correo,
       clave,
+      celular,
       clave_2: clave2
     } = empleadosSchema.parse(body)
 
@@ -31,6 +32,17 @@ export async function POST (request: Request) {
     if (existingEmpleadoEmail !== null) {
       return NextResponse.json(
         { messsage: '¡El correo electrónico ya existe en la base de datos!' },
+        { status: 400 }
+      )
+    }
+
+    const existingEmpleadoCelular = await db.empleados.findUnique({
+      where: { celular }
+    })
+
+    if (existingEmpleadoCelular !== null) {
+      return NextResponse.json(
+        { messsage: '¡El número de celular ya existe en nuestra base de datos!' },
         { status: 400 }
       )
     }

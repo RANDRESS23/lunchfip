@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
+import { useEmpleadoStore } from '@/store/empleados'
 
 export const useEmailsEmpleados = () => {
-  const [empleados, setEmpleados] = useState<Empleado[]>([])
+  const empleados = useEmpleadoStore(state => state.empleados)
+  const setEmpleados = useEmpleadoStore(state => state.setEmpleados)
   const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
   const [loadingEmailsEmpleados, setLoadingEmailsEmpleados] = useState(false)
 
@@ -27,5 +29,5 @@ export const useEmailsEmpleados = () => {
     getEmailsEmpleados()
   }, [])
 
-  return { empleados, emailsEmpleados, loadingEmailsEmpleados }
+  return { empleados, setEmpleados, emailsEmpleados, loadingEmailsEmpleados }
 }

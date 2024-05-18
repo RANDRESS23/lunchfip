@@ -1,6 +1,6 @@
 import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
-import { empleadosSchema } from './schema'
+import { empleadosDataSchema, empleadosSchema } from './schema'
 import { NextResponse } from 'next/server'
 
 export async function GET () {
@@ -100,6 +100,118 @@ export async function POST (request: Request) {
     return NextResponse.json(
       { empleado, message: '¡Empleado registrado exitosamente!' },
       { status: 201 }
+    )
+  } catch (error: any) {
+    console.error({ error })
+
+    if (error?.errors !== null) {
+      const errorsMessages: Record<string, string> = {}
+      const { errors } = error
+
+      errors.forEach(
+        ({ message, path }: { message: string, path: string[] }) => {
+          if (!Object.values(errorsMessages).includes(message)) {
+            errorsMessages[path.join('')] = message
+          }
+        }
+      )
+
+      return NextResponse.json(errorsMessages, { status: 500 })
+    }
+
+    return NextResponse.json(
+      { message: 'Something went wrong.', error },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT (request: Request) {
+  const body = await request.json()
+
+  try {
+    const {
+      id_empleado: idEmpleado,
+      primer_nombre: primerNombre,
+      segundo_nombre: segundoNombre,
+      primer_apellido: primerApellido,
+      segundo_apellido: segundoApellido,
+      numero_documento: numeroDocumento,
+      correo,
+      celular
+    } = empleadosDataSchema.parse(body)
+
+    const currentEmployee = await db.empleados.findUnique({
+      where: { id_empleado: idEmpleado }
+    })
+
+    if (currentEmployee?.numero_documento !== numeroDocumento) {
+      const existingEmpleadoDocumento = await db.empleados.findUnique({
+        where: { id_empleado: idEmpleado }
+      })
+
+      if (existingEmpleadoDocumento !== null) {
+        return NextResponse.json(
+          { messsage: '¡El número de documento ya existe en la base de datos!' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (currentEmployee?.correo !== correo) {
+      const existingEmpleadoEmail = await db.empleados.findUnique({
+        where: { correo }
+      })
+
+      if (existingEmpleadoEmail !== null) {
+        return NextResponse.json(
+          { messsage: '¡El correo electrónico ya existe en la base de datos!' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (currentEmployee?.celular !== celular) {
+      const existingEmpleadoCelular = await db.empleados.findUnique({
+        where: { celular }
+      })
+
+      if (existingEmpleadoCelular !== null) {
+        return NextResponse.json(
+          { messsage: '¡El número de celular ya existe en nuestra base de datos!' },
+          { status: 400 }
+        )
+      }
+    }
+
+    const dateAux = new Date()
+    dateAux.setUTCHours(dateAux.getUTCHours() - 5)
+    const currentDate = new Date(dateAux.toString())
+
+    const updatedEmpleado = await db.empleados.update({
+      data: {
+        primer_nombre: primerNombre,
+        segundo_nombre: segundoNombre,
+        primer_apellido: primerApellido,
+        segundo_apellido: segundoApellido,
+        numero_documento: numeroDocumento,
+        correo,
+        celular,
+        updatedAt: currentDate
+      },
+      where: { id_empleado: idEmpleado }
+    })
+
+    const empleados = await db.empleados.findMany()
+    const { clave: _, ...empleado } = updatedEmpleado
+
+    return NextResponse.json(
+      {
+        empleado,
+        empleados,
+        message: '¡Empleado actualizado exitosamente!'
+      },
+      { status: 200 }
     )
   } catch (error: any) {
     console.error({ error })
