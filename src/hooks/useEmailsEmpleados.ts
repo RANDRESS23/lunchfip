@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
 
 export const useEmailsEmpleados = () => {
+  const [empleados, setEmpleados] = useState<Empleado[]>([])
   const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
   const [loadingEmailsEmpleados, setLoadingEmailsEmpleados] = useState(false)
 
@@ -14,6 +15,7 @@ export const useEmailsEmpleados = () => {
         const response = await api.get('/empleados')
         const emails: string[] = response.data.map((empleado: Empleado) => empleado.correo)
 
+        setEmpleados(response.data as Empleado[])
         setEmailsEmpleados(emails)
       } catch (error) {
         console.log(error)
@@ -25,5 +27,5 @@ export const useEmailsEmpleados = () => {
     getEmailsEmpleados()
   }, [])
 
-  return { emailsEmpleados, loadingEmailsEmpleados }
+  return { empleados, emailsEmpleados, loadingEmailsEmpleados }
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs'
 import { Toaster } from 'sonner'
 import NextUIProviderContext from '@/providers/NextUIProvider'
 import { NavBar } from '@/components/Navbar'
@@ -38,13 +37,11 @@ export default function RootLayout ({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
-        <ClerkProvider>
-          <NextUIProviderContext>
-            <Toaster />
-            <NavBar />
-            {children}
-          </NextUIProviderContext>
-        </ClerkProvider>
+        <NextUIProviderContext>
+          <Toaster />
+          <NavBar />
+          {children}
+        </NextUIProviderContext>
       </body>
     </html>
   )

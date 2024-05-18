@@ -119,7 +119,7 @@ export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
                           'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-white dark:bg-black px-3 py-1 text-sm font-medium hover:text-black dark:hover:text-white backdrop-blur-3xl transition-all',
                           pathname === '/sign-up' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark')}
                         >
-                          Cerrar Sesión
+                          {isSignOut ? 'Cerrando..' : 'Cerrar Sesión'}
                         </span>
                       </button>
                     </ButtonsCard>

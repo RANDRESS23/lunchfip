@@ -66,7 +66,7 @@ export const NavBarMobile = (
                             }}
                             disabled={isSignOut}
                           >
-                            Cerrar Sesión
+                            {isSignOut ? 'Cerrando...' : 'Cerrar Sesión'}
                           </button>
                           <Divider className='mt-2' />
                         </>
