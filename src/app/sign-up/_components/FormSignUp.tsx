@@ -123,6 +123,7 @@ export const FormSignUp = () => {
               isRequired
               name="primer_nombre"
               register={register}
+              disabled={isLoading}
               errors={errors}
             />
 
@@ -132,6 +133,7 @@ export const FormSignUp = () => {
               isRequired={false}
               name="segundo_nombre"
               register={register}
+              disabled={isLoading}
               errors={errors}
             />
 
@@ -141,6 +143,7 @@ export const FormSignUp = () => {
               isRequired
               name="primer_apellido"
               register={register}
+              disabled={isLoading}
               errors={errors}
             />
 
@@ -150,6 +153,7 @@ export const FormSignUp = () => {
               isRequired={false}
               name="segundo_apellido"
               register={register}
+              disabled={isLoading}
               errors={errors}
             />
 
@@ -157,7 +161,7 @@ export const FormSignUp = () => {
               label="Tipo de documento"
               isRequired
               name="id_tipo_documento"
-              disabled={loadingTiposDocumento}
+              disabled={loadingTiposDocumento || isLoading}
               options={
                 tiposDocumento.map(tipoDocumento => ({ label: tipoDocumento.tipo_documento, value: tipoDocumento.id_tipo_documento }))
               }
@@ -171,6 +175,7 @@ export const FormSignUp = () => {
               isRequired
               name="numero_documento"
               register={register}
+              disabled={isLoading}
               endContent={
                 <div className="h-full flex justify-center items-center">
                   <HiIdentification className="text-2xl text-default-400 pointer-events-none" />
@@ -183,7 +188,7 @@ export const FormSignUp = () => {
               label="Facultad"
               isRequired
               name="id_facultad"
-              disabled={loadingFacultades}
+              disabled={loadingFacultades || isLoading}
               options={
                 facultades.map(facultad => ({ label: facultad.facultad, value: facultad.id_facultad }))
               }
@@ -195,7 +200,7 @@ export const FormSignUp = () => {
               label="Programa académico"
               isRequired
               name="id_programa"
-              disabled={!(dirtyFields.id_facultad as boolean) || loadingProgramas}
+              disabled={!(dirtyFields.id_facultad as boolean) || loadingProgramas || isLoading}
               options={
                 programas
                   .filter(programa => programa.id_facultad === watch('id_facultad'))
@@ -211,6 +216,7 @@ export const FormSignUp = () => {
               isRequired
               name="celular"
               register={register}
+              disabled={isLoading}
               endContent={
                 <div className="h-full flex justify-center items-center">
                   <MdPhoneIphone className="text-2xl text-default-400 pointer-events-none" />
@@ -223,7 +229,7 @@ export const FormSignUp = () => {
               label="Sexo"
               isRequired
               name="id_sexo"
-              disabled={loadingSexos}
+              disabled={loadingSexos || isLoading}
               options={
                 sexos.map(sexo => ({ label: sexo.sexo, value: sexo.id_sexo }))
               }
@@ -237,6 +243,7 @@ export const FormSignUp = () => {
               isRequired
               name="correo_institucional"
               register={register}
+              disabled={isLoading}
               endContent={
                 <div className="pointer-events-none flex items-center h-full">
                   <span className="text-default-400 text-small">@itfip.edu.co</span>
@@ -251,6 +258,7 @@ export const FormSignUp = () => {
               isRequired
               name="clave"
               register={register}
+              disabled={isLoading}
               endContent={
                 <button className="focus:outline-none h-full" type="button" onClick={toggleVisibility}>
                   {passwordVisible
@@ -271,6 +279,7 @@ export const FormSignUp = () => {
               isRequired
               name="clave_2"
               register={register}
+              disabled={isLoading}
               endContent={
                 <button className="focus:outline-none h-full" type="button" onClick={toggleVisibility2}>
                   {passwordVisible2

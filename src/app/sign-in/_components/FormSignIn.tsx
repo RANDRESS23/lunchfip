@@ -126,6 +126,7 @@ export const FormSignIn = () => {
           isRequired
           name="correo"
           register={register}
+          disabled={isLoading}
           endContent={
             <div className="pointer-events-none flex items-center h-full">
               <span className="text-default-400 text-small">@itfip.edu.co</span>
@@ -140,6 +141,7 @@ export const FormSignIn = () => {
           isRequired
           name="clave"
           register={register}
+          disabled={isLoading}
           endContent={
             <button className="focus:outline-none h-full" type="button" onClick={toggleVisibility}>
               {passwordVisible

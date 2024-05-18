@@ -28,7 +28,6 @@ export async function POST (request: Request) {
       segundo_nombre: segundoNombre,
       primer_apellido: primerApellido,
       segundo_apellido: segundoApellido,
-      id_tipo_documento: idTipoDocumento,
       numero_documento: numeroDocumento,
       correo,
       clave,
@@ -70,6 +69,8 @@ export async function POST (request: Request) {
       where: { rol: 'Empleado' }
     })
 
+    const tiposDocumento = await db.tipos_Documento.findMany()
+
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
@@ -82,7 +83,7 @@ export async function POST (request: Request) {
         segundo_nombre: segundoNombre,
         primer_apellido: primerApellido,
         segundo_apellido: segundoApellido,
-        id_tipo_documento: idTipoDocumento,
+        id_tipo_documento: tiposDocumento[0].id_tipo_documento,
         numero_documento: numeroDocumento,
         correo,
         clave: hashedPassword,
