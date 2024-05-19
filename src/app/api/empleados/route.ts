@@ -95,10 +95,15 @@ export async function POST (request: Request) {
       }
     })
 
+    const empleados = await db.empleados.findMany()
     const { clave: _, ...empleado } = newEmpleado
 
     return NextResponse.json(
-      { empleado, message: '¡Empleado registrado exitosamente!' },
+      {
+        empleado,
+        empleados,
+        message: '¡Empleado registrado exitosamente!'
+      },
       { status: 201 }
     )
   } catch (error: any) {

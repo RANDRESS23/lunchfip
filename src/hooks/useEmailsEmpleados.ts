@@ -7,12 +7,12 @@ export const useEmailsEmpleados = () => {
   const empleados = useEmpleadoStore(state => state.empleados)
   const setEmpleados = useEmpleadoStore(state => state.setEmpleados)
   const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
-  const [loadingEmailsEmpleados, setLoadingEmailsEmpleados] = useState(false)
+  const [loadingEmpleados, setLoadingEmpleados] = useState(false)
 
   useEffect(() => {
     const getEmailsEmpleados = async () => {
       try {
-        setLoadingEmailsEmpleados(true)
+        setLoadingEmpleados(true)
 
         const response = await api.get('/empleados')
         const emails: string[] = response.data.map((empleado: Empleado) => empleado.correo)
@@ -22,12 +22,12 @@ export const useEmailsEmpleados = () => {
       } catch (error) {
         console.log(error)
       } finally {
-        setLoadingEmailsEmpleados(false)
+        setLoadingEmpleados(false)
       }
     }
 
     getEmailsEmpleados()
   }, [])
 
-  return { empleados, setEmpleados, emailsEmpleados, loadingEmailsEmpleados }
+  return { empleados, setEmpleados, emailsEmpleados, loadingEmpleados }
 }

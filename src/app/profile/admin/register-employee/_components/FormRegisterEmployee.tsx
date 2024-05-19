@@ -16,6 +16,8 @@ import { toast } from 'sonner'
 import { createClient } from '@supabase/supabase-js'
 import { empleadosSchema } from '@/app/api/empleados/schema'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
+import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { type Empleado } from '@/types/empleados'
 
 interface FormRegisterEmployeeProps {
   onClose: () => void
@@ -27,6 +29,7 @@ interface FormRegisterEmployeeProps {
 export const FormRegisterEmployee = ({ onClose, onShoot, supabaseUrl, serviceRolKey }: FormRegisterEmployeeProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordVisible2, setPasswordVisible2] = useState(false)
+  const { setEmpleados } = useEmailsEmpleados()
   const [isLoading, setIsLoading] = useState(false)
   const { sexos, loadingSexos } = useSexos()
 
@@ -82,8 +85,9 @@ export const FormRegisterEmployee = ({ onClose, onShoot, supabaseUrl, serviceRol
         }
 
         if (user) {
-          await api.post('/empleados', { ...data, id_empleado: user.id })
+          const response = await api.post('/empleados', { ...data, id_empleado: user.id })
 
+          setEmpleados(response.data.empleados as Empleado[])
           toast.success(`¡El empleado con el correo ${data.correo} se registró exitosamente!`)
           onShoot()
           onClose()
