@@ -12,6 +12,9 @@ import { totalLunchesSchema } from '@/app/api/almuerzos/schema'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 import { type Almuerzos, type AlmuerzosEntregados, type AlmuerzosReservados } from '@/types/almuerzos'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
+import { Skeleton } from '@nextui-org/react'
+import { useConfetti } from '@/hooks/useConfetti'
+import Realistic from 'react-canvas-confetti/dist/presets/realistic'
 
 interface FormDefineLunchesProps {
   nextDate: Date
@@ -25,6 +28,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
   const setAlmuerzosEntregados = useAlmuerzosStore(state => state.setAlmuerzosEntregados)
   const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
   const [editAmount, setEditAmount] = useState(true)
+  const { onInitHandler, onShoot } = useConfetti()
 
   useEffect(() => {
     setEditAmount(almuerzosTotales?.id_almuerzo === '')
@@ -43,10 +47,16 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    setIsLoading(true)
-
     try {
+      setIsLoading(true)
+
       if (almuerzosTotales?.id_almuerzo !== '') {
+        const isPossibleSubmit = almuerzosTotales.total_almuerzos !== Number(data.total_almuerzos)
+
+        if (!isPossibleSubmit) {
+          return toast.success('¡La cantidad de almuerzos sigue igual, por lo tanto no se ha realizado ningún cambio!')
+        }
+
         const response = await api.patch('/almuerzos', {
           id_almuerzo: almuerzosTotales.id_almuerzo,
           cantidad: data.total_almuerzos
@@ -60,7 +70,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
           setAlmuerzosEntregados(almuerzosEntregados as AlmuerzosEntregados)
 
           toast.success(`¡Cantidad de almuerzos actualizada exitosamente para la fecha ${nextFullDate}!`)
-          setEditAmount(false)
+          onShoot()
         }
       } else {
         const response = await api.post('/almuerzos', {
@@ -76,7 +86,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
           setAlmuerzosEntregados(almuerzosEntregados as AlmuerzosEntregados)
 
           toast.success(`¡Cantidad de almuerzos asignada exitosamente para la fecha ${nextFullDate}!`)
-          setEditAmount(false)
+          onShoot()
         }
       }
     } catch (error: any) {
@@ -94,24 +104,25 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
       console.error({ error })
     } finally {
       setIsLoading(false)
+      setEditAmount(false)
     }
   }
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-sm w-11/12 flex flex-col gap-5 mt-10'>
+      <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-sm w-11/12 flex flex-col font-inter-sans'>
         <div className='mb-3'>
           {
             almuerzosTotales?.id_almuerzo !== '' && !editAmount
               ? (
-                  <h2 className='flex items-center flex-wrap text-xl font-semibold dark:text-gray-400 text-gray-800/90 tracking-tighter'>
-                    Ya se registró la cantidad de almuerzos para el día {nextFullDate}
-                  </h2>
+                  <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
+                    Ya se registró la cantidad de almuerzos para el día <span className='font-semibold'>{nextFullDate}</span>
+                  </p>
                 )
               : (
-                  <h2 className='flex items-center flex-wrap text-xl font-semibold dark:text-gray-400 text-gray-800/90 tracking-tighter'>
-                    Registrar la cantidad de almuerzos para el día {nextFullDate}
-                  </h2>
+                  <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
+                    Registrar la cantidad de almuerzos para el día <span className='font-semibold'>{nextFullDate}</span>
+                  </p>
                 )
           }
         </div>
@@ -119,15 +130,14 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
         {
           !loadingAlmuerzosTotales
             ? (
-                <>
+                <div className='flex flex-col justify-center items-center gap-5'>
                   <Input
                     type="number"
                     label="Cantidad de Almuerzos"
                     isRequired
                     name="total_almuerzos"
-                    size="lg"
                     value={almuerzosTotales?.id_almuerzo !== '' ? almuerzosTotales?.total_almuerzos.toString() : ''}
-                    disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '') && !editAmount}
+                    disabled={isLoading || !editAmount}
                     register={register}
                     endContent={
                       <div className="h-full flex justify-center items-center">
@@ -139,8 +149,14 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
 
                   <Button
                     type="submit"
-                    text={almuerzosTotales?.id_almuerzo !== '' ? 'Actualizar' : 'Registrar'}
-                    disabled={(isLoading || almuerzosTotales?.id_almuerzo !== '') && !editAmount}
+                    text={
+                      isLoading
+                        ? 'Cargando...'
+                        : almuerzosTotales?.id_almuerzo !== ''
+                          ? 'Actualizar Cantidad'
+                          : 'Registrar Cantidad'
+                    }
+                    disabled={isLoading || !editAmount}
                   />
 
                   {
@@ -159,18 +175,22 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
                       <Button
                         type="button"
                         text='Cancelar'
-                        disabled={false}
+                        disabled={isLoading}
                         onClick={() => { setEditAmount(false) }}
                       />
                     )
                   }
-                </>
+                </div>
               )
             : (
-                <div>Cargando...</div>
+                <div className='flex flex-col justify-center items-center gap-5'>
+                  <Skeleton className="flex w-full h-[60px] rounded-xl"/>
+                  <Skeleton className="flex w-full h-[60px] rounded-xl"/>
+                </div>
               )
         }
       </form>
+      <Realistic onInit={onInitHandler} />
     </div>
   )
 }

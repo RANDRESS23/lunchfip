@@ -64,45 +64,6 @@ const config: Config = {
           '83.333%': { opacity: '1' },
           '100%': { opacity: '0' }
         },
-        'animation-title-4': {
-          '0%': { backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)' },
-          '16.667%': { backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)' },
-          '33.333%': { backgroundImage: 'linear-gradient(90deg,#7928ca,#ff0080)' },
-          '50%': { backgroundImage: 'linear-gradient(90deg,#7928ca,#ff0080)' },
-          '66.667%': { backgroundImage: 'linear-gradient(90deg,#ff4d4d,#f9cb28)' },
-          '83.333%': { backgroundImage: 'linear-gradient(90deg,#ff4d4d,#f9cb28)' },
-          '100%': { backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)' }
-        },
-        'animation-button': {
-          '0%': {
-            backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)',
-            boxShadow: '0px 0px 20px 2px rgba(0, 223, 216, 0.8)'
-          },
-          '16.667%': {
-            backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)',
-            boxShadow: '0px 0px 20px 2px rgba(0, 223, 216, 0.8)'
-          },
-          '33.333%': {
-            backgroundImage: 'linear-gradient(90deg,#7928ca,#ff0080)',
-            boxShadow: '0px 0px 20px 2px rgba(255, 0, 128, 0.8)'
-          },
-          '50%': {
-            backgroundImage: 'linear-gradient(90deg,#7928ca,#ff0080)',
-            boxShadow: '0px 0px 20px 2px rgba(255, 0, 128, 0.8)'
-          },
-          '66.667%': {
-            backgroundImage: 'linear-gradient(90deg,#ff4d4d,#f9cb28)',
-            boxShadow: '0px 0px 20px 2px rgba(249, 203, 40, 0.8)'
-          },
-          '83.333%': {
-            backgroundImage: 'linear-gradient(90deg,#ff4d4d,#f9cb28)',
-            boxShadow: '0px 0px 20px 2px rgba(249, 203, 40, 0.8)'
-          },
-          '100%': {
-            backgroundImage: 'linear-gradient(90deg,#007cf0,#00dfd8)',
-            boxShadow: '0px 0px 20px 2px rgba(0, 223, 216, 0.8)'
-          }
-        },
         spotlight: {
           '0%': {
             opacity: '0',
@@ -126,8 +87,6 @@ const config: Config = {
         'color-cycle-1': 'animation-title-1 10s ease-in-out infinite',
         'color-cycle-2': 'animation-title-2 10s ease-in-out infinite',
         'color-cycle-3': 'animation-title-3 10s ease-in-out infinite',
-        'color-cycle-4': 'animation-button 12s ease-in-out infinite',
-        'color-cycle-5': 'animation-title-4 12s ease-in-out infinite',
         spotlight: 'spotlight 2s ease .75s 1 forwards',
         shimmer: 'shimmer 2s linear infinite'
       }

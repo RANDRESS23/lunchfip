@@ -10,6 +10,8 @@ import { useEmpleado } from '@/hooks/useEmpleado'
 import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
 import { EMPLEADO_INITIAL_VALUES } from '@/initial-values/empleado'
 import { useState } from 'react'
+import { useAdministrador } from '@/hooks/useAdministrador'
+import { ADMINISTRADOR_INITIAL_VALUES } from '@/initial-values/administrador'
 
 interface NavBarMobileProps {
   items: Array<{ title: string, href: string }>
@@ -26,17 +28,26 @@ export const NavBarMobile = (
   const supabase = createClient()
   const { setEstudiante } = useEstudiante()
   const { setEmpleado } = useEmpleado()
+  const { setAdministrador } = useAdministrador()
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      setIsSignOut(true)
 
-    setIsSignOut(true)
-    setEstudiante(ESTUDIANTE_INITIAL_VALUES)
-    setEmpleado(EMPLEADO_INITIAL_VALUES)
+      await supabase.auth.signOut()
 
-    toast.success('¡Cierre de sesión exitosamente!')
-    router.push('/sign-in')
-    router.refresh()
+      setEstudiante(ESTUDIANTE_INITIAL_VALUES)
+      setEmpleado(EMPLEADO_INITIAL_VALUES)
+      setAdministrador(ADMINISTRADOR_INITIAL_VALUES)
+
+      toast.success('¡Cierre de sesión exitosamente!')
+      router.push('/sign-in')
+      router.refresh()
+    } catch (error) {
+      console.log({ error })
+    } finally {
+      setIsSignOut(false)
+    }
   }
 
   return (

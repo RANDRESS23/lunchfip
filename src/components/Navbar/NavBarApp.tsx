@@ -38,16 +38,23 @@ export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
   const supabase = createClient()
 
   const signOut = async () => {
-    await supabase.auth.signOut()
+    try {
+      setIsSignOut(true)
 
-    setIsSignOut(true)
-    setEstudiante(ESTUDIANTE_INITIAL_VALUES)
-    setEmpleado(EMPLEADO_INITIAL_VALUES)
-    setAdministrador(ADMINISTRADOR_INITIAL_VALUES)
+      await supabase.auth.signOut()
 
-    toast.success('¡Cierre de sesión exitosamente!')
-    router.push('/sign-in')
-    router.refresh()
+      setEstudiante(ESTUDIANTE_INITIAL_VALUES)
+      setEmpleado(EMPLEADO_INITIAL_VALUES)
+      setAdministrador(ADMINISTRADOR_INITIAL_VALUES)
+
+      toast.success('¡Cierre de sesión exitosamente!')
+      router.push('/sign-in')
+      router.refresh()
+    } catch (error) {
+      console.log({ error })
+    } finally {
+      setIsSignOut(false)
+    }
   }
 
   const pathname = usePathname()

@@ -39,18 +39,6 @@ export const menuItemsStudent = [
 
 export const menuItemsEmployee = [
   {
-    title: 'Definir Almuerzos',
-    href: '/profile/employee/lunch',
-    icon: (pathname: string) => (
-      <IoFastFoodSharp
-        className={cn(
-          'text-2xl',
-          pathname === '/profile/employee/lunch' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
-        )}
-      />
-    )
-  },
-  {
     title: 'Reservar Almuerzo',
     href: '/profile/employee/reserve',
     icon: (pathname: string) => (
@@ -97,6 +85,18 @@ export const menuItemsAdmin = [
         className={cn(
           'text-2xl',
           pathname === '/profile/admin/register-employee' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+        )}
+      />
+    )
+  },
+  {
+    title: 'Definir Almuerzos',
+    href: '/profile/admin/lunch',
+    icon: (pathname: string) => (
+      <IoFastFoodSharp
+        className={cn(
+          'text-2xl',
+          pathname === '/profile/admin/lunch' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
         )}
       />
     )
