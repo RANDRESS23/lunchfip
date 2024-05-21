@@ -4,6 +4,7 @@ import { FaMoneyBill1Wave, FaUserPlus } from 'react-icons/fa6'
 import { PiNotePencilFill } from 'react-icons/pi'
 import { IoFastFoodSharp } from 'react-icons/io5'
 import { GiBowlOfRice } from 'react-icons/gi'
+import { FaUserGraduate } from 'react-icons/fa'
 
 import { cn } from '@/libs/utils'
 
@@ -97,6 +98,18 @@ export const menuItemsAdmin = [
         className={cn(
           'text-2xl',
           pathname === '/profile/admin/lunch' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+        )}
+      />
+    )
+  },
+  {
+    title: 'Estudiantes Registrados',
+    href: '/profile/admin/list-students',
+    icon: (pathname: string) => (
+      <FaUserGraduate
+        className={cn(
+          'text-2xl',
+          pathname === '/profile/admin/list-students' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
         )}
       />
     )

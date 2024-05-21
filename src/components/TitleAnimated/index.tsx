@@ -5,17 +5,17 @@ interface TitleAnimatedProps {
   text2: string
   textSize?: string
   isTextLeft?: boolean
+  isTextCol?: boolean
 }
 
-export const TitleAnimated = ({ text1, text2, textSize, isTextLeft }: TitleAnimatedProps) => {
+export const TitleAnimated = ({ text1, text2, textSize, isTextLeft, isTextCol }: TitleAnimatedProps) => {
   const textSizeDefault = 'text-3xl lg:text-4xl'
 
   return (
     <div className={cn(
-      'w-full relative flex items-center text-center mb-5 md:gap-3',
-      text1.length >= 20 ? 'lg:flex-col' : 'lg:flex-row',
-      text1.length >= text2.length ? 'flex-col' : 'flex-row gap-2',
-      isTextLeft === undefined && 'justify-center'
+      'w-full relative flex flex-col items-center text-center mb-5 md:gap-3',
+      isTextLeft === undefined && 'justify-center',
+      isTextCol ? 'lg:flex-col' : 'lg:flex-row'
     )}>
       <span className={cn(
         'bg-clip-text text-transparent bg-gradient-to-b dark:from-white dark:to-neutral-400 from-black/80 to-black font-extrabold',

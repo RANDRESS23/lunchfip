@@ -9,6 +9,8 @@ export const ESTUDIANTE_INITIAL_VALUES = {
   numero_documento: '',
   id_programa: '',
   programa: '',
+  id_facultad: '',
+  facultad: '',
   correo_institucional: '',
   id_sexo: '',
   sexo: '',
@@ -16,6 +18,7 @@ export const ESTUDIANTE_INITIAL_VALUES = {
   saldo: 0,
   imageUrl: '',
   codigoUrl: '',
+  estado: '',
   createdAt: new Date(),
   updatedAt: new Date()
 }

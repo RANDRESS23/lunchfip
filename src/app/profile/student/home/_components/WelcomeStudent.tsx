@@ -15,6 +15,7 @@ export const WelcomeStudent = () => {
         text1='Bienvenido a LunchFip'
         text2={`${firstName} ${lastName}`}
         textSize='text-4xl lg:text-5xl'
+        isTextCol
       />
     </div>
   )

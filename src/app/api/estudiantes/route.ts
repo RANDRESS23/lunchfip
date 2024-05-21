@@ -15,7 +15,67 @@ export async function GET () {
   try {
     const estudiantes = await db.estudiantes.findMany()
 
-    return NextResponse.json(estudiantes)
+    const estudiantesLunchFip = await Promise.all(estudiantes.map(async (estudiante) => {
+      const tipoDocumentoPromise = await db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: estudiante.id_tipo_documento }
+      })
+
+      const sexoPromise = await db.sexos.findUnique({
+        where: { id_sexo: estudiante.id_sexo }
+      })
+
+      const programaPromise = await db.programas.findUnique({
+        where: { id_programa: estudiante.id_programa }
+      })
+
+      const imageEstudiantePromise = await db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante }
+      })
+
+      const codigoQREstudiantePromise = await db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante }
+      })
+
+      const estadoEstudiante = await db.estados_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante }
+      })
+
+      const [
+        tipoDocumento,
+        sexo,
+        programa,
+        imageEstudiante,
+        codigoQREstudiante
+      ] = await Promise.all([
+        tipoDocumentoPromise,
+        sexoPromise,
+        programaPromise,
+        imageEstudiantePromise,
+        codigoQREstudiantePromise
+      ])
+
+      const facultadPromise = await db.facultades.findUnique({
+        where: { id_facultad: programa?.id_facultad }
+      })
+
+      const estadoPromise = await db.estados.findUnique({
+        where: { id_estado: estadoEstudiante?.id_estado }
+      })
+
+      const [
+        facultad,
+        estado
+      ] = await Promise.all([
+        facultadPromise,
+        estadoPromise
+      ])
+
+      return {
+        ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, id_facultad: facultad?.id_facultad, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr, estado: estado?.estado
+      }
+    }))
+
+    return NextResponse.json(estudiantesLunchFip)
   } catch (error) {
     console.error({ error })
 
@@ -129,6 +189,10 @@ export async function POST (request: Request) {
       where: { id_programa: newEstudiante.id_programa }
     })
 
+    const facultad = await db.facultades.findUnique({
+      where: { id_facultad: programa?.id_facultad }
+    })
+
     const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
       where: { id_estudiante: estudiante.id_estudiante }
     })
@@ -137,9 +201,17 @@ export async function POST (request: Request) {
       where: { id_estudiante: estudiante.id_estudiante }
     })
 
+    const estadoEstudiante = await db.estados_Estudiantes.findFirst({
+      where: { id_estudiante: estudiante.id_estudiante }
+    })
+
+    const estado = await db.estados.findUnique({
+      where: { id_estado: estadoEstudiante?.id_estado }
+    })
+
     return NextResponse.json(
       {
-        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
+        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, id_facultad: facultad?.id_facultad, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr, estado: estado?.estado },
         message: '¡Estudiante registrado exitosamente!'
       },
       { status: 201 }
@@ -246,6 +318,10 @@ export async function PUT (request: Request) {
       where: { id_programa: updatedEstudiante.id_programa }
     })
 
+    const facultad = await db.facultades.findUnique({
+      where: { id_facultad: programa?.id_facultad }
+    })
+
     const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
       where: { id_estudiante: updatedEstudiante.id_estudiante }
     })
@@ -254,11 +330,19 @@ export async function PUT (request: Request) {
       where: { id_estudiante: updatedEstudiante.id_estudiante }
     })
 
+    const estadoEstudiante = await db.estados_Estudiantes.findFirst({
+      where: { id_estudiante: updatedEstudiante.id_estudiante }
+    })
+
+    const estado = await db.estados.findUnique({
+      where: { id_estado: estadoEstudiante?.id_estado }
+    })
+
     const { clave: _, ...estudiante } = updatedEstudiante
 
     return NextResponse.json(
       {
-        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr },
+        estudiante: { ...estudiante, tipo_documento: tipoDocumento?.tipo_documento, sexo: sexo?.sexo, programa: programa?.programa, id_facultad: facultad?.id_facultad, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, codigoUrl: codigoQREstudiante?.url_codigo_qr, estado: estado?.estado },
         message: '¡Estudiante actualizado exitosamente!'
       },
       { status: 200 }

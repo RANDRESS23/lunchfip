@@ -24,7 +24,7 @@ export const ItemList = ({ href, icon, title }: ItemListProps) => {
       >
         {icon}
         <span
-          className={cn('ml-3 flex-1 whitespace-nowrap')}
+          className='ml-3 flex-1'
         >
           {title}
         </span>

@@ -97,8 +97,8 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
                   return (
                     <TableCell className='text-center'>
                       <User
-                        avatarProps={{ radius: 'lg', src: item.sexo === 'masculino' ? 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980427/svgs/male-icon_hmnyeh.svg' : 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980438/svgs/female-icon_zktpzk.svg' }}
-                        description='raulquimbaya4@gmail.com'
+                        avatarProps={{ radius: 'lg', src: item.id_sexo === '90e58398-2198-40b9-9a09-e55b6df94bee' ? 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980427/svgs/male-icon_hmnyeh.svg' : 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980438/svgs/female-icon_zktpzk.svg' }}
+                        description={item.correo}
                         name={`${item.primer_nombre} ${item.primer_apellido}`}
                       >
                         <span className='italic'>{item.correo}</span>

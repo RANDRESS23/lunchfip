@@ -25,6 +25,8 @@ export interface Estudiante {
   numero_documento: string
   id_programa: string
   programa: string
+  id_facultad: string
+  facultad: string
   correo_institucional: string
   id_sexo: string
   sexo: string
@@ -32,6 +34,7 @@ export interface Estudiante {
   saldo: number
   imageUrl: string
   codigoUrl: string
+  estado: string
   createdAt: Date
   updatedAt: Date
 }
