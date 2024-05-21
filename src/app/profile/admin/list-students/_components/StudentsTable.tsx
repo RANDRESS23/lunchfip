@@ -1,6 +1,6 @@
 'use client'
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, User, Spinner, Chip } from '@nextui-org/react'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, User, Spinner, Chip, Pagination } from '@nextui-org/react'
 import { toast } from 'sonner'
 import { useConfetti } from '@/hooks/useConfetti'
 import Realistic from 'react-canvas-confetti/dist/presets/realistic'
@@ -9,6 +9,7 @@ import { useEstudiantes } from '@/hooks/useEstudiantes'
 import { createClient } from '@supabase/supabase-js'
 import { BsToggle2Off, BsToggle2On } from 'react-icons/bs'
 import { cn } from '@/libs/utils'
+import { useMemo, useState } from 'react'
 
 interface StudentsTableProps {
   supabaseUrl: string
@@ -16,10 +17,9 @@ interface StudentsTableProps {
 }
 
 export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps) => {
-  const { estudiantes, setEstudiantes, loadingEstudiantes } = useEstudiantes()
+  const [page, setPage] = useState(1)
+  const { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes } = useEstudiantes({ page: page.toString() })
   const { onInitHandler, onShoot } = useConfetti()
-
-  if (estudiantes[0].id_estudiante === '') return null
 
   const handleChangeState = (estado: string, idEstudiante: string, primerNombre: string, primerApellido: string) => {
     if (estado === 'Activo') {
@@ -139,9 +139,31 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
     }
   }
 
+  const rowsPerPage = 20
+
+  const pages = useMemo(() => {
+    return estudiantesCount ? Math.ceil(estudiantesCount / rowsPerPage) : 0
+  }, [estudiantesCount, rowsPerPage])
+  /* cambiar la key de la tableBody despues */
   return (
     <section className='w-full'>
-      <Table isStriped aria-label="Tabla de empleados registrados en LunchFip" shadow='md'>
+      <Table isStriped aria-label="Tabla de estudiantes registrados en LunchFip" shadow='md' bottomContent={
+        pages > 0
+          ? (
+              <div className="flex w-full justify-center">
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="primary"
+                  page={page}
+                  total={pages}
+                  onChange={(page) => { setPage(page) }}
+                />
+              </div>
+            )
+          : null
+      }>
         <TableHeader>
           <TableColumn className='text-center bg-[#f3f2f2] dark:bg-[#3f3f4666] text-black dark:text-white transition-all'>USUARIO</TableColumn>
           <TableColumn className='text-center bg-[#f3f2f2] dark:bg-[#3f3f4666] text-black dark:text-white transition-all'>NOMBRE</TableColumn>
@@ -151,8 +173,8 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
           <TableColumn className='text-center bg-[#f3f2f2] dark:bg-[#3f3f4666] text-black dark:text-white transition-all'>ESTADO</TableColumn>
           <TableColumn className='text-center bg-[#f3f2f2] dark:bg-[#3f3f4666] text-black dark:text-white transition-all'>ACCIONES</TableColumn>
         </TableHeader>
-        <TableBody items={estudiantes} emptyContent={'No hay empleados registrados en LunchFip.'} isLoading={loadingEstudiantes} loadingContent={<Spinner label="Cargando..." />}>
-          {estudiantes.map((item) => (
+        <TableBody items={estudiantes} emptyContent={'No hay estudiantes registrados en LunchFip.'} isLoading={loadingEstudiantes} loadingContent={<Spinner label="Cargando..." />}>
+          {estudiantes.filter((item) => item.id_estudiante !== '').map((item) => (
             <TableRow key={item.id_estudiante}>
               {(columnKey) => {
                 if (columnKey === '$.0') {

@@ -3,9 +3,11 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type Estudiante } from '@/types/estudiantes'
 
-export const useEstudiantes = () => {
+export const useEstudiantes = ({ page }: { page: string }) => {
   const estudiantes = useEstudianteStore(state => state.estudiantes)
   const setEstudiantes = useEstudianteStore(state => state.setEstudiantes)
+  const estudiantesCount = useEstudianteStore(state => state.estudiantesCount)
+  const setEstudiantesCount = useEstudianteStore(state => state.setEstudiantesCount)
   const [loadingEstudiantes, setLoadingEstudiantes] = useState(false)
 
   useEffect(() => {
@@ -13,9 +15,10 @@ export const useEstudiantes = () => {
       try {
         setLoadingEstudiantes(true)
 
-        const response = await api.get('/estudiantes')
+        const response = await api.get(`/estudiantes?page=${page}`)
 
-        setEstudiantes(response.data as Estudiante[])
+        setEstudiantes(response.data.estudiantes as Estudiante[])
+        setEstudiantesCount(response.data.estudiantesCount as number)
       } catch (error) {
         console.log(error)
       } finally {
@@ -24,7 +27,7 @@ export const useEstudiantes = () => {
     }
 
     getEmailsEmpleados()
-  }, [])
+  }, [page])
 
-  return { estudiantes, setEstudiantes, loadingEstudiantes }
+  return { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes }
 }

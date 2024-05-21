@@ -35,7 +35,7 @@ export default async function ListStudentsPage () {
         text2='Registrados'
         isTextLeft
       />
-      <p className='w-full z-10 -mt-3 mb-7 text-p-light dark:text-p-dark'>En esta sección podrás visualizar a los estudiantes registrados dentro de LunchFip, así como también cambiar sus estados de <span className='italic'>{'"Activo"'}</span> a <span className='italic'>{'"inactivo"'}</span> o viceversa.</p>
+      <p className='w-full z-10 -mt-3 mb-7 text-p-light dark:text-p-dark'>En esta sección podrás visualizar a los estudiantes registrados dentro de LunchFip, así como también cambiar sus estados de <span className='italic'>{'"Activo"'}</span> a <span className='italic'>{'"Inactivo"'}</span> o viceversa.</p>
       <StudentsTable
         supabaseUrl={supabaseUrl}
         serviceRolKey={serviceRolKey}

@@ -94,7 +94,22 @@ const config: Config = {
   },
   darkMode: 'class',
   plugins: [
-    nextui()
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: '#00aaff',
+            secondary: '#ff3366'
+          }
+        },
+        dark: {
+          colors: {
+            primary: '#00aaff',
+            secondary: '#ff3366'
+          }
+        }
+      }
+    })
   ]
 }
 

@@ -11,9 +11,20 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-export async function GET () {
+export async function GET (request: Request) {
   try {
-    const estudiantes = await db.estudiantes.findMany()
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+
+    if (page === null) {
+      return NextResponse.json(
+        { messsage: '¡El parámetro "page" es requerido!' },
+        { status: 400 }
+      )
+    }
+
+    const estudiantesTotal = await db.estudiantes.findMany()
+    const estudiantes = estudiantesTotal.slice(20 * (Number(page) - 1), 20 * Number(page))
 
     const estudiantesLunchFip = await Promise.all(estudiantes.map(async (estudiante) => {
       const tipoDocumentoPromise = await db.tipos_Documento.findUnique({
@@ -75,7 +86,10 @@ export async function GET () {
       }
     }))
 
-    return NextResponse.json(estudiantesLunchFip)
+    return NextResponse.json({
+      estudiantes: estudiantesLunchFip,
+      estudiantesCount: estudiantesTotal.length
+    })
   } catch (error) {
     console.error({ error })
 
