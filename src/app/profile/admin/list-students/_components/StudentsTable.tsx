@@ -129,9 +129,9 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) => {
-        const fullName = `${user.primer_nombre} ${user.segundo_nombre} ${user.primer_apellido} ${user.segundo_apellido}`
+        const document = `${user.numero_documento}`
 
-        return fullName.toLowerCase().includes(filterValue.toLowerCase())
+        return document.includes(filterValue)
       })
     }
     if (statusFilter !== 'all' && Array.from(statusFilter).length !== STATUS_OPTIONS.length) {

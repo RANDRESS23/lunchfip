@@ -5,8 +5,8 @@ export const getEmployeeEmails = async () => {
   let employeeEmails: string[] = []
 
   try {
-    const { data } = await api.get('/empleados')
-    const emails: string[] = data.map((empleado: Empleado) => empleado.correo)
+    const response = await api.get(`/empleados/?page=${1}&rows=${10}`)
+    const emails: string[] = response.data.totalEmpleados.map((empleado: Empleado) => empleado.correo)
 
     employeeEmails = emails
   } catch (error) {

@@ -168,21 +168,36 @@ export async function POST (request: Request) {
     })
 
     const empleadosAux = await db.empleados.findMany()
-    const empleados = empleadosAux.map(async (empleado) => {
-      const sexo = await db.sexos.findUnique({
+    const empleados = await Promise.all(empleadosAux.map(async (empleado) => {
+      const sexoPromise = await db.sexos.findUnique({
         where: { id_sexo: empleado.id_sexo }
       })
 
-      const estadoEmpleado = await db.estados_Empleados.findFirst({
+      const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
         where: { id_empleado: empleado.id_empleado }
       })
 
-      const estado = await db.estados.findUnique({
+      const [
+        sexo,
+        estadoEmpleado
+      ] = await Promise.all([
+        sexoPromise,
+        estadoEmpleadoPromise
+      ])
+
+      const estadoPromise = await db.estados.findUnique({
         where: { id_estado: estadoEmpleado?.id_estado }
       })
 
+      const [
+        estado
+      ] = await Promise.all([
+        estadoPromise
+      ])
+
       return { ...empleado, sexo: sexo?.sexo, estado: estado?.estado }
-    })
+    }))
+
     const { clave: _, ...empleado } = newEmpleado
 
     return NextResponse.json(
@@ -318,21 +333,35 @@ export async function PUT (request: Request) {
     })
 
     const empleadosAux = await db.empleados.findMany()
-    const empleados = empleadosAux.map(async (empleado) => {
-      const sexo = await db.sexos.findUnique({
+    const empleados = await Promise.all(empleadosAux.map(async (empleado) => {
+      const sexoPromise = await db.sexos.findUnique({
         where: { id_sexo: empleado.id_sexo }
       })
 
-      const estadoEmpleado = await db.estados_Empleados.findFirst({
+      const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
         where: { id_empleado: empleado.id_empleado }
       })
 
-      const estado = await db.estados.findUnique({
+      const [
+        sexo,
+        estadoEmpleado
+      ] = await Promise.all([
+        sexoPromise,
+        estadoEmpleadoPromise
+      ])
+
+      const estadoPromise = await db.estados.findUnique({
         where: { id_estado: estadoEmpleado?.id_estado }
       })
 
+      const [
+        estado
+      ] = await Promise.all([
+        estadoPromise
+      ])
+
       return { ...empleado, sexo: sexo?.sexo, estado: estado?.estado }
-    })
+    }))
 
     const { clave: _, ...empleado } = updatedEmpleado
 

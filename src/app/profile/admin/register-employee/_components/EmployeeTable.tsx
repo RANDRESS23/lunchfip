@@ -139,9 +139,9 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) => {
-        const fullName = `${user.primer_nombre} ${user.segundo_nombre} ${user.primer_apellido} ${user.segundo_apellido}`
+        const document = `${user.numero_documento}`
 
-        return fullName.toLowerCase().includes(filterValue.toLowerCase())
+        return document.includes(filterValue)
       })
     }
     if (statusFilter !== 'all' && Array.from(statusFilter).length !== STATUS_OPTIONS.length) {
@@ -289,7 +289,7 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
                             </Tooltip>
                           )
                         }
-                        <Tooltip color={item.estado === 'Activo' ? 'success' : 'danger'} content={item.estado === 'Activo' ? 'Deshabilitar Estudiante' : 'Habilitar Estudiante'} >
+                        <Tooltip color={item.estado === 'Activo' ? 'success' : 'danger'} content={item.estado === 'Activo' ? 'Deshabilitar Empleado' : 'Habilitar Empleado'} >
                           <span
                             className={cn(
                               'text-lg cursor-pointer active:opacity-50',

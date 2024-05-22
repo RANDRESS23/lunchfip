@@ -5,6 +5,7 @@ import { PiNotePencilFill } from 'react-icons/pi'
 import { IoFastFoodSharp } from 'react-icons/io5'
 import { GiBowlOfRice } from 'react-icons/gi'
 import { FaUserGraduate } from 'react-icons/fa'
+import { BiSolidFoodMenu } from 'react-icons/bi'
 
 import { cn } from '@/libs/utils'
 
@@ -110,6 +111,18 @@ export const menuItemsAdmin = [
         className={cn(
           'text-2xl',
           pathname === '/profile/admin/list-students' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+        )}
+      />
+    )
+  },
+  {
+    title: 'Reporte Almuerzos',
+    href: '/profile/admin/report-lunches',
+    icon: (pathname: string) => (
+      <BiSolidFoodMenu
+        className={cn(
+          'text-2xl',
+          pathname === '/profile/admin/report-lunches' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
         )}
       />
     )

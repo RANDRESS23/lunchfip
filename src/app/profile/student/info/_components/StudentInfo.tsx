@@ -6,13 +6,13 @@ import { Skeleton } from '@nextui-org/react'
 import { TitleAnimated } from '@/components/TitleAnimated'
 
 export const StudentInfo = () => {
-  const { estudiante } = useEstudiante()
+  const { estudiante, loadingStudent } = useEstudiante()
 
   return (
     <div className='flex flex-col items-center gap-10 h-full font-inter-sans mt-10'>
       <section className='flex flex-col items-center text-center gap-3'>
         {
-          estudiante.imageUrl !== ''
+          estudiante.imageUrl !== '' && !loadingStudent
             ? (
                 <>
                   <section className='w-40 relative flex justify-center items-center overflow-hidden rounded-full z-10'>

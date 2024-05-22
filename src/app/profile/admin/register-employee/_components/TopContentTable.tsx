@@ -57,11 +57,12 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
           <Input
             isClearable
             className="w-full"
-            placeholder="Buscar por nombre..."
+            placeholder="Buscar por número de documento..."
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => { onClear() }}
             onValueChange={onSearchChange}
+            type='number'
           />
           <span
             className={
