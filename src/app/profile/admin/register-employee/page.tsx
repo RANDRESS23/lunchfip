@@ -36,7 +36,7 @@ export default async function RegisterEmployeePage () {
         text2='Empleado'
         isTextLeft
       />
-      <p className='w-full z-10 -mt-3 mb-7 text-p-light dark:text-p-dark'>En esta sección podrás registrar un nuevo empleado, modificar la información de los empleados ya registrados, o simplemente eliminar la cuenta de algún empleado.</p>
+      <p className='w-full z-10 -mt-3 mb-9 text-p-light dark:text-p-dark'>En esta sección podrás registrar un nuevo empleado, modificar la información de los empleados ya registrados, o simplemente eliminar la cuenta de algún empleado.</p>
       <RegisterEmployee
         supabaseUrl={supabaseUrl}
         serviceRolKey={serviceRolKey}

@@ -3,6 +3,7 @@
 import { Button, useDisclosure } from '@nextui-org/react'
 import { UserIcon } from '../icons/UserIcon'
 import { ModalRegisterEmployee } from './ModalRegisterEmployee'
+import { PlusIcon } from '../icons/PlusIcon'
 
 interface RegisterEmployeeProps {
   supabaseUrl: string
@@ -13,8 +14,18 @@ export const RegisterEmployee = ({ supabaseUrl, serviceRolKey }: RegisterEmploye
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <div className='w-full flex justify-start mb-5'>
-      <Button color="success" variant="bordered" startContent={<UserIcon/>} onClick={onOpen}>
+    <div className='w-full flex justify-start mb-3 font-inter-sans'>
+      <Button
+        color="success"
+        variant="bordered"
+        startContent={
+          <div className='flex justify-center items-center'>
+            <UserIcon/>
+            <PlusIcon className='-ml-2' />
+          </div>
+        }
+        onClick={onOpen}
+      >
         Registrar Nuevo Empleado
       </Button>
       <ModalRegisterEmployee

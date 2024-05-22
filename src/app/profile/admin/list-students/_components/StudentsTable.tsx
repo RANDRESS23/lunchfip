@@ -42,7 +42,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
   const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS))
   const [statusFilter, setStatusFilter] = useState<Selection>('all')
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'age',
+    column: 'nombre',
     direction: 'ascending'
   })
   const { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes } = useEstudiantes({ page: page.toString(), rows: rowsPerPage.toString() })

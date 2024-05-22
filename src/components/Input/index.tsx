@@ -7,6 +7,8 @@ import type {
 import { MyInput } from './InputExtend'
 import { usePathname } from 'next/navigation'
 
+const PATHNAMES_WITHOUT_SPINNER_ANIMATION = ['/sign-up', '/profile/student/info']
+
 interface InputProps {
   type: string
   label?: string
@@ -66,7 +68,7 @@ export const Input = (
             <span
               className={cn(
                 'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10',
-                (pathname === '/sign-up' || pathname === '/profile/student/info') ? 'lg:animate-[spin_2s_linear_infinite]' : 'animate-[spin_2s_linear_infinite]'
+                (PATHNAMES_WITHOUT_SPINNER_ANIMATION.includes(pathname)) ? 'lg:animate-[spin_2s_linear_infinite]' : 'animate-[spin_2s_linear_infinite]'
               )}
             />
           )
