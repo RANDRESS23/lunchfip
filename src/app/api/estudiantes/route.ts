@@ -15,6 +15,7 @@ export async function GET (request: Request) {
   try {
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
+    const rows = searchParams.get('rows')
 
     if (page === null) {
       return NextResponse.json(
@@ -23,8 +24,15 @@ export async function GET (request: Request) {
       )
     }
 
+    if (rows === null) {
+      return NextResponse.json(
+        { messsage: '¡El parámetro "rows" es requerido!' },
+        { status: 400 }
+      )
+    }
+
     const estudiantesTotal = await db.estudiantes.findMany()
-    const estudiantes = estudiantesTotal.slice(20 * (Number(page) - 1), 20 * Number(page))
+    const estudiantes = estudiantesTotal.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
 
     const estudiantesLunchFip = await Promise.all(estudiantes.map(async (estudiante) => {
       const tipoDocumentoPromise = await db.tipos_Documento.findUnique({

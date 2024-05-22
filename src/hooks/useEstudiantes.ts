@@ -3,7 +3,7 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type Estudiante } from '@/types/estudiantes'
 
-export const useEstudiantes = ({ page }: { page: string }) => {
+export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) => {
   const estudiantes = useEstudianteStore(state => state.estudiantes)
   const setEstudiantes = useEstudianteStore(state => state.setEstudiantes)
   const estudiantesCount = useEstudianteStore(state => state.estudiantesCount)
@@ -15,7 +15,7 @@ export const useEstudiantes = ({ page }: { page: string }) => {
       try {
         setLoadingEstudiantes(true)
 
-        const response = await api.get(`/estudiantes?page=${page}`)
+        const response = await api.get(`/estudiantes/?page=${page}&rows=${rows}`)
 
         setEstudiantes(response.data.estudiantes as Estudiante[])
         setEstudiantesCount(response.data.estudiantesCount as number)
