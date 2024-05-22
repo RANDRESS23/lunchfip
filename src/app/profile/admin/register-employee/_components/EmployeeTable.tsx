@@ -2,8 +2,7 @@
 
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, User, useDisclosure, Spinner } from '@nextui-org/react'
 import { EditIcon } from '../icons/EditIcon'
-import { DeleteIcon } from '../icons/DeleteIcon'
-import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { useEmpleados } from '@/hooks/useEmpleados'
 import { ModalEditEmployee } from './ModalEditEmployee'
 import { type Empleado } from '@/types/empleados'
 import { useEmpleado } from '@/hooks/useEmpleado'
@@ -12,6 +11,8 @@ import { toast } from 'sonner'
 import { useConfetti } from '@/hooks/useConfetti'
 import Realistic from 'react-canvas-confetti/dist/presets/realistic'
 import api from '@/libs/api'
+import { cn } from '@/libs/utils'
+import { BsToggle2Off, BsToggle2On } from 'react-icons/bs'
 
 interface EmployeeTableProps {
   supabaseUrl: string
@@ -19,7 +20,7 @@ interface EmployeeTableProps {
 }
 
 export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps) => {
-  const { empleados, setEmpleados, loadingEmpleados } = useEmailsEmpleados()
+  const { empleados, setEmpleados, loadingEmpleados } = useEmpleados({})
   const { setEmpleado } = useEmpleado()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onInitHandler, onShoot } = useConfetti()
@@ -29,16 +30,25 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
     onOpen()
   }
 
-  const handleDeleteEmployee = ({ id_empleado: idEmpleado, primer_nombre: primerNombre, primer_apellido: primerApellido }: { id_empleado: string, primer_nombre: string, primer_apellido: string }) => {
-    toast(`¿Estás seguro que deseas elminar al empleado "${primerNombre} ${primerApellido}?"`, {
-      action: {
-        label: 'Eliminar',
-        onClick: () => { deleteEmployee(idEmpleado) }
-      }
-    })
+  const handleChangeState = (estado: string, idEmpleado: string, primerNombre: string, primerApellido: string) => {
+    if (estado === 'Activo') {
+      toast(`¿Estás seguro que deseas deshabilitar al empleado "${primerNombre} ${primerApellido}?"`, {
+        action: {
+          label: 'Deshabilitar',
+          onClick: () => { handleChangeStateEmployee(idEmpleado, '876600h', 'Inactivo') }
+        }
+      })
+    } else {
+      toast(`¿Estás seguro que deseas habilitar al empleado "${primerNombre} ${primerApellido}?"`, {
+        action: {
+          label: 'Habilitar',
+          onClick: () => { handleChangeStateEmployee(idEmpleado, '0h', 'Activo') }
+        }
+      })
+    }
   }
 
-  const deleteEmployee = async (idEmpleado: string) => {
+  const handleChangeStateEmployee = async (idEmpleado: string, banDuration: string, newState: string) => {
     try {
       const supabase = createClient(supabaseUrl, serviceRolKey, {
         auth: {
@@ -47,20 +57,30 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
         }
       })
 
-      const { error } = await supabase.auth.admin.deleteUser(idEmpleado)
+      const { error } = await supabase.auth.admin.updateUserById(idEmpleado, {
+        ban_duration: banDuration
+      })
 
       if (error) {
         console.log({ error })
 
-        return toast.error('¡Ocurrió un error al eliminar la cuenta del empleado!.')
+        return toast.error(`¡Ocurrió un error al ${newState === 'Inactivo' ? 'deshabilitar' : 'habilitar'} la cuenta del empleado!.`)
       }
 
-      const response = await api.delete(`/empleados/${idEmpleado}`)
+      const response = await api.patch('/empleados/estado', { id_empleado: idEmpleado, estadoNuevo: newState })
 
       if (response.status === 200) {
-        setEmpleados(response.data.empleados as Empleado[])
+        const empleadoUpdated = empleados.map((empleado) => {
+          if (empleado.id_empleado === idEmpleado) {
+            return { ...empleado, estado: newState }
+          }
+
+          return empleado
+        })
+
+        setEmpleados(empleadoUpdated)
         onShoot()
-        toast.success('¡Empleado eliminado exitosamente!')
+        toast.success(`¡Empleado ${newState === 'Inactivo' ? 'deshabilitado' : 'habilitado'} exitosamente!`)
       }
     } catch (error: any) {
       if (error.response?.data !== undefined) {
@@ -90,14 +110,14 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
           <TableColumn className='text-center bg-[#f3f2f2] dark:bg-[#3f3f4666] text-black dark:text-white transition-all'>ACCIONES</TableColumn>
         </TableHeader>
         <TableBody items={empleados} emptyContent={'No hay empleados registrados en LunchFip.'} isLoading={loadingEmpleados} loadingContent={<Spinner label="Cargando..." />}>
-          {empleados.map((item) => (
+          {empleados.filter((item) => item.id_empleado !== '').map((item) => (
             <TableRow key={item.id_empleado}>
               {(columnKey) => {
                 if (columnKey === '$.0') {
                   return (
                     <TableCell className='text-center'>
                       <User
-                        avatarProps={{ radius: 'lg', src: item.id_sexo === '90e58398-2198-40b9-9a09-e55b6df94bee' ? 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980427/svgs/male-icon_hmnyeh.svg' : 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980438/svgs/female-icon_zktpzk.svg' }}
+                        avatarProps={{ radius: 'lg', src: item.sexo === 'Masculino' ? 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980427/svgs/male-icon_hmnyeh.svg' : 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1715980438/svgs/female-icon_zktpzk.svg' }}
                         description={item.correo}
                         name={`${item.primer_nombre} ${item.primer_apellido}`}
                       >
@@ -149,15 +169,19 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
                           <EditIcon />
                         </span>
                       </Tooltip>
-                      <Tooltip color="danger" content="Eliminar Empleado">
-                        <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => {
-                          handleDeleteEmployee({
-                            id_empleado: item.id_empleado,
-                            primer_nombre: item.primer_nombre,
-                            primer_apellido: item.primer_apellido
-                          })
-                        }}>
-                          <DeleteIcon />
+                      <Tooltip color={item.estado === 'Activo' ? 'success' : 'danger'} content={item.estado === 'Activo' ? 'Deshabilitar Estudiante' : 'Habilitar Estudiante'} >
+                        <span
+                          className={cn(
+                            'text-lg cursor-pointer active:opacity-50',
+                            item.estado === 'Activo' ? 'text-success' : 'text-danger'
+                          )}
+                          onClick={() => { handleChangeState(item.estado, item.id_empleado, item.primer_nombre, item.primer_apellido) }}
+                        >
+                          {
+                            item.estado === 'Activo'
+                              ? <BsToggle2On className='text-3xl' />
+                              : <BsToggle2Off className='text-3xl' />
+                          }
                         </span>
                       </Tooltip>
                     </div>

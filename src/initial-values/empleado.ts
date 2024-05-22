@@ -11,6 +11,7 @@ export const EMPLEADO_INITIAL_VALUES = {
   id_sexo: '',
   sexo: '',
   celular: '',
+  estado: '',
   createdAt: new Date(),
   updatedAt: new Date()
 }

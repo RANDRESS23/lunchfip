@@ -13,7 +13,7 @@ import { empleadosDataSchema } from '@/app/api/empleados/schema'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
 import { useEmpleado } from '@/hooks/useEmpleado'
 import { InputControlled } from '@/components/Input/InputControlled'
-import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { useEmpleados } from '@/hooks/useEmpleados'
 import { type Empleado } from '@/types/empleados'
 
 interface FormRegisterEmployeeProps {
@@ -25,7 +25,7 @@ interface FormRegisterEmployeeProps {
 
 export const FormEditEmployee = ({ onClose, onShoot, supabaseUrl, serviceRolKey }: FormRegisterEmployeeProps) => {
   const { empleado, loadingEmpleado } = useEmpleado()
-  const { setEmpleados } = useEmailsEmpleados()
+  const { setEmpleados } = useEmpleados({})
   const [isLoading, setIsLoading] = useState(false)
 
   if (loadingEmpleado) return null

@@ -55,7 +55,7 @@ export async function GET (request: Request) {
         where: { id_estudiante: estudiante.id_estudiante }
       })
 
-      const estadoEstudiante = await db.estados_Estudiantes.findFirst({
+      const estadoEstudiantePromise = await db.estados_Estudiantes.findFirst({
         where: { id_estudiante: estudiante.id_estudiante }
       })
 
@@ -64,13 +64,15 @@ export async function GET (request: Request) {
         sexo,
         programa,
         imageEstudiante,
-        codigoQREstudiante
+        codigoQREstudiante,
+        estadoEstudiante
       ] = await Promise.all([
         tipoDocumentoPromise,
         sexoPromise,
         programaPromise,
         imageEstudiantePromise,
-        codigoQREstudiantePromise
+        codigoQREstudiantePromise,
+        estadoEstudiantePromise
       ])
 
       const facultadPromise = await db.facultades.findUnique({

@@ -3,11 +3,60 @@ import { db } from '@/libs/prismaDB'
 import { empleadosDataSchema, empleadosSchema } from './schema'
 import { NextResponse } from 'next/server'
 
-export async function GET () {
+export async function GET (request: Request) {
   try {
-    const empleados = await db.empleados.findMany()
+    const searchParams = new URL(request.url).searchParams
+    const page = searchParams.get('page')
+    const rows = searchParams.get('rows')
 
-    return NextResponse.json(empleados)
+    if (page === null) {
+      return NextResponse.json(
+        { messsage: '¡El parámetro "page" es requerido!' },
+        { status: 400 }
+      )
+    }
+
+    if (rows === null) {
+      return NextResponse.json(
+        { messsage: '¡El parámetro "rows" es requerido!' },
+        { status: 400 }
+      )
+    }
+
+    const empleadosTotal = await db.empleados.findMany()
+    const empleados = empleadosTotal.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
+
+    const empleadosLunchFip = await Promise.all(empleados.map(async (empleado) => {
+      const sexoPromise = await db.sexos.findUnique({
+        where: { id_sexo: empleado.id_sexo }
+      })
+
+      const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
+        where: { id_empleado: empleado.id_empleado }
+      })
+
+      const [
+        sexo,
+        estado
+      ] = await Promise.all([
+        sexoPromise,
+        estadoEmpleadoPromise
+      ])
+
+      const estadoEmpleado = await db.estados.findUnique({
+        where: { id_estado: estado?.id_estado }
+      })
+
+      return {
+        ...empleado, sexo: sexo?.sexo, estado: estadoEmpleado?.estado
+      }
+    }))
+
+    return NextResponse.json({
+      empleados: empleadosLunchFip,
+      totalEmpleados: empleadosTotal,
+      empleadosCount: empleadosTotal.length
+    })
   } catch (error) {
     console.error({ error })
 
@@ -95,12 +144,50 @@ export async function POST (request: Request) {
       }
     })
 
-    const empleados = await db.empleados.findMany()
+    const estados = await db.estados.findMany()
+
+    await db.estados_Empleados.create({
+      data: {
+        id_empleado: newEmpleado.id_empleado,
+        id_estado: estados[0].id_estado,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      }
+    })
+
+    const sexo = await db.sexos.findUnique({
+      where: { id_sexo: newEmpleado.id_sexo }
+    })
+
+    const estadoEmpleado = await db.estados_Empleados.findFirst({
+      where: { id_empleado: newEmpleado.id_empleado }
+    })
+
+    const estado = await db.estados.findUnique({
+      where: { id_estado: estadoEmpleado?.id_estado }
+    })
+
+    const empleadosAux = await db.empleados.findMany()
+    const empleados = empleadosAux.map(async (empleado) => {
+      const sexo = await db.sexos.findUnique({
+        where: { id_sexo: empleado.id_sexo }
+      })
+
+      const estadoEmpleado = await db.estados_Empleados.findFirst({
+        where: { id_empleado: empleado.id_empleado }
+      })
+
+      const estado = await db.estados.findUnique({
+        where: { id_estado: estadoEmpleado?.id_estado }
+      })
+
+      return { ...empleado, sexo: sexo?.sexo, estado: estado?.estado }
+    })
     const { clave: _, ...empleado } = newEmpleado
 
     return NextResponse.json(
       {
-        empleado,
+        empleado: { ...empleado, sexo: sexo?.sexo, estado: estado?.estado },
         empleados,
         message: '¡Empleado registrado exitosamente!'
       },
@@ -207,12 +294,51 @@ export async function PUT (request: Request) {
       where: { id_empleado: idEmpleado }
     })
 
-    const empleados = await db.empleados.findMany()
+    const estados = await db.estados.findMany()
+
+    await db.estados_Empleados.create({
+      data: {
+        id_empleado: updatedEmpleado.id_empleado,
+        id_estado: estados[0].id_estado,
+        createdAt: currentDate,
+        updatedAt: currentDate
+      }
+    })
+
+    const sexo = await db.sexos.findUnique({
+      where: { id_sexo: updatedEmpleado.id_sexo }
+    })
+
+    const estadoEmpleado = await db.estados_Empleados.findFirst({
+      where: { id_empleado: updatedEmpleado.id_empleado }
+    })
+
+    const estado = await db.estados.findUnique({
+      where: { id_estado: estadoEmpleado?.id_estado }
+    })
+
+    const empleadosAux = await db.empleados.findMany()
+    const empleados = empleadosAux.map(async (empleado) => {
+      const sexo = await db.sexos.findUnique({
+        where: { id_sexo: empleado.id_sexo }
+      })
+
+      const estadoEmpleado = await db.estados_Empleados.findFirst({
+        where: { id_empleado: empleado.id_empleado }
+      })
+
+      const estado = await db.estados.findUnique({
+        where: { id_estado: estadoEmpleado?.id_estado }
+      })
+
+      return { ...empleado, sexo: sexo?.sexo, estado: estado?.estado }
+    })
+
     const { clave: _, ...empleado } = updatedEmpleado
 
     return NextResponse.json(
       {
-        empleado,
+        empleado: { ...empleado, sexo: sexo?.sexo, estado: estado?.estado },
         empleados,
         message: '¡Empleado actualizado exitosamente!'
       },

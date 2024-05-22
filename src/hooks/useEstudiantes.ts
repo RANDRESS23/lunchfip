@@ -29,5 +29,5 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
     getEmailsEmpleados()
   }, [page])
 
-  return { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes }
+  return { estudiantes, estudiantesCount, loadingEstudiantes, setEstudiantes }
 }

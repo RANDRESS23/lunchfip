@@ -10,7 +10,7 @@ import { Button } from '@/components/Button'
 import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { useEmpleados } from '@/hooks/useEmpleados'
 import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
 import Link from 'next/link'
@@ -27,7 +27,7 @@ export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
-  const { emailsEmpleados } = useEmailsEmpleados()
+  const { emailsEmpleados } = useEmpleados({})
   const { emailsAdmin } = useEmailsAdmin()
   const { setEmpleado } = useEmpleado()
   const { setAdministrador } = useAdministrador()

@@ -79,6 +79,22 @@ model Estados_Estudiantes {
   @@index([id_estado])
 }
 
+model Estados_Empleados {
+  id_estado_estudiante  String      @id @default(uuid())
+  
+  id_empleado           String
+  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+
+  id_estado             String
+  estado                Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([id_empleado])
+  @@index([id_estado])
+}
+
 model Empleados {
   id_empleado            String          @id @default(uuid())
   primer_nombre          String          @db.VarChar(50)
@@ -102,6 +118,7 @@ model Empleados {
   id_rol                 String
   rol                    Roles           @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
 
+  estados_empleados      Estados_Empleados[]
   reservas_empleados     Reservas_Empleados[]
   entregas               Entregas[]
   recargas               Recargas[]
@@ -167,6 +184,7 @@ model Estados {
   estado               String      @db.VarChar(20)
 
   estados_estudiantes  Estados_Estudiantes[]
+  estados_empleados    Estados_Empleados[]
   estados_reservas     Estados_Reservas[]
 
   createdAt            DateTime    @default(now())

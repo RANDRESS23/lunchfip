@@ -16,7 +16,7 @@ import { toast } from 'sonner'
 import { createClient } from '@supabase/supabase-js'
 import { empleadosSchema } from '@/app/api/empleados/schema'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
-import { useEmailsEmpleados } from '@/hooks/useEmailsEmpleados'
+import { useEmpleados } from '@/hooks/useEmpleados'
 import { type Empleado } from '@/types/empleados'
 
 interface FormRegisterEmployeeProps {
@@ -29,7 +29,7 @@ interface FormRegisterEmployeeProps {
 export const FormRegisterEmployee = ({ onClose, onShoot, supabaseUrl, serviceRolKey }: FormRegisterEmployeeProps) => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [passwordVisible2, setPasswordVisible2] = useState(false)
-  const { setEmpleados } = useEmailsEmpleados()
+  const { setEmpleados } = useEmpleados({})
   const [isLoading, setIsLoading] = useState(false)
   const { sexos, loadingSexos } = useSexos()
 

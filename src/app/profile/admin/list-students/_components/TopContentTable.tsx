@@ -53,15 +53,22 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-3 items-end">
-        <Input
-          isClearable
-          className="w-full sm:max-w-[44%]"
-          placeholder="Buscar por nombre..."
-          startContent={<SearchIcon />}
-          value={filterValue}
-          onClear={() => { onClear() }}
-          onValueChange={onSearchChange}
-        />
+        <div className='relative overflow-hidden p-[1px] rounded-xl w-full sm:max-w-[44%]'>
+          <Input
+            isClearable
+            className="w-full"
+            placeholder="Buscar por nombre..."
+            startContent={<SearchIcon />}
+            value={filterValue}
+            onClear={() => { onClear() }}
+            onValueChange={onSearchChange}
+          />
+          <span
+            className={
+              'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10 animate-[spin_2s_linear_infinite]'
+            }
+          />
+        </div>
         <div className="flex gap-3">
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
@@ -108,7 +115,7 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
         </div>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-default-400 text-small">Total {estudiantesCount} estudiantes</span>
+        <span className="text-default-400 text-small">Total {estudiantesCount} estudiantes registrados</span>
         <label className="flex items-center text-default-400 text-small">
           Filas por página:
           <select

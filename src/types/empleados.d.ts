@@ -11,6 +11,7 @@ export interface Empleado {
   id_sexo: string
   sexo: string
   celular: string
+  estado: string
   createdAt: Date
   updatedAt: Date
 }
