@@ -9,12 +9,14 @@ import { FaSortAmountUpAlt } from 'react-icons/fa'
 import { Button } from '@/components/Button'
 import { toast } from 'sonner'
 import { totalLunchesSchema } from '@/app/api/almuerzos/schema'
-import { useAlmuerzosStore } from '@/store/almuerzos'
 import { type Almuerzos, type AlmuerzosEntregados, type AlmuerzosReservados } from '@/types/almuerzos'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
 import { Skeleton } from '@nextui-org/react'
 import { useConfetti } from '@/hooks/useConfetti'
 import Realistic from 'react-canvas-confetti/dist/presets/realistic'
+import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
+import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
+import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
 
 interface FormDefineLunchesProps {
   nextDate: Date
@@ -23,10 +25,9 @@ interface FormDefineLunchesProps {
 
 export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const setAlmuerzosTotales = useAlmuerzosStore(state => state.setAlmuerzosTotales)
-  const setAlmuerzosReservados = useAlmuerzosStore(state => state.setAlmuerzosReservados)
-  const setAlmuerzosEntregados = useAlmuerzosStore(state => state.setAlmuerzosEntregados)
-  const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
+  const { setAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: nextDate.toString() })
+  const { almuerzosTotales, loadingAlmuerzosTotales, setAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
   const [editAmount, setEditAmount] = useState(true)
   const { onInitHandler, onShoot } = useConfetti()
 
@@ -172,7 +173,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
 
                   {
                     (almuerzosTotales?.id_almuerzo !== '' && editAmount) && (
-                      <Button
+                      <ButtonLitUpBorders
                         type="button"
                         text='Cancelar'
                         disabled={isLoading}

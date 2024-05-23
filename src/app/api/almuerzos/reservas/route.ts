@@ -42,6 +42,21 @@ export async function POST (request: Request) {
       )
     }
 
+    const almuerzosTotalesDia = await db.almuerzos.findUnique({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    const almuerzosReservadosTotales = await db.almuerzos_Reservados.findUnique({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    if (almuerzosReservadosTotales?.cantidad === almuerzosTotalesDia?.total_almuerzos) {
+      return NextResponse.json(
+        { message: '¡Ya no hay almuerzos disponibles para reservar!.' },
+        { status: 404 }
+      )
+    }
+
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
@@ -115,7 +130,7 @@ export async function POST (request: Request) {
       }
     })
 
-    await db.almuerzos_Reservados.update({
+    const updatedAlmuerzosReservados = await db.almuerzos_Reservados.update({
       data: {
         cantidad: { increment: 1 },
         updatedAt: currentDate
@@ -125,6 +140,7 @@ export async function POST (request: Request) {
 
     return NextResponse.json(
       {
+        almuerzosReservados: updatedAlmuerzosReservados,
         message: '¡Reserva realizada exitosamente!'
       },
       { status: 201 }

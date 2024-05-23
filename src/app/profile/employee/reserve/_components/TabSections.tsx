@@ -6,7 +6,7 @@ import { FormReserve } from './FormReserve'
 
 export const TabSections = () => {
   return (
-    <Tabs aria-label="Options" className='w-full my-5'>
+    <Tabs aria-label="Options" variant='underlined' className='w-full my-5'>
       <Tab key="escanear" title="Escanear" className='w-full'>
         <Card className='py-5'>
           <CardBody>

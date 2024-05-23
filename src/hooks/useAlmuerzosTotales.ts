@@ -30,5 +30,5 @@ export const useAlmuerzosTotales = ({ nextDate }: { nextDate: string }) => {
     getAlmuerzosTotales()
   }, [])
 
-  return { almuerzosTotales, loadingAlmuerzosTotales }
+  return { almuerzosTotales, loadingAlmuerzosTotales, setAlmuerzosTotales }
 }

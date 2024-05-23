@@ -125,7 +125,7 @@ export async function PATCH (request: Request) {
 
     if (almuerzosReservados.cantidad > Number(cantidad)) {
       return NextResponse.json(
-        { message: '¡La cantidad de almuerzos reservados es mayor a la cantidad establecida por el usuario!' },
+        { message: '¡La cantidad de almuerzos reservados es mayor a la cantidad establecida por el administrador!' },
         { status: 400 }
       )
     }

@@ -91,16 +91,30 @@ export const ModalRecharge = ({
             <>
               <div className='relative bg-grid-black dark:bg-grid-white'>
                 <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
-                <ModalHeader className="flex flex-col gap-1">
+                <ModalHeader className="flex justify-between items-center gap-1">
                   <TitleAnimated
                     text1='Recargar'
                     text2='Saldo'
                     textSize='text-3xl'
                     isTextLeft
                   />
-                  <hr className='-mt-3 border-black dark:border-white z-10' />
+                  <Image
+                    src='/svgs/logo-lunchfip-dark.svg'
+                    alt='logo lunchfip'
+                    width={130}
+                    height={130}
+                    className='hidden dark:flex w-32 z-10 -mt-5'
+                  />
+                  <Image
+                    src='/svgs/logo-lunchfip-light.svg'
+                    alt='logo lunchfip'
+                    width={130}
+                    height={130}
+                    className='flex dark:hidden w-32 z-10 -mt-2'
+                  />
                 </ModalHeader>
                 <ModalBody>
+                  <hr className='-mt-7 mb-3 border-black dark:border-white z-10' />
                   <div className='flex gap-5'>
                     <section className='w-2/5 flex justify-center items-center relative overflow-hidden rounded-xl z-10'>
                       <Image

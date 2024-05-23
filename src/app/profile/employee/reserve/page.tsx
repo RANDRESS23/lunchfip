@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { TabSections } from './_components/TabSections'
 import { TitleAnimated } from '@/components/TitleAnimated'
-import { TablesDefineLunches } from '@/components/TablesLunch/TablesDefineLunches'
+import { LunchesReservedStats } from '@/components/LunchesStats/LunchesReservedStats'
 import getNextDate from '@/libs/nextDate'
 import { type Metadata } from 'next'
 import { createClient } from '@/utils/supabase/server'
@@ -26,7 +26,7 @@ export default async function ReservePage () {
   if (isAdmin) return redirect('/profile/admin/home')
   if (!isEmployee) return redirect('/profile/student/home')
 
-  const { nextDate, nextFullDate } = getNextDate()
+  const { nextDate, nextFullDate, isValidHourToReserve } = getNextDate()
 
   return (
     <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
@@ -36,17 +36,36 @@ export default async function ReservePage () {
         text2='Almuerzo'
         isTextLeft
       />
-      <p className='w-full z-10 -mt-3 mb-5 text-p-light dark:text-p-dark'>Reservar almuerzo a estudiante mediante su código QR personal o número de documento.</p>
-      <div className='w-full flex gap-10'>
-        <div className='w-3/5'>
-          <TabSections />
-        </div>
-        <div className='w-2/5'>
-          <TablesDefineLunches
-            nextDate={nextDate}
-            nextFullDate={nextFullDate}
-          />
-        </div>
+      <p className='w-full z-10 -mt-3 mb-8 text-p-light dark:text-p-dark'>Reservar almuerzo a estudiante mediante su código QR personal o número de documento.</p>
+      <div className='w-full flex gap-6'>
+        {
+          isValidHourToReserve
+            ? (
+                <>
+                  <div className='w-2/5'>
+                    <TabSections />
+                  </div>
+                  <div className='w-3/5'>
+                    <LunchesReservedStats
+                      nextDate={nextDate}
+                      nextFullDate={nextFullDate}
+                    />
+                  </div>
+                </>
+              )
+            : (
+                <div className='relative w-full z-10'>
+                  <p className='w-full italic text-center text-color-secondary'>⚠ ¡El tiempo de servicio para reservar almuerzos ha finalizado, gracias por utilizar LunchFip!. ⚠</p>
+                  <p className='w-full mt-2 mb-7 italic text-center text-color-secondary'>Horario de servicio de reservas de almuerzos: Día anterior: 05:00 p.m hasta las 11:00 a.m del día actual</p>
+
+                  <LunchesReservedStats
+                    nextDate={nextDate}
+                    nextFullDate={nextFullDate}
+                    isFlex
+                  />
+                </div>
+              )
+        }
       </div>
     </div>
   )

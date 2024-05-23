@@ -33,5 +33,5 @@ export const useAlmuerzosEntregados = ({ nextDate }: { nextDate: string }) => {
     getAlmuerzosEntregados()
   }, [])
 
-  return { almuerzosEntregados, loadingAlmuerzosEntregados }
+  return { almuerzosEntregados, loadingAlmuerzosEntregados, setAlmuerzosEntregados }
 }

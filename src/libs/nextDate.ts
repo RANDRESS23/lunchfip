@@ -5,15 +5,18 @@ export default function getNextDate () {
   const nextDate = new Date(todayDate.toString())
   const hour = nextDate.getUTCHours()
   const isValidHour = hour >= 15
+  const isValidHourToReserve = hour >= 17 || hour < 11
+  const isValidHourToDelivery = hour >= 11 && hour < 14
+  const isValidHourToDeliveryStats = hour >= 14 && hour < 17
 
-  if (((nextDate.getDay() + 1) === 6) && isValidHour) {
-    nextDate.setDate(nextDate.getDate() + 3)
-  } else if ((nextDate.getDay() + 1) === 7) {
-    nextDate.setDate(nextDate.getDate() + 2)
-  } else if (((nextDate.getDay()) === 0)) {
-    nextDate.setDate(nextDate.getDate() + 1)
-  } else if (isValidHour) {
-    nextDate.setDate(nextDate.getDate() + 1)
+  if (isValidHour) {
+    if (nextDate.getDay() === 5) {
+      nextDate.setDate(nextDate.getDate() + 3)
+    } else if (nextDate.getDay() === 6) {
+      nextDate.setDate(nextDate.getDate() + 2)
+    } else {
+      nextDate.setDate(nextDate.getDate() + 1)
+    }
   }
 
   const year = nextDate.getFullYear()
@@ -22,5 +25,5 @@ export default function getNextDate () {
 
   const nextFullDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`
 
-  return { nextDate, nextFullDate }
+  return { nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats }
 }

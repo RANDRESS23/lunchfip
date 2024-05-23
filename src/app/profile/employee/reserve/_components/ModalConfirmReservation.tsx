@@ -17,6 +17,8 @@ import { useConfetti } from '@/hooks/useConfetti'
 import { TitleAnimated } from '@/components/TitleAnimated'
 import { Button } from '@/components/Button'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
+import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
+import { type AlmuerzosReservados } from '@/types/almuerzos'
 
 interface ModalConfirmReservationProps {
   numeroDocumento: string
@@ -40,6 +42,7 @@ export const ModalConfirmReservation = ({
 
   const { nextDate } = getNextDate()
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
 
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
@@ -59,6 +62,8 @@ export const ModalConfirmReservation = ({
       })
 
       if (response.status === 201) {
+        setAlmuerzosReservados(response.data.almuerzosReservados as AlmuerzosReservados)
+
         onShoot()
         toast.success('¡Reserva realizada exitosamente!')
 
@@ -84,16 +89,30 @@ export const ModalConfirmReservation = ({
             <>
               <div className='relative bg-grid-black dark:bg-grid-white'>
                 <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
-                <ModalHeader className="flex flex-col gap-1">
+                <ModalHeader className="flex justify-between items-center gap-1">
                   <TitleAnimated
                     text1='Reservar'
                     text2='Almuerzo'
                     textSize='text-3xl'
                     isTextLeft
                   />
-                  <hr className='-mt-3 border-black dark:border-white z-10' />
+                  <Image
+                    src='/svgs/logo-lunchfip-dark.svg'
+                    alt='logo lunchfip'
+                    width={130}
+                    height={130}
+                    className='hidden dark:flex w-32 z-10 -mt-5'
+                  />
+                  <Image
+                    src='/svgs/logo-lunchfip-light.svg'
+                    alt='logo lunchfip'
+                    width={130}
+                    height={130}
+                    className='flex dark:hidden w-32 z-10 -mt-2'
+                  />
                 </ModalHeader>
                 <ModalBody>
+                  <hr className='-mt-7 mb-3 border-black dark:border-white z-10' />
                   <div className='flex gap-5'>
                     <section className='w-2/5 flex justify-center items-center relative overflow-hidden rounded-xl z-10'>
                       <Image
