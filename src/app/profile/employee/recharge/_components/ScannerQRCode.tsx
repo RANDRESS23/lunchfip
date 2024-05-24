@@ -35,8 +35,7 @@ export const ScannerQRCode = () => {
 
       try {
         const response = await api.post('/almuerzos/recargas/verificar', {
-          id_estudiante: data,
-          id_empleado: ''
+          id_estudiante: data
         })
 
         if (response.status === 200) {

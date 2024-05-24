@@ -1,18 +1,38 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
-import { recargasSchema } from '../schema'
+import { z } from 'zod'
+
+export const documentAndIdStudentSchema = z.object({
+  id_estudiante: z.string().optional(),
+  numero_documento: z.string().min(7, {
+    message: 'El número de documento debe tener al menos 7 caracteres.'
+  }).max(12, {
+    message: 'El número de documento debe tener máximo 12 caracteres.'
+  }).optional()
+})
 
 export async function POST (request: Request) {
   const body = await request.json()
 
   try {
     const {
-      numero_documento: numeroDocumento
-    } = recargasSchema.parse(body)
+      numero_documento: numeroDocumento,
+      id_estudiante: idEstudiante
+    } = documentAndIdStudentSchema.parse(body)
 
-    const estudiante = await db.estudiantes.findUnique({
-      where: { numero_documento: numeroDocumento }
-    })
+    let estudiante = null
+
+    if (numeroDocumento) {
+      estudiante = await db.estudiantes.findUnique({
+        where: { numero_documento: numeroDocumento }
+      })
+    }
+
+    if (idEstudiante) {
+      estudiante = await db.estudiantes.findUnique({
+        where: { id_estudiante: idEstudiante }
+      })
+    }
 
     if (estudiante === null) {
       return NextResponse.json(
