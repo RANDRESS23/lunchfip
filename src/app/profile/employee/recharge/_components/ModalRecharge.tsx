@@ -46,14 +46,18 @@ export const ModalRecharge = ({
   const { onInitHandler, onShoot } = useConfetti()
 
   const rechargeBalance = async () => {
+    if (newSaldo === 0) {
+      return toast.error('¡Ingresa el valor de la recarga ($500 - $50.000)!')
+    }
+
     try {
       if (newSaldo < 500) {
-        toast.error('El monto mínimo de recarga es de $500')
+        toast.error('¡El monto mínimo de recarga es de $500!')
         return
       }
 
       if (newSaldo > 50000) {
-        toast.error('El monto máximo de recarga es de $50.000')
+        toast.error('¡El monto máximo de recarga es de $50.000!')
         return
       }
 
@@ -67,6 +71,7 @@ export const ModalRecharge = ({
 
       if (response.status === 201) {
         onShoot()
+        setNewSaldo(0)
         toast.success('¡Recarga realizada exitosamente!')
 
         if (reset !== undefined) reset()
@@ -189,7 +194,7 @@ export const ModalRecharge = ({
                       type='number'
                       label='Saldo a recargar'
                       size='lg'
-                      isDisabled={false}
+                      isDisabled={loadingRechargeBalance}
                       color='stone'
                       className='border border-black dark:border-white rounded-xl'
                       endContent={

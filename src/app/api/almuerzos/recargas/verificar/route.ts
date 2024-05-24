@@ -7,11 +7,11 @@ export async function POST (request: Request) {
 
   try {
     const {
-      id_estudiante: idEstudiante
+      numero_documento: numeroDocumento
     } = recargasSchema.parse(body)
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { numero_documento: numeroDocumento }
     })
 
     if (estudiante === null) {

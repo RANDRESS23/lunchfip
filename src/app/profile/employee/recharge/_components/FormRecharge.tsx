@@ -42,28 +42,19 @@ export const FormRecharge = () => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    setIsLoading(true)
-
     try {
-      const response = await api.post('/estudiantes/id-estudiante', {
+      setIsLoading(true)
+
+      const response = await api.post('/almuerzos/recargas/verificar', {
         numero_documento: data.numero_documento
       })
 
       if (response.status === 200) {
-        const { idEstudiante } = response.data
+        const { estudiante } = response.data
 
-        const response2 = await api.post('/almuerzos/recargas/verificar', {
-          id_estudiante: idEstudiante,
-          id_empleado: ''
-        })
+        setEstudiante(estudiante as Estudiante)
 
-        if (response2.status === 200) {
-          const { estudiante } = response2.data
-
-          setEstudiante(estudiante as Estudiante)
-
-          handleOpen()
-        }
+        handleOpen()
       }
     } catch (error: any) {
       if (error.response.data !== undefined) {

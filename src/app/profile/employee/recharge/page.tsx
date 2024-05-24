@@ -33,7 +33,7 @@ export default async function RechargePage () {
         text2='Saldo'
         isTextLeft
       />
-      <p className='w-full z-10 -mt-3 mb-5 text-p-light dark:text-p-dark'>Recargar saldo a estudiante mediante su códigos QR personal o número de documento.</p>
+      <p className='w-full z-10 -mt-3 mb-5 text-p-light dark:text-p-dark'>Recargar saldo a estudiante mediante su código QR personal o número de documento.</p>
       <div className='w-full flex gap-10'>
         <div className='w-3/6'>
           <TabSections />

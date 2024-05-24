@@ -42,9 +42,9 @@ export const FormReserve = () => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
-    setIsLoading(true)
-
     try {
+      setIsLoading(true)
+
       const response = await api.post('/estudiantes/id-estudiante', {
         numero_documento: data.numero_documento
       })
