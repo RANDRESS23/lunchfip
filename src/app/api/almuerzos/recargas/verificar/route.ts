@@ -2,7 +2,7 @@ import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-export const documentAndIdStudentSchema = z.object({
+const documentAndIdStudentSchema = z.object({
   id_estudiante: z.string().optional(),
   numero_documento: z.string().min(7, {
     message: 'El número de documento debe tener al menos 7 caracteres.'
