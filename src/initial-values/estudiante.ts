@@ -22,3 +22,23 @@ export const ESTUDIANTE_INITIAL_VALUES = {
   createdAt: new Date(),
   updatedAt: new Date()
 }
+
+export const ESTUDIANTE_ALMUERZO_INITIAL_VALUES = {
+  id_estudiante: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  tipo_documento: '',
+  numero_documento: '',
+  programa: '',
+  facultad: '',
+  correo_institucional: '',
+  celular: '',
+  imageUrl: '',
+  fecha_reserva: '',
+  hora_reserva: '',
+  estado_reserva: '',
+  fecha_entrega: '',
+  hora_entrega: ''
+}

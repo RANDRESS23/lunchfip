@@ -11,7 +11,7 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
   const [loadingEstudiantes, setLoadingEstudiantes] = useState(false)
 
   useEffect(() => {
-    const getEmailsEmpleados = async () => {
+    const getEstudiantes = async () => {
       try {
         setLoadingEstudiantes(true)
 
@@ -26,8 +26,8 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
       }
     }
 
-    getEmailsEmpleados()
-  }, [page])
+    getEstudiantes()
+  }, [page, rows])
 
   return { estudiantes, estudiantesCount, loadingEstudiantes, setEstudiantes }
 }

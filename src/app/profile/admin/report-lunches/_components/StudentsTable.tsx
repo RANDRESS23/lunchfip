@@ -1,43 +1,34 @@
 'use client'
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Tooltip, User, Spinner, Chip, Pagination, type SortDescriptor, type Selection } from '@nextui-org/react'
-import { toast } from 'sonner'
-import { useConfetti } from '@/hooks/useConfetti'
-import Realistic from 'react-canvas-confetti/dist/presets/realistic'
-import api from '@/libs/api'
-import { useEstudiantes } from '@/hooks/useEstudiantes'
-import { createClient } from '@supabase/supabase-js'
-import { BsToggle2Off, BsToggle2On } from 'react-icons/bs'
-import { cn } from '@/libs/utils'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Spinner, Chip, Pagination, type SortDescriptor, type Selection } from '@nextui-org/react'
 import { useMemo, useState } from 'react'
 import { TopContentTable } from './TopContentTable'
-import { type Estudiante } from '@/types/estudiantes'
-
-interface StudentsTableProps {
-  supabaseUrl: string
-  serviceRolKey: string
-}
+import { type EstudianteAlmuerzo } from '@/types/estudiantes'
+import { type DateValue, today, getLocalTimeZone } from '@internationalized/date'
+import { useEstudiantesAlmuerzos } from '@/hooks/useEstudiantesAlmuerzos'
 
 const COLUMNS = [
   { name: 'USUARIO', uid: 'usuario', sortable: true },
   { name: 'NOMBRE', uid: 'nombre', sortable: true },
   { name: 'DOCUMENTO', uid: 'documento', sortable: true },
   { name: 'PROGRAMA', uid: 'programa', sortable: true },
-  { name: 'CELULAR', uid: 'celular' },
-  { name: 'ESTADO', uid: 'estado', sortable: true },
-  { name: 'ACCIONES', uid: 'acciones' }
+  { name: 'HORA RESERVA', uid: 'hora_reserva', sortable: true },
+  { name: 'ESTADO RESERVA', uid: 'estado_reserva', sortable: true },
+  { name: 'HORA ENTREGA', uid: 'hora_entrega', sortable: true },
+  { name: 'CELULAR', uid: 'celular' }
 ]
 
 const STATUS_OPTIONS = [
-  { name: 'Activo', uid: 'Activo' },
-  { name: 'Inactivo', uid: 'Inactivo' }
+  { name: 'Sin Entregar', uid: 'Activo' },
+  { name: 'Entregado', uid: 'Inactivo' }
 ]
 
-const INITIAL_VISIBLE_COLUMNS = ['usuario', 'nombre', 'documento', 'estado', 'acciones']
+const INITIAL_VISIBLE_COLUMNS = ['usuario', 'documento', 'hora_reserva', 'estado_reserva', 'hora_entrega']
 
-export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps) => {
+export const StudentsTable = () => {
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [fecha, setFecha] = useState<DateValue>(today(getLocalTimeZone()))
   const [filterValue, setFilterValue] = useState('')
   const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS))
   const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -45,76 +36,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
     column: 'nombre',
     direction: 'ascending'
   })
-  const { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes } = useEstudiantes({ page: page.toString(), rows: rowsPerPage.toString() })
-  const { onInitHandler, onShoot } = useConfetti()
-
-  const handleChangeState = (estado: string, idEstudiante: string, primerNombre: string, primerApellido: string) => {
-    if (estado === 'Activo') {
-      toast(`¿Estás seguro que deseas deshabilitar al estudiante "${primerNombre} ${primerApellido}?"`, {
-        action: {
-          label: 'Deshabilitar',
-          onClick: () => { handleChangeStateStudent(idEstudiante, '876600h', 'Inactivo') }
-        }
-      })
-    } else {
-      toast(`¿Estás seguro que deseas habilitar al estudiante "${primerNombre} ${primerApellido}?"`, {
-        action: {
-          label: 'Habilitar',
-          onClick: () => { handleChangeStateStudent(idEstudiante, '0h', 'Activo') }
-        }
-      })
-    }
-  }
-
-  const handleChangeStateStudent = async (idEstudiante: string, banDuration: string, newState: string) => {
-    try {
-      const supabase = createClient(supabaseUrl, serviceRolKey, {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      })
-
-      const { error } = await supabase.auth.admin.updateUserById(idEstudiante, {
-        ban_duration: banDuration
-      })
-
-      if (error) {
-        console.log({ error })
-
-        return toast.error(`¡Ocurrió un error al ${newState === 'Inactivo' ? 'deshabilitar' : 'habilitar'} la cuenta del estudiante!.`)
-      }
-
-      const response = await api.patch('/estudiantes/estado', { id_estudiante: idEstudiante, estadoNuevo: newState })
-
-      if (response.status === 200) {
-        const estudiantesUpdated = estudiantes.map((estudiante) => {
-          if (estudiante.id_estudiante === idEstudiante) {
-            return { ...estudiante, estado: newState }
-          }
-
-          return estudiante
-        })
-
-        setEstudiantes(estudiantesUpdated)
-        onShoot()
-        toast.success(`¡Estudiante ${newState === 'Inactivo' ? 'deshabilitado' : 'habilitado'} exitosamente!`)
-      }
-    } catch (error: any) {
-      if (error.response?.data !== undefined) {
-        const errorsMessages = Object.values(error.response.data as Record<string, string>)
-        let errorsMessagesString = ''
-
-        errorsMessages.forEach((message: any) => {
-          errorsMessagesString += `${message} ${'\n'}`
-        })
-
-        return toast.error(errorsMessagesString)
-      }
-
-      console.error({ error })
-    }
-  }
+  const { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos } = useEstudiantesAlmuerzos({ fecha: fecha.toString(), page: page.toString(), rows: rowsPerPage.toString() })
 
   const hasSearchFilter = Boolean(filterValue)
 
@@ -125,7 +47,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
   }, [visibleColumns])
 
   const filteredItems = useMemo(() => {
-    let filteredUsers = [...estudiantes]
+    let filteredUsers = [...estudiantesAlmuerzos]
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((user) => {
@@ -136,15 +58,15 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
     }
     if (statusFilter !== 'all' && Array.from(statusFilter).length !== STATUS_OPTIONS.length) {
       filteredUsers = filteredUsers.filter((user) =>
-        Array.from(statusFilter).includes(user.estado)
+        Array.from(statusFilter).includes(user.estado_reserva)
       )
     }
 
     return filteredUsers
-  }, [estudiantes, filterValue, statusFilter])
+  }, [estudiantesAlmuerzos, filterValue, statusFilter])
 
   const pages = useMemo(() => {
-    return estudiantesCount ? Math.ceil(filteredItems.length / rowsPerPage) : 0
+    return estudiantesAlmuerzosCount ? Math.ceil(filteredItems.length / rowsPerPage) : 0
   }, [filteredItems, rowsPerPage])
 
   const items = useMemo(() => {
@@ -155,9 +77,9 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
   }, [page, filteredItems, rowsPerPage])
 
   const sortedItems = useMemo(() => {
-    return [...items].sort((a: Estudiante, b: Estudiante) => {
-      const first = a[sortDescriptor.column as keyof Estudiante] as number
-      const second = b[sortDescriptor.column as keyof Estudiante] as number
+    return [...items].sort((a: EstudianteAlmuerzo, b: EstudianteAlmuerzo) => {
+      const first = a[sortDescriptor.column as keyof EstudianteAlmuerzo] ?? 0
+      const second = b[sortDescriptor.column as keyof EstudianteAlmuerzo] ?? 0
       const cmp = first < second ? -1 : first > second ? 1 : 0
 
       return sortDescriptor.direction === 'descending' ? -cmp : cmp
@@ -171,7 +93,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
       aria-label="Tabla de estudiantes registrados en LunchFip"
       isHeaderSticky
       shadow='md'
-      topContent={<TopContentTable estudiantesCount={estudiantesCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEstudiantes={loadingEstudiantes} />}
+      topContent={<TopContentTable estudiantesCount={estudiantesAlmuerzosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} fecha={fecha} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} setFecha={setFecha} loadingEstudiantesAlmuerzos={loadingEstudiantesAlmuerzos} />}
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       topContentPlacement="outside"
@@ -203,7 +125,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={sortedItems} emptyContent={'No hay estudiantes registrados en LunchFip.'} isLoading={loadingEstudiantes} loadingContent={<Spinner label="Cargando..." />}>
+        <TableBody items={sortedItems} emptyContent={'No hay registros para la fecha seleccionada en LunchFip.'} isLoading={loadingEstudiantesAlmuerzos} loadingContent={<Spinner label="Cargando..." />}>
           {sortedItems.filter((item) => item.id_estudiante !== '').map((item) => (
             <TableRow key={item.id_estudiante}>
               {(columnKey) => {
@@ -260,35 +182,33 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
                   )
                 }
 
-                if (columnKey === 'estado') {
+                if (columnKey === 'hora_reserva') {
+                  return (
+                    <TableCell className='text-center'>
+                      <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize italic">{item.hora_reserva}</p>
+                        <p className="text-bold text-sm capitalize text-default-400 italic">{item.fecha_reserva}</p>
+                      </div>
+                    </TableCell>
+                  )
+                }
+
+                if (columnKey === 'estado_reserva') {
                   return (
                     <TableCell className='text-center italic'>
-                      <Chip className="capitalize" color={item.estado === 'Activo' ? 'success' : 'danger'} size="sm" variant="flat">
-                        {item.estado}
+                      <Chip className="capitalize" color={item.estado_reserva === 'Activo' ? 'danger' : 'success'} size="sm" variant="flat">
+                        {item.estado_reserva === 'Activo' ? 'Sin Entregar' : 'Entregado'}
                       </Chip>
                     </TableCell>
                   )
                 }
 
-                if (columnKey === 'acciones') {
+                if (columnKey === 'hora_entrega') {
                   return (
                     <TableCell className='text-center'>
-                      <div className="relative flex items-center justify-center gap-2">
-                        <Tooltip color={item.estado === 'Activo' ? 'success' : 'danger'} content={item.estado === 'Activo' ? 'Deshabilitar Estudiante' : 'Habilitar Estudiante'} >
-                          <span
-                            className={cn(
-                              'text-lg cursor-pointer active:opacity-50',
-                              item.estado === 'Activo' ? 'text-success' : 'text-danger'
-                            )}
-                            onClick={() => { handleChangeState(item.estado, item.id_estudiante, item.primer_nombre, item.primer_apellido) }}
-                          >
-                            {
-                              item.estado === 'Activo'
-                                ? <BsToggle2On className='text-3xl' />
-                                : <BsToggle2Off className='text-3xl' />
-                            }
-                          </span>
-                        </Tooltip>
+                      <div className="flex flex-col">
+                        <p className="text-bold text-sm capitalize italic">{item.hora_entrega}</p>
+                        <p className="text-bold text-sm capitalize text-default-400 italic">{item.fecha_entrega}</p>
                       </div>
                     </TableCell>
                   )
@@ -300,7 +220,6 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
           ))}
         </TableBody>
       </Table>
-      <Realistic onInit={onInitHandler} />
     </section>
   )
 }

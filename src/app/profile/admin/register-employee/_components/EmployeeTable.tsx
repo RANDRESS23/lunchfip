@@ -181,7 +181,7 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
         aria-label="Tabla de empleados registrados en LunchFip"
         isHeaderSticky
         shadow='md'
-        topContent={<TopContentTable empleadosCount={empleadosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} />}
+        topContent={<TopContentTable empleadosCount={empleadosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEmpleados={loadingEmpleados} />}
         sortDescriptor={sortDescriptor}
         onSortChange={setSortDescriptor}
         topContentPlacement="outside"

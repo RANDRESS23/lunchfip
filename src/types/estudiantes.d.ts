@@ -38,3 +38,23 @@ export interface Estudiante {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface EstudianteAlmuerzo {
+  id_estudiante: string
+  primer_nombre: string
+  segundo_nombre: string
+  primer_apellido: string
+  segundo_apellido: string
+  tipo_documento: string
+  numero_documento: string
+  programa: string
+  facultad: string
+  correo_institucional: string
+  celular: string
+  imageUrl: string
+  fecha_reserva: string
+  hora_reserva: string
+  estado_reserva: string
+  fecha_entrega: string
+  hora_entrega: string
+}

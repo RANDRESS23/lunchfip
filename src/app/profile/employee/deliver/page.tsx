@@ -61,7 +61,7 @@ export default async function ReservePage () {
                       ? (
                           <>
                             <p className='w-full italic text-center text-color-secondary'>⚠ ¡El tiempo de servicio para entregar almuerzos ha finalizado, gracias por utilizar LunchFip!. ⚠</p>
-                            <p className='w-full mt-2 mb-7 italic text-center text-color-secondary'>Horario de servicio de entrega de almuerzos: 11:00 a.m hasta las 02:00 p.m</p>
+                            <p className='w-full mt-2 mb-7 italic text-center text-color-secondary'>Horario de servicio de entrega de almuerzos: Lunes a Viernes de 11:00 a.m hasta las 02:00 p.m</p>
                             <LunchesDeliveriedStats
                               nextDate={nextDate}
                               nextFullDate={nextFullDate}
@@ -71,7 +71,7 @@ export default async function ReservePage () {
                       : (
                           <div className='w-full flex flex-col justify-center items-center'>
                             <p className='w-full italic text-center text-color-secondary'>⚠ ¡No se encuentra habilitado el servicio para entregar almuerzos, tienes que esperar el horario disponile!. ⚠</p>
-                            <p className='w-full mt-2 mb-7 italic text-center text-color-secondary'>Horario de servicio de entrega de almuerzos: 11:00 a.m hasta las 02:00 p.m</p>
+                            <p className='w-full mt-2 mb-7 italic text-center text-color-secondary'>Horario de servicio de entrega de almuerzos: Lunes a Viernes de 11:00 a.m hasta las 02:00 p.m</p>
                             <Image
                               src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1716430605/svgs/lunch-time-gif-dark_svixq5.gif'
                               alt='logo lunchfip'

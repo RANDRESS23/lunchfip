@@ -17,7 +17,7 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
   const [loadingEmpleados, setLoadingEmpleados] = useState(false)
 
   useEffect(() => {
-    const getEmailsEmpleados = async () => {
+    const getEmpleados = async () => {
       try {
         setLoadingEmpleados(true)
 
@@ -34,8 +34,8 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
       }
     }
 
-    getEmailsEmpleados()
-  }, [])
+    getEmpleados()
+  }, [page, rows])
 
   return { empleados, empleadosCount, emailsEmpleados, loadingEmpleados, setEmpleados }
 }

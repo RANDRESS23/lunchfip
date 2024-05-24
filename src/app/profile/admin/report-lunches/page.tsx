@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { getAdminEmails } from '@/services/getAdminEmails'
 import { TitleAnimated } from '@/components/TitleAnimated'
+import { StudentsTable } from './_components/StudentsTable'
 
 export async function generateMetadata (): Promise<Metadata> {
   return {
@@ -32,10 +33,7 @@ export default async function ReportLunchesPage () {
         isTextLeft
       />
       <p className='w-full z-10 -mt-3 mb-9 text-p-light dark:text-p-dark'>En esta sección podrás visualizar a los estudiantes que reservaron almuerzo dependiendo de la fecha ingresada, así como también si se les entregó o no el almuerzo correspondiente.</p>
-      {/* <StudentsTable
-        supabaseUrl={supabaseUrl}
-        serviceRolKey={serviceRolKey}
-      /> */}
+      <StudentsTable />
     </div>
   )
 }

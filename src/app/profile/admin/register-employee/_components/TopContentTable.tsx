@@ -2,6 +2,7 @@ import { SearchIcon } from '../icons/SearchIcon'
 import { ChevronDownIcon } from '../icons/ChevronDownIcon'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from '@nextui-org/react'
 import { useCallback } from 'react'
+import { cn } from '@/libs/utils'
 
 const STATUS_OPTIONS = [
   { name: 'Activo', uid: 'Activo' },
@@ -23,6 +24,7 @@ interface TopContentTableProps {
   filterValue: string
   statusFilter: any
   visibleColumns: any
+  loadingEmpleados: boolean
   setVisibleColumns: (value: any) => void
   setStatusFilter: (value: any) => void
   setFilterValue: (value: string) => void
@@ -30,7 +32,7 @@ interface TopContentTableProps {
   setRowsPerPage: (rowsPerPage: number) => void
 }
 
-export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, visibleColumns, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
+export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, visibleColumns, loadingEmpleados, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value)
@@ -56,6 +58,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
         <div className='relative overflow-hidden p-[1px] rounded-xl w-full sm:max-w-[44%]'>
           <Input
             isClearable
+            label='Documento'
             className="w-full"
             placeholder="Buscar por número de documento..."
             startContent={<SearchIcon />}
@@ -63,11 +66,13 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
             onClear={() => { onClear() }}
             onValueChange={onSearchChange}
             type='number'
+            isDisabled={loadingEmpleados}
           />
           <span
-            className={
-              'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10 animate-[spin_2s_linear_infinite]'
-            }
+            className={cn(
+              'absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10 animate-[spin_2s_linear_infinite]',
+              loadingEmpleados ? 'opacity-0' : 'opacity-100'
+            )}
           />
         </div>
         <div className="flex gap-3">

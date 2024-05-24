@@ -12,8 +12,10 @@
   "dependencies": {
     "@clerk/nextjs": "^4.30.1",
     "@hookform/resolvers": "^3.3.4",
-    "@nextui-org/react": "^2.2.9",
+    "@internationalized/date": "^3.5.4",
+    "@nextui-org/react": "^2.3.6",
     "@prisma/client": "^5.7.1",
+    "@react-aria/i18n": "^3.11.1",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.1",
     "@tsparticles/engine": "^3.3.0",
