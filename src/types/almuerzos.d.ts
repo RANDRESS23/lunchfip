@@ -21,3 +21,15 @@ export interface AlmuerzosEntregados {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface AlmuerzosEstadisticas {
+  totalAlmuerzosDefinidos: number
+  totalAlmuerzosReservados: number
+  totalAlmuerzosReservadosPresencial: number
+  totalAlmuerzosReservadosVirtual: number
+  totalAlmuerzosEntregados: number
+  totalAlmuerzosSinEntregar: number
+  totalRecargas: number
+  fechaInicio: string
+  fechaFin: string
+}

@@ -2,7 +2,7 @@ import { ChevronDownIcon } from '../icons/ChevronDownIcon'
 import { SearchIcon } from '../icons/SearchIcon'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, DatePicker } from '@nextui-org/react'
 import { useCallback } from 'react'
-import { type DateValue } from '@internationalized/date'
+import { parseDate, type DateValue } from '@internationalized/date'
 import { I18nProvider } from '@react-aria/i18n'
 import { cn } from '@/libs/utils'
 
@@ -46,7 +46,6 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
       setFilterValue('')
     }
   }, [])
-  console.log({ estudiantesCount })
 
   const onClear = useCallback(() => {
     setFilterValue('')
@@ -72,6 +71,8 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
                 label="Fecha"
                 value={fecha}
                 onChange={handleFecha}
+                minValue={parseDate('2024-03-13')}
+                maxValue={parseDate('2024-06-22')}
                 className="w-full"
                 granularity="day"
                 isDisabled={loadingEstudiantesAlmuerzos}

@@ -6,6 +6,7 @@ import { IoFastFoodSharp } from 'react-icons/io5'
 import { GiBowlOfRice } from 'react-icons/gi'
 import { FaUserGraduate } from 'react-icons/fa'
 import { BiSolidFoodMenu } from 'react-icons/bi'
+import { ImStatsDots } from 'react-icons/im'
 
 import { cn } from '@/libs/utils'
 
@@ -123,6 +124,18 @@ export const menuItemsAdmin = [
         className={cn(
           'text-2xl',
           pathname === '/profile/admin/report-lunches' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+        )}
+      />
+    )
+  },
+  {
+    title: 'Estadísticas Almuerzos',
+    href: '/profile/admin/stats-lunches',
+    icon: (pathname: string) => (
+      <ImStatsDots
+        className={cn(
+          'text-2xl',
+          pathname === '/profile/admin/stats-lunches' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
         )}
       />
     )
