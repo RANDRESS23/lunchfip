@@ -1,6 +1,26 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 
+const getDayAndMonthString = (fechaAux: Date) => {
+  const mesAux = fechaAux.getMonth() + 1
+  const diaAux = fechaAux.getDate()
+
+  const fechaString = `${diaAux < 10 ? '0' : ''}${diaAux}/${mesAux < 10 ? '0' : ''}${mesAux}`
+
+  return fechaString
+}
+
+const getDefaultData = (fechaInicioAux: Date, fechaFinAux: Date) => [
+  {
+    name: getDayAndMonthString(fechaInicioAux),
+    cantidad: 0
+  },
+  {
+    name: getDayAndMonthString(fechaFinAux),
+    cantidad: 0
+  }
+]
+
 export async function GET (_: Request, { params }: { params: { fechaInicio: string, fechaFin: string } }) {
   try {
     const fechaInicioAux = new Date(params.fechaInicio)
@@ -33,32 +53,95 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
       return NextResponse.json({
         almuerzosEstadisticas: {
           totalAlmuerzosDefinidos: 0,
+          dataTotalAlmuerzosDefinidos: getDefaultData(fechaInicioAux, fechaFinAux),
           totalAlmuerzosReservados: 0,
+          dataTotalAlmuerzosReservados: getDefaultData(fechaInicioAux, fechaFinAux),
           totalAlmuerzosReservadosPresencial: 0,
+          dataTotalAlmuerzosReservadosPresencial: getDefaultData(fechaInicioAux, fechaFinAux),
           totalAlmuerzosReservadosVirtual: 0,
+          dataTotalAlmuerzosReservadosVirtual: getDefaultData(fechaInicioAux, fechaFinAux),
           totalAlmuerzosEntregados: 0,
+          dataTotalAlmuerzosEntregados: getDefaultData(fechaInicioAux, fechaFinAux),
           totalAlmuerzosSinEntregar: 0,
+          dataTotalAlmuerzosSinEntregar: getDefaultData(fechaInicioAux, fechaFinAux),
           totalRecargas: 0,
+          dataTotalRecargas: getDefaultData(fechaInicioAux, fechaFinAux),
           fechaInicio: fechaInicioString,
           fechaFin: fechaFinString
         }
       })
     }
 
-    const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
+    const dataTotalAlmuerzosReservados: Array<{ name: string, cantidad: number }> = []
+    const dataTotalAlmuerzosReservadosPresencial: Array<{ name: string, cantidad: number }> = []
+    const dataTotalAlmuerzosReservadosVirtual: Array<{ name: string, cantidad: number }> = []
+    const dataTotalAlmuerzosEntregados: Array<{ name: string, cantidad: number }> = []
+    const dataTotalAlmuerzosSinEntregar: Array<{ name: string, cantidad: number }> = []
+    const dataTotalRecargas: Array<{ name: string, cantidad: number }> = []
+
+    almuerzos.forEach(async (almuerzo) => {
+      const reservasDate = await db.reservas.findMany({
+        where: { fecha: almuerzo.fecha }
+      })
+      const entregasDate = await db.entregas.findMany({
+        where: { fecha: almuerzo.fecha }
+      })
+
+      let reservasPresenciales = 0
+      let reservasVirtuales = 0
+
+      reservasDate.forEach(async (reserva) => {
+        const reservaPresencialDate = await db.reservas_Empleados.findFirst({
+          where: { id_reserva: reserva.id_reserva }
+        })
+        const reservaVirtualDate = await db.reservas_Virtuales.findFirst({
+          where: { id_reserva: reserva.id_reserva }
+        })
+
+        if (reservaPresencialDate !== null) reservasPresenciales++
+        if (reservaVirtualDate !== null) reservasVirtuales++
+      })
+
+      dataTotalAlmuerzosReservados.push({
+        name: getDayAndMonthString(almuerzo.fecha),
+        cantidad: reservasDate.length
+      })
+      dataTotalAlmuerzosReservadosPresencial.push({
+        name: getDayAndMonthString(almuerzo.fecha),
+        cantidad: reservasPresenciales
+      })
+      dataTotalAlmuerzosReservadosVirtual.push({
+        name: getDayAndMonthString(almuerzo.fecha),
+        cantidad: reservasVirtuales
+      })
+      dataTotalAlmuerzosSinEntregar.push({
+        name: getDayAndMonthString(almuerzo.fecha),
+        cantidad: reservasDate.length - entregasDate.length
+      })
+      dataTotalAlmuerzosEntregados.push({
+        name: getDayAndMonthString(almuerzo.fecha),
+        cantidad: entregasDate.length
+      })
+    })
+
     const totalAlmuerzosReservados = await db.reservas.findMany({
       where: { id_almuerzo: { in: almuerzos.map(almuerzo => almuerzo.id_almuerzo) } }
     })
+
     const totalAlmuerzosReservadosPresencial = await db.reservas_Empleados.count({
       where: { id_reserva: { in: totalAlmuerzosReservados.map(reserva => reserva.id_reserva) } }
     })
+
     const totalAlmuerzosReservadosVirtual = await db.reservas_Virtuales.count({
       where: { id_reserva: { in: totalAlmuerzosReservados.map(reserva => reserva.id_reserva) } }
     })
+
     const totalAlmuerzosEntregados = await db.entregas.count({
       where: { id_almuerzo: { in: almuerzos.map(almuerzo => almuerzo.id_almuerzo) } }
     })
+
     const totalAlmuerzosSinEntregar = totalAlmuerzosReservados.length - totalAlmuerzosEntregados
+
     const totalRecargas = await db.recargas.count({
       where: {
         fecha: {
@@ -68,15 +151,51 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
       }
     })
 
+    const totalRecargasFecha = await db.recargas.findMany({
+      where: {
+        fecha: {
+          gte: fechaInicioParsed,
+          lte: fechaFinParsed
+        }
+      }
+    })
+
+    totalRecargasFecha.forEach(async recarga => {
+      const recargasDate = await db.recargas.findMany({
+        where: { fecha: recarga.fecha }
+      })
+
+      if (recargasDate.length !== 0 && recargasDate !== null) {
+        dataTotalRecargas.push({
+          name: getDayAndMonthString(recarga.fecha),
+          cantidad: recargasDate.length
+        })
+      }
+    })
+
+    const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
+
+    const dataTotalAlmuerzosDefinidos = almuerzos.map(almuerzo => ({
+      name: getDayAndMonthString(almuerzo.fecha),
+      cantidad: almuerzo.total_almuerzos
+    }))
+
     return NextResponse.json({
       almuerzosEstadisticas: {
         totalAlmuerzosDefinidos,
+        dataTotalAlmuerzosDefinidos,
         totalAlmuerzosReservados: totalAlmuerzosReservados.length,
+        dataTotalAlmuerzosReservados,
         totalAlmuerzosReservadosPresencial,
+        dataTotalAlmuerzosReservadosPresencial,
         totalAlmuerzosReservadosVirtual,
+        dataTotalAlmuerzosReservadosVirtual,
         totalAlmuerzosEntregados,
+        dataTotalAlmuerzosEntregados,
         totalAlmuerzosSinEntregar,
+        dataTotalAlmuerzosSinEntregar,
         totalRecargas,
+        dataTotalRecargas,
         fechaInicio: fechaInicioString,
         fechaFin: fechaFinString
       }

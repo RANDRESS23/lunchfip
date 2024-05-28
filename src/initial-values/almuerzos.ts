@@ -24,12 +24,19 @@ export const ALMUERZOS_ENTREGADOS_INITIAL_VALUES = {
 
 export const ALMUERZOS_ESTADISTICAS_INITIAL_VALUES = {
   totalAlmuerzosDefinidos: 0,
+  dataTotalAlmuerzosDefinidos: [{ name: '', cantidad: 0 }],
   totalAlmuerzosReservados: 0,
+  dataTotalAlmuerzosReservados: [{ name: '', cantidad: 0 }],
   totalAlmuerzosReservadosPresencial: 0,
+  dataTotalAlmuerzosReservadosPresencial: [{ name: '', cantidad: 0 }],
   totalAlmuerzosReservadosVirtual: 0,
+  dataTotalAlmuerzosReservadosVirtual: [{ name: '', cantidad: 0 }],
   totalAlmuerzosEntregados: 0,
+  dataTotalAlmuerzosEntregados: [{ name: '', cantidad: 0 }],
   totalAlmuerzosSinEntregar: 0,
+  dataTotalAlmuerzosSinEntregar: [{ name: '', cantidad: 0 }],
   totalRecargas: 0,
+  dataTotalRecargas: [{ name: '', cantidad: 0 }],
   fechaInicio: '',
   fechaFin: ''
 }

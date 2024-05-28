@@ -24,12 +24,19 @@ export interface AlmuerzosEntregados {
 
 export interface AlmuerzosEstadisticas {
   totalAlmuerzosDefinidos: number
+  dataTotalAlmuerzosDefinidos: Array<{ name: string, cantidad: number }>
   totalAlmuerzosReservados: number
+  dataTotalAlmuerzosReservados: Array<{ name: string, cantidad: number }>
   totalAlmuerzosReservadosPresencial: number
+  dataTotalAlmuerzosReservadosPresencial: Array<{ name: string, cantidad: number }>
   totalAlmuerzosReservadosVirtual: number
+  dataTotalAlmuerzosReservadosVirtual: Array<{ name: string, cantidad: number }>
   totalAlmuerzosEntregados: number
+  dataTotalAlmuerzosEntregados: Array<{ name: string, cantidad: number }>
   totalAlmuerzosSinEntregar: number
+  dataTotalAlmuerzosSinEntregar: Array<{ name: string, cantidad: number }>
   totalRecargas: number
+  dataTotalRecargas: Array<{ name: string, cantidad: number }>
   fechaInicio: string
   fechaFin: string
 }
