@@ -1,9 +1,12 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 
-const getDayAndMonthString = (fechaAux: Date) => {
-  const mesAux = fechaAux.getMonth() + 1
-  const diaAux = fechaAux.getDate()
+const getDayAndMonthString = (fechaAux: Date, notSumDay?: boolean) => {
+  const fechaAuxParsed = new Date(fechaAux.toString())
+  if (!notSumDay) fechaAuxParsed.setDate(fechaAuxParsed.getDate() + 1)
+
+  const mesAux = new Date(fechaAuxParsed.toString()).getMonth() + 1
+  const diaAux = new Date(fechaAuxParsed.toString()).getDate()
 
   const fechaString = `${diaAux < 10 ? '0' : ''}${diaAux}/${mesAux < 10 ? '0' : ''}${mesAux}`
 
@@ -81,16 +84,16 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
     almuerzos.forEach(async (almuerzo) => {
       const reservasDate = await db.reservas.findMany({
-        where: { fecha: almuerzo.fecha }
+        where: { id_almuerzo: almuerzo.id_almuerzo }
       })
       const entregasDate = await db.entregas.findMany({
-        where: { fecha: almuerzo.fecha }
+        where: { id_almuerzo: almuerzo.id_almuerzo }
       })
 
       let reservasPresenciales = 0
       let reservasVirtuales = 0
 
-      reservasDate.forEach(async (reserva) => {
+      reservasDate.forEach(async (reserva, index) => {
         const reservaPresencialDate = await db.reservas_Empleados.findFirst({
           where: { id_reserva: reserva.id_reserva }
         })
@@ -98,31 +101,79 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
           where: { id_reserva: reserva.id_reserva }
         })
 
-        if (reservaPresencialDate !== null) reservasPresenciales++
-        if (reservaVirtualDate !== null) reservasVirtuales++
-      })
+        if (reservaPresencialDate !== null) reservasPresenciales += 1
+        if (reservaVirtualDate !== null) reservasVirtuales += 1
 
-      dataTotalAlmuerzosReservados.push({
-        name: getDayAndMonthString(almuerzo.fecha),
-        cantidad: reservasDate.length
-      })
-      dataTotalAlmuerzosReservadosPresencial.push({
-        name: getDayAndMonthString(almuerzo.fecha),
-        cantidad: reservasPresenciales
-      })
-      dataTotalAlmuerzosReservadosVirtual.push({
-        name: getDayAndMonthString(almuerzo.fecha),
-        cantidad: reservasVirtuales
-      })
-      dataTotalAlmuerzosSinEntregar.push({
-        name: getDayAndMonthString(almuerzo.fecha),
-        cantidad: reservasDate.length - entregasDate.length
-      })
-      dataTotalAlmuerzosEntregados.push({
-        name: getDayAndMonthString(almuerzo.fecha),
-        cantidad: entregasDate.length
+        if (index === reservasDate.length - 1) {
+          dataTotalAlmuerzosReservados.push({
+            name: getDayAndMonthString(almuerzo.fecha),
+            cantidad: reservasDate.length
+          })
+          dataTotalAlmuerzosReservadosPresencial.push({
+            name: getDayAndMonthString(almuerzo.fecha),
+            cantidad: reservasPresenciales
+          })
+          dataTotalAlmuerzosReservadosVirtual.push({
+            name: getDayAndMonthString(almuerzo.fecha),
+            cantidad: reservasVirtuales
+          })
+          dataTotalAlmuerzosSinEntregar.push({
+            name: getDayAndMonthString(almuerzo.fecha),
+            cantidad: reservasDate.length - entregasDate.length
+          })
+          dataTotalAlmuerzosEntregados.push({
+            name: getDayAndMonthString(almuerzo.fecha),
+            cantidad: entregasDate.length
+          })
+        }
       })
     })
+
+    const totalRecargasFecha = await db.recargas.findMany({
+      where: {
+        fecha: {
+          gte: fechaInicioParsed,
+          lte: fechaFinParsed
+        }
+      }
+    })
+
+    let fechaAux = ''
+
+    totalRecargasFecha.forEach(async recarga => {
+      const startDate = new Date(recarga.fecha)
+      startDate.setUTCHours(startDate.getUTCHours() + 5)
+      startDate.setUTCHours(0, 0, 0, 0)
+      startDate.setUTCHours(startDate.getUTCHours() - 19)
+
+      if (fechaAux === startDate.toString()) return
+
+      fechaAux = startDate.toString()
+
+      const endDate = new Date(startDate)
+      endDate.setUTCDate(startDate.getUTCDate() + 1)
+
+      const recargasDate = await db.recargas.findMany({
+        where: {
+          fecha: {
+            gte: startDate,
+            lt: endDate
+          }
+        }
+      })
+
+      dataTotalRecargas.push({
+        name: getDayAndMonthString(recarga.fecha, true),
+        cantidad: recargasDate.length
+      })
+    })
+
+    const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
+
+    const dataTotalAlmuerzosDefinidos = almuerzos.map(almuerzo => ({
+      name: getDayAndMonthString(almuerzo.fecha),
+      cantidad: almuerzo.total_almuerzos
+    }))
 
     const totalAlmuerzosReservados = await db.reservas.findMany({
       where: { id_almuerzo: { in: almuerzos.map(almuerzo => almuerzo.id_almuerzo) } }
@@ -150,35 +201,6 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
         }
       }
     })
-
-    const totalRecargasFecha = await db.recargas.findMany({
-      where: {
-        fecha: {
-          gte: fechaInicioParsed,
-          lte: fechaFinParsed
-        }
-      }
-    })
-
-    totalRecargasFecha.forEach(async recarga => {
-      const recargasDate = await db.recargas.findMany({
-        where: { fecha: recarga.fecha }
-      })
-
-      if (recargasDate.length !== 0 && recargasDate !== null) {
-        dataTotalRecargas.push({
-          name: getDayAndMonthString(recarga.fecha),
-          cantidad: recargasDate.length
-        })
-      }
-    })
-
-    const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
-
-    const dataTotalAlmuerzosDefinidos = almuerzos.map(almuerzo => ({
-      name: getDayAndMonthString(almuerzo.fecha),
-      cantidad: almuerzo.total_almuerzos
-    }))
 
     return NextResponse.json({
       almuerzosEstadisticas: {

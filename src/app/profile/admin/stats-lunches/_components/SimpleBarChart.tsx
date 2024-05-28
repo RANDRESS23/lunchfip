@@ -2,37 +2,6 @@
 
 import { XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Rectangle, BarChart, Bar } from 'recharts'
 
-const data = [
-  {
-    name: '27/05',
-    cantidad: 400
-  },
-  {
-    name: '28/05',
-    cantidad: 500
-  },
-  {
-    name: '29/05',
-    cantidad: 300
-  },
-  {
-    name: '30/05',
-    cantidad: 300
-  },
-  {
-    name: '31/05',
-    cantidad: 400
-  },
-  {
-    name: '01/06',
-    cantidad: 400
-  },
-  {
-    name: '02/06',
-    cantidad: 500
-  }
-]
-
 const CustomTooltip = ({ active, payload, label, text1, text2 }: any) => {
   if (active && payload?.length) {
     return (
@@ -50,9 +19,10 @@ const CustomTooltip = ({ active, payload, label, text1, text2 }: any) => {
 interface SimpleBarChartProps {
   text1: string
   text2: string
+  data: Array<{ name: string, cantidad: number }>
 }
 
-export const SimpleBarChart = ({ text1, text2 }: SimpleBarChartProps) => {
+export const SimpleBarChart = ({ text1, text2, data }: SimpleBarChartProps) => {
   return (
     <ResponsiveContainer width="100%" height="90%">
       <BarChart
