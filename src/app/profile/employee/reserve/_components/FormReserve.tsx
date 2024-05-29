@@ -13,6 +13,8 @@ import { ModalConfirmReservation } from './ModalConfirmReservation'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useDisclosure } from '@nextui-org/react'
 import { type Estudiante } from '@/types/estudiantes'
+import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
+import getNextDate from '@/libs/nextDate'
 
 const numeroDocumentoSchema = z.object({
   numero_documento: z.string().min(7, {
@@ -26,6 +28,9 @@ export const FormReserve = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { estudiante, setEstudiante } = useEstudiante()
+
+  const { nextDate } = getNextDate()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
 
   const handleOpen = () => { onOpen() }
 
@@ -54,8 +59,8 @@ export const FormReserve = () => {
 
         const response2 = await api.post('/almuerzos/reservas/verificar', {
           id_estudiante: idEstudiante,
-          id_empleado: '',
-          id_almuerzo: ''
+          id_almuerzo: almuerzosTotales.id_almuerzo,
+          id_empleado: ''
         })
 
         if (response2.status === 200) {

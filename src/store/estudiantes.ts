@@ -8,11 +8,13 @@ interface EstudianteStore {
   estudiantesCount: number
   estudiantesAlmuerzos: EstudianteAlmuerzo[]
   estudiantesAlmuerzosCount: number
+  codigoQRReserva: string
   setEstudiante: (estudiante: Estudiante) => void
   setEstudiantes: (estudiantes: Estudiante[]) => void
   setEstudiantesAlmuerzos: (estudiantesAlmuerzos: EstudianteAlmuerzo[]) => void
   setEstudiantesCount: (estudiantesCount: number) => void
   setEstudiantesAlmuerzosCount: (estudiantesCount: number) => void
+  setCodigoQRReserva: (codigoQRReserva: string) => void
 }
 
 export const useEstudianteStore = create<EstudianteStore>((set) => ({
@@ -21,9 +23,11 @@ export const useEstudianteStore = create<EstudianteStore>((set) => ({
   estudiantesCount: 0,
   estudiantesAlmuerzos: [ESTUDIANTE_ALMUERZO_INITIAL_VALUES],
   estudiantesAlmuerzosCount: 0,
+  codigoQRReserva: '',
   setEstudiante: (estudiante: Estudiante) => { set({ estudiante }) },
   setEstudiantes: (estudiantes: Estudiante[]) => { set({ estudiantes }) },
   setEstudiantesAlmuerzos: (estudiantesAlmuerzos: EstudianteAlmuerzo[]) => { set({ estudiantesAlmuerzos }) },
   setEstudiantesCount: (estudiantesCount: number) => { set({ estudiantesCount }) },
-  setEstudiantesAlmuerzosCount: (estudiantesAlmuerzosCount: number) => { set({ estudiantesAlmuerzosCount }) }
+  setEstudiantesAlmuerzosCount: (estudiantesAlmuerzosCount: number) => { set({ estudiantesAlmuerzosCount }) },
+  setCodigoQRReserva: (codigoQRReserva: string) => { set({ codigoQRReserva }) }
 }))

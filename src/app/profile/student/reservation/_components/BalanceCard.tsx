@@ -43,8 +43,13 @@ export function BalanceCard ({ nextFullDate, saldoParsed, loadingReservation, is
         >
           <Button
             type="button"
-            text={loadingReservation ? 'Cargando...' : 'Reservar Almuerzo'}
-            disabled={loadingReservation}
+            text={
+              loadingReservation
+                ? 'Cargando...'
+                : !isAvailableReserve
+                    ? 'No Disponible'
+                    : 'Reservar Almuerzo'}
+            disabled={loadingReservation || !isAvailableReserve}
             onClick={saveReservation}
           />
         </CardItem>

@@ -7,7 +7,8 @@ export async function POST (request: Request) {
 
   try {
     const {
-      id_estudiante: idEstudiante
+      id_estudiante: idEstudiante,
+      id_almuerzo: idAlmuerzo
     } = reservasSchema.parse(body)
 
     const estudiante = await db.estudiantes.findUnique({
@@ -33,11 +34,17 @@ export async function POST (request: Request) {
       )
     }
 
-    const existingTheStudentReservation = await db.estudiantes_Reservas.findFirst({
-      where: { id_estudiante: idEstudiante }
+    const reservas = await db.reservas.findMany({
+      where: { id_almuerzo: idAlmuerzo }
     })
 
-    if (existingTheStudentReservation !== null) {
+    const estudiantesReservas = await db.estudiantes_Reservas.findMany({
+      where: { id_reserva: { in: reservas.map(reserva => reserva.id_reserva) } }
+    })
+
+    const existingTheStudentReservation = estudiantesReservas.some(estudianteReserva => estudianteReserva.id_estudiante === estudiante.id_estudiante)
+
+    if (existingTheStudentReservation) {
       return NextResponse.json(
         { message: '¡El estudiante ya realizó la respectiva reserva de almuerzo!' },
         { status: 400 }

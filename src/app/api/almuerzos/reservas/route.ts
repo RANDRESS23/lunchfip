@@ -109,7 +109,7 @@ export async function POST (request: Request) {
       }
     })
 
-    const qrBase64Str = await QRCode.toDataURL(newEstudianteReserva.id_estudiante_reserva, { version: 3 })
+    const qrBase64Str = await QRCode.toDataURL(newEstudianteReserva.id_estudiante_reserva, { version: 10 })
     const qrStr = qrBase64Str.split(',')[1]
     const buffer = Buffer.from(qrStr, 'base64')
 

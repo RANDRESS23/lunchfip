@@ -8,11 +8,16 @@ import api from '@/libs/api'
 import { type Estudiante } from '@/types/estudiantes'
 import { toast } from 'sonner'
 import { useEstudiante } from '@/hooks/useEstudiante'
+import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
+import getNextDate from '@/libs/nextDate'
 
 export const ScannerQRCode = () => {
   const [repeatScann, setRepeatScann] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { estudiante, setEstudiante } = useEstudiante()
+
+  const { nextDate } = getNextDate()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
 
   const handleOpen = () => { onOpen() }
 
@@ -36,8 +41,8 @@ export const ScannerQRCode = () => {
       try {
         const response = await api.post('/almuerzos/reservas/verificar', {
           id_estudiante: data,
-          id_empleado: '',
-          id_almuerzo: ''
+          id_almuerzo: almuerzosTotales.id_almuerzo,
+          id_empleado: ''
         })
 
         if (response.status === 200) {

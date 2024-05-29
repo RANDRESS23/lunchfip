@@ -34,7 +34,7 @@ export default async function ReservationPage () {
         text2='Almuerzo'
         textSize='text-4xl lg:text-[42px]'
       />
-      <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes reservar tu almuerzo con anticipo si cuentas con el saldo suficiente.</p>
+      <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes reservar tu almuerzo con anticipo si cuentas con el saldo suficiente, o por otro lado, visualizar tu código QR de reserva.</p>
       <ReserveLunch
         nextDate={nextDate}
         nextFullDate={nextFullDate}

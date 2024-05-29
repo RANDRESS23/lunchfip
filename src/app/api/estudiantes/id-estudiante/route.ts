@@ -3,10 +3,10 @@ import { db } from '@/libs/prismaDB'
 import getNextDate from '@/libs/nextDate'
 
 export async function POST (request: Request) {
-  const body = await request.json()
-  const { nextDate } = getNextDate()
-
   try {
+    const body = await request.json()
+    const { nextDate } = getNextDate()
+
     const { numero_documento: numeroDocumento } = body
 
     const estudiante = await db.estudiantes.findUnique({
