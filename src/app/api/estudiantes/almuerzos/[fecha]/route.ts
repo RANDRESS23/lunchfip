@@ -64,7 +64,7 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
       })
 
       const estudianteReservaPromise = await db.estudiantes_Reservas.findFirst({
-        where: { id_estudiante: estudiante.id_estudiante }
+        where: { id_estudiante: estudiante.id_estudiante, id_reserva: { in: reservas.map(reserva => reserva.id_reserva) } }
       })
 
       const [
@@ -95,16 +95,28 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
         where: { id_estudiante_reserva: estudianteReserva?.id_estudiante_reserva }
       })
 
+      const reservaEmpleadoPromise = await db.reservas_Empleados.findFirst({
+        where: { id_reserva: estudianteReserva?.id_reserva }
+      })
+
+      const reservaVirtualPromise = await db.reservas_Virtuales.findFirst({
+        where: { id_reserva: estudianteReserva?.id_reserva }
+      })
+
       const [
         facultad,
         estadoReserva,
         reserva,
-        estudianteEntrega
+        estudianteEntrega,
+        reservaEmpleado,
+        reservaVirtual
       ] = await Promise.all([
         facultadPromise,
         estadoReservaPromise,
         reservaPromise,
-        estudianteEntregaPromise
+        estudianteEntregaPromise,
+        reservaEmpleadoPromise,
+        reservaVirtualPromise
       ])
 
       const estadoPromise = await db.estados.findUnique({
@@ -112,7 +124,7 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
       })
 
       const entregaPromise = await db.entregas.findUnique({
-        where: { id_entrega: estudianteEntrega?.id_entrega }
+        where: { id_entrega: estudianteEntrega?.id_entrega ?? '' }
       })
 
       const [
@@ -159,7 +171,7 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
       const fechaReserva = `${yearReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
 
       return {
-        ...resEstudiantes, tipo_documento: tipoDocumento?.tipo_documento, programa: programa?.programa, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, estado_reserva: estado?.estado, fecha_reserva: fechaReserva, hora_reserva: horaReserva, fecha_entrega: fechaEntrega ?? 'N/A', hora_entrega: horaEntrega ?? 'N/A'
+        ...resEstudiantes, tipo_documento: tipoDocumento?.tipo_documento, programa: programa?.programa, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, estado_reserva: estado?.estado, fecha_reserva: fechaReserva, hora_reserva: horaReserva, fecha_entrega: fechaEntrega ?? 'N/A', hora_entrega: horaEntrega ?? 'N/A', reserva_empleado: !!reservaEmpleado, reserva_virtual: !!reservaVirtual
       }
     }))
 

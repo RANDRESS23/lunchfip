@@ -12,6 +12,7 @@ const COLUMNS = [
   { name: 'NOMBRE', uid: 'nombre', sortable: true },
   { name: 'DOCUMENTO', uid: 'documento', sortable: true },
   { name: 'PROGRAMA', uid: 'programa', sortable: true },
+  { name: 'TIPO RESERVA', uid: 'tipo_reserva', sortable: true },
   { name: 'HORA RESERVA', uid: 'hora_reserva', sortable: true },
   { name: 'ESTADO RESERVA', uid: 'estado_reserva', sortable: true },
   { name: 'HORA ENTREGA', uid: 'hora_entrega', sortable: true },
@@ -37,6 +38,7 @@ export const StudentsTable = () => {
     direction: 'ascending'
   })
   const { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos } = useEstudiantesAlmuerzos({ fecha: fecha.toString(), page: page.toString(), rows: rowsPerPage.toString() })
+  console.log({ estudiantesAlmuerzos })
 
   const hasSearchFilter = Boolean(filterValue)
 
@@ -172,6 +174,14 @@ export const StudentsTable = () => {
                         <p className="text-bold text-sm capitalize italic">{item.programa}</p>
                         <p className="text-bold text-sm capitalize text-default-400 italic">{item.facultad}</p>
                       </div>
+                    </TableCell>
+                  )
+                }
+
+                if (columnKey === 'tipo_reserva') {
+                  return (
+                    <TableCell className='text-center italic'>
+                      {item.reserva_empleado ? 'Presencial' : item.reserva_virtual ? 'Virtual' : 'N/A'}
                     </TableCell>
                   )
                 }

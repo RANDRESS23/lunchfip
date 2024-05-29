@@ -25,7 +25,7 @@ export default async function ReservationPage () {
   if (isEmployee) return redirect('/profile/employee/home')
   if (isAdmin) return redirect('/profile/admin/home')
 
-  const { nextDate, nextFullDate } = getNextDate()
+  const { nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats } = getNextDate()
 
   return (
     <div className='container mx-auto py-[90px] px-6 font-inter-sans'>
@@ -38,6 +38,9 @@ export default async function ReservationPage () {
       <ReserveLunch
         nextDate={nextDate}
         nextFullDate={nextFullDate}
+        isValidHourToReserve={isValidHourToReserve}
+        isValidHourToDelivery={isValidHourToDelivery}
+        isValidHourToDeliveryStats={isValidHourToDeliveryStats}
       />
     </div>
   )

@@ -18,9 +18,12 @@ import { ReserveCodeQR } from './ReserveCodeQR'
 interface ReserveLunchProps {
   nextDate: Date
   nextFullDate: string
+  isValidHourToReserve: boolean
+  isValidHourToDelivery: boolean
+  isValidHourToDeliveryStats: boolean
 }
 
-export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
+export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats }: ReserveLunchProps) => {
   const { estudiante } = useEstudiante()
   const [loadingReservation, setLoadingReservation] = useState(false)
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
@@ -63,13 +66,28 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
   return (
     <div className='flex flex-col items-center justify-center -mt-7'>
       {
-        almuerzosTotales.id_almuerzo === '' && (
+        isValidHourToDeliveryStats && (
+          <p className='w-full z-10 mt-14 mb-5 italic text-center text-color-secondary'>⚠ ¡Servicio no disponible, podrás reservar tu almuerzo si cuentas con el saldo suficiente a partir de las 05:00 p.m.!. ⚠</p>
+        )
+      }
+      {
+        (almuerzosReservados.cantidad - almuerzosEntregados.cantidad === 0) && (codigoQRReserva === '') && isValidHourToReserve && (
+          <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡Mala suerte, se agotaron los almuerzos disponibles para reservar, atento para la próxima vez!. ⚠</p>
+        )
+      }
+      {
+        (codigoQRReserva === '') && isValidHourToDelivery && (
+          <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡Mala suerte, no alcanzaste a reservar tu almuerzo, atento para la próxima vez!. ⚠</p>
+        )
+      }
+      {
+        (almuerzosTotales.id_almuerzo === '') && isValidHourToReserve && (
           <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!. ⚠</p>
         )
       }
       <div className={'flex flex-col items-center justify-center'}>
         {
-          codigoQRReserva !== '' && (
+          (codigoQRReserva !== '') && isValidHourToReserve && isValidHourToDelivery && (
             <>
               <p className='w-full z-10 mt-14 italic text-center text-color-primary'>✔ ¡Reservaste, puedes visualizar tu código QR de reserva a continuación, presenta este código QR al personal encargado para reclamar tu almuerzo!. ✔</p>
               <ReserveCodeQR
@@ -87,15 +105,15 @@ export const ReserveLunch = ({ nextDate, nextFullDate }: ReserveLunchProps) => {
           codigoQRReserva !== '' && '-mt-24 md:-mt-16'
         )}>
           <AvailableLunchs
-            amounthLunch={almuerzosReservados.cantidad - almuerzosEntregados.cantidad}
+            amounthLunch={isValidHourToReserve ? almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad : 'N/A'}
             nextFullDate={nextFullDate}
-            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === ''}
+            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosReservados.cantidad - almuerzosEntregados.cantidad !== 0 && isValidHourToReserve}
           />
           <BalanceCard
             nextFullDate={nextFullDate}
             saldoParsed={saldoParsed3}
             loadingReservation={loadingReservation}
-            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === ''}
+            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosReservados.cantidad - almuerzosEntregados.cantidad !== 0 && isValidHourToReserve}
             saveReservation={saveReservation}
           />
         </div>

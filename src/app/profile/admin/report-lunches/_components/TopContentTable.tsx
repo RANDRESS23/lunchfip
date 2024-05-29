@@ -16,6 +16,7 @@ const COLUMNS = [
   { name: 'NOMBRE', uid: 'nombre', sortable: true },
   { name: 'DOCUMENTO', uid: 'documento', sortable: true },
   { name: 'PROGRAMA', uid: 'programa', sortable: true },
+  { name: 'TIPO RESERVA', uid: 'tipo_reserva', sortable: true },
   { name: 'HORA RESERVA', uid: 'hora_reserva', sortable: true },
   { name: 'ESTADO RESERVA', uid: 'estado_reserva', sortable: true },
   { name: 'HORA ENTREGA', uid: 'hora_entrega', sortable: true },

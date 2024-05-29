@@ -2,7 +2,7 @@ import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card'
 import { cn } from '@/libs/utils'
 
 interface AvailableLunchsProps {
-  amounthLunch: number
+  amounthLunch: number | string
   nextFullDate: string
   isAvailableReserve: boolean
 }
@@ -33,6 +33,13 @@ export const AvailableLunchs = ({ amounthLunch, nextFullDate, isAvailableReserve
           className="w-full text-5xl text-center font-bold text-neutral-600 dark:text-white my-11"
         >
           {amounthLunch}
+        </CardItem>
+        <CardItem
+          as="p"
+          translateZ="60"
+          className="text-center text-sm w-full mt-2 text-p-light dark:text-p-dark"
+        >
+          {amounthLunch === 'N/A' && 'Servicio de reservas de almuerzo finalizado, espera a las 05:00 p.m. para reservar tu almuerzo del día siguiente.'}
         </CardItem>
       </CardBody>
     </CardContainer>

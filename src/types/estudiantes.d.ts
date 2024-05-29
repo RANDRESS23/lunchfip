@@ -57,4 +57,6 @@ export interface EstudianteAlmuerzo {
   estado_reserva: string
   fecha_entrega: string
   hora_entrega: string
+  reserva_empleado: boolean
+  reserva_virtual: boolean
 }

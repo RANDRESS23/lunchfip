@@ -24,6 +24,7 @@ const COLUMNS = [
   { name: 'DOCUMENTO', uid: 'documento', sortable: true },
   { name: 'PROGRAMA', uid: 'programa', sortable: true },
   { name: 'CELULAR', uid: 'celular' },
+  { name: 'SALDO', uid: 'saldo', sortable: true },
   { name: 'ESTADO', uid: 'estado', sortable: true },
   { name: 'ACCIONES', uid: 'acciones' }
 ]
@@ -207,6 +208,11 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
           {sortedItems.filter((item) => item.id_estudiante !== '').map((item) => (
             <TableRow key={item.id_estudiante}>
               {(columnKey) => {
+                const saldoString = item.saldo.toString()
+                const saldoParsed = saldoString.slice(0, saldoString.length - 3)
+                const saldoParsed2 = saldoString.slice(saldoString.length - 3)
+                const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
+
                 if (columnKey === 'usuario') {
                   return (
                     <TableCell className='text-center'>
@@ -257,6 +263,12 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
                 if (columnKey === 'celular') {
                   return (
                     <TableCell className='text-center italic'>{item.celular}</TableCell>
+                  )
+                }
+
+                if (columnKey === 'saldo') {
+                  return (
+                    <TableCell className='text-center italic'>{saldoParsed3}</TableCell>
                   )
                 }
 
