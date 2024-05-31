@@ -6,6 +6,8 @@ import { type Estudiante } from '@/types/estudiantes'
 export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) => {
   const estudiantes = useEstudianteStore(state => state.estudiantes)
   const setEstudiantes = useEstudianteStore(state => state.setEstudiantes)
+  const totalEstudiantes = useEstudianteStore(state => state.totalEstudiantes)
+  const setTotalEstudiantes = useEstudianteStore(state => state.setTotalEstudiantes)
   const estudiantesCount = useEstudianteStore(state => state.estudiantesCount)
   const setEstudiantesCount = useEstudianteStore(state => state.setEstudiantesCount)
   const [loadingEstudiantes, setLoadingEstudiantes] = useState(false)
@@ -18,6 +20,7 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
         const response = await api.get(`/estudiantes/?page=${page}&rows=${rows}`)
 
         setEstudiantes(response.data.estudiantes as Estudiante[])
+        setTotalEstudiantes(response.data.totalEstudiantes as Estudiante[])
         setEstudiantesCount(response.data.estudiantesCount as number)
       } catch (error) {
         console.log(error)
@@ -29,5 +32,5 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
     getEstudiantes()
   }, [page, rows])
 
-  return { estudiantes, estudiantesCount, loadingEstudiantes, setEstudiantes }
+  return { estudiantes, estudiantesCount, loadingEstudiantes, totalEstudiantes, setEstudiantes }
 }

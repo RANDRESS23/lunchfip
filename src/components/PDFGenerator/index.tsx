@@ -8,16 +8,17 @@ interface PDFGeneratorProps {
   contactName: string
   invoiceHeader: Array<{ title: string, style: { width: number } }>
   invoiceTable: Array<Array<string | number>>
+  orientationLandscape: boolean
 }
 
-export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceHeader, invoiceTable }: PDFGeneratorProps) => {
+export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceHeader, invoiceTable, orientationLandscape }: PDFGeneratorProps) => {
   const getProps = () => {
     return {
       outputType: OutputType.Save,
       onJsPDFDocCreation: (jsPDFDoc: jsPDF) => { console.log(jsPDFDoc) },
       returnJsPDFDocObject: true,
       fileName,
-      orientationLandscape: false,
+      orientationLandscape,
       compress: true,
       logo: {
         src: 'https://res.cloudinary.com/dje4ke8hw/image/upload/v1717022852/svgs/LOGO-LUNCHFIP-LIGHT_mviq4a.png',

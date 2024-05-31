@@ -3,6 +3,8 @@ import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from '@nextui-org/react'
 import { useCallback } from 'react'
+import { PDFGenerator } from '@/components/PDFGenerator'
+import { type Estudiante } from '@/types/estudiantes'
 
 const STATUS_OPTIONS = [
   { name: 'Activo', uid: 'Activo' },
@@ -26,6 +28,7 @@ interface TopContentTableProps {
   statusFilter: any
   visibleColumns: any
   loadingEstudiantes: boolean
+  totalEstudiantes: Estudiante[]
   setVisibleColumns: (value: any) => void
   setStatusFilter: (value: any) => void
   setFilterValue: (value: string) => void
@@ -33,7 +36,7 @@ interface TopContentTableProps {
   setRowsPerPage: (rowsPerPage: number) => void
 }
 
-export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, loadingEstudiantes, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
+export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, loadingEstudiantes, totalEstudiantes, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value)
@@ -77,6 +80,72 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
           />
         </div>
         <div className="flex gap-3">
+          <PDFGenerator
+            fileName='Estudiantes-Registro-LunchFip'
+            contactLabel='Tabla Registros de:'
+            contactName='Estudiantes'
+            invoiceHeader={[
+              {
+                title: '#',
+                style: {
+                  width: 10
+                }
+              },
+              {
+                title: 'Documento',
+                style: {
+                  width: 30
+                }
+              },
+              {
+                title: 'Nombre Completo',
+                style: {
+                  width: 60
+                }
+              },
+              {
+                title: 'Correo',
+                style: {
+                  width: 50
+                }
+              },
+              {
+                title: 'Programa',
+                style: {
+                  width: 50
+                }
+              },
+              {
+                title: 'Celular',
+                style: {
+                  width: 30
+                }
+              },
+              {
+                title: 'Saldo',
+                style: {
+                  width: 20
+                }
+              },
+              {
+                title: 'Estado',
+                style: {
+                  width: 30
+                }
+              }
+            ]}
+            invoiceTable={totalEstudiantes.map((empleado, index) => [
+              index + 1,
+              empleado.numero_documento,
+              `${empleado.primer_nombre[0]?.toUpperCase() ?? ''}${empleado.primer_nombre?.slice(1) ?? ''} ${empleado.segundo_nombre[0]?.toUpperCase() ?? ''}${empleado.segundo_nombre?.slice(1) ?? ''} ${empleado.primer_apellido[0]?.toUpperCase() ?? ''}${empleado.primer_apellido?.slice(1) ?? ''} ${empleado.segundo_apellido[0]?.toUpperCase() ?? ''}${empleado.segundo_apellido?.slice(1) ?? ''}`,
+              empleado.correo_institucional,
+              empleado.programa,
+              empleado.celular,
+              `$ ${empleado.saldo}`,
+              empleado.estado
+            ])}
+            orientationLandscape
+          />
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

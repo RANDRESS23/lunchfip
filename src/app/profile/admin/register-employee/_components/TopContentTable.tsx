@@ -129,6 +129,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
               empleado.celular,
               empleado.estado
             ])}
+            orientationLandscape={false}
           />
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
