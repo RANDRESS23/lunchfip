@@ -1,10 +1,12 @@
 import { ChevronDownIcon } from '../icons/ChevronDownIcon'
 import { SearchIcon } from '../icons/SearchIcon'
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, DatePicker } from '@nextui-org/react'
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, DatePicker, Spinner } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { parseDate, type DateValue } from '@internationalized/date'
 import { I18nProvider } from '@react-aria/i18n'
 import { cn } from '@/libs/utils'
+import { PDFGenerator } from '@/components/PDFGenerator'
+import { type EstudianteAlmuerzo } from '@/types/estudiantes'
 
 const STATUS_OPTIONS = [
   { name: 'Sin Entregar', uid: 'Activo' },
@@ -30,6 +32,8 @@ interface TopContentTableProps {
   visibleColumns: any
   fecha: DateValue
   loadingEstudiantesAlmuerzos: boolean
+  totalEstudiantesAlmuerzos: EstudianteAlmuerzo[]
+  loadingTotalEstudiantesAlmuerzos: boolean
   setVisibleColumns: (value: any) => void
   setStatusFilter: (value: any) => void
   setFilterValue: (value: string) => void
@@ -38,7 +42,7 @@ interface TopContentTableProps {
   setFecha: (fecha: DateValue) => void
 }
 
-export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, fecha, loadingEstudiantesAlmuerzos, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage, setFecha }: TopContentTableProps) => {
+export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, fecha, loadingEstudiantesAlmuerzos, loadingTotalEstudiantesAlmuerzos, totalEstudiantesAlmuerzos, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage, setFecha }: TopContentTableProps) => {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value)
@@ -108,6 +112,87 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
           </div>
         </div>
         <div className="flex gap-3">
+          {
+            loadingTotalEstudiantesAlmuerzos
+              ? <Spinner color='secondary' />
+              : totalEstudiantesAlmuerzos.length !== 0
+                ? (
+                    <PDFGenerator
+                      fileName={`Almuerzos-Registro-${fecha.toString()}-LunchFip`}
+                      contactLabel='Tabla Registros de:'
+                      contactName={`Almuerzos (${fecha.toString()})`}
+                      invoiceHeader={[
+                        {
+                          title: '#',
+                          style: {
+                            width: 10
+                          }
+                        },
+                        {
+                          title: 'Documento',
+                          style: {
+                            width: 30
+                          }
+                        },
+                        {
+                          title: 'Nombre Completo',
+                          style: {
+                            width: 50
+                          }
+                        },
+                        {
+                          title: 'Programa',
+                          style: {
+                            width: 45
+                          }
+                        },
+                        {
+                          title: 'Celular',
+                          style: {
+                            width: 25
+                          }
+                        },
+                        {
+                          title: 'Tipo Reserva',
+                          style: {
+                            width: 30
+                          }
+                        },
+                        {
+                          title: 'Hora Reserva',
+                          style: {
+                            width: 30
+                          }
+                        },
+                        {
+                          title: 'Estado Reserva',
+                          style: {
+                            width: 30
+                          }
+                        },
+                        {
+                          title: 'Hora Entrega',
+                          style: {
+                            width: 30
+                          }
+                        }
+                      ]}
+                      invoiceTable={totalEstudiantesAlmuerzos.map((estudiante, index) => [
+                        index + 1,
+                        estudiante.numero_documento,
+                        `${estudiante.primer_nombre[0]?.toUpperCase() ?? ''}${estudiante.primer_nombre?.slice(1) ?? ''} ${estudiante.segundo_nombre[0]?.toUpperCase() ?? ''}${estudiante.segundo_nombre?.slice(1) ?? ''} ${estudiante.primer_apellido[0]?.toUpperCase() ?? ''}${estudiante.primer_apellido?.slice(1) ?? ''} ${estudiante.segundo_apellido[0]?.toUpperCase() ?? ''}${estudiante.segundo_apellido?.slice(1) ?? ''}`,
+                        estudiante.programa,
+                        estudiante.celular,
+                        `${estudiante.reserva_empleado ? 'Presencial' : estudiante.reserva_virtual ? 'Virtual' : 'N/A'}`,
+                        estudiante.hora_reserva,
+                        `${estudiante.estado_reserva === 'Activo' ? 'Sin Entregar' : 'Entregado'}`,
+                        estudiante.hora_entrega
+                      ])}
+                      orientationLandscape
+                    />
+                  )
+                : null
+          }
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

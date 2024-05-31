@@ -134,15 +134,15 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
                 }
               }
             ]}
-            invoiceTable={totalEstudiantes.map((empleado, index) => [
+            invoiceTable={totalEstudiantes.map((estudiante, index) => [
               index + 1,
-              empleado.numero_documento,
-              `${empleado.primer_nombre[0]?.toUpperCase() ?? ''}${empleado.primer_nombre?.slice(1) ?? ''} ${empleado.segundo_nombre[0]?.toUpperCase() ?? ''}${empleado.segundo_nombre?.slice(1) ?? ''} ${empleado.primer_apellido[0]?.toUpperCase() ?? ''}${empleado.primer_apellido?.slice(1) ?? ''} ${empleado.segundo_apellido[0]?.toUpperCase() ?? ''}${empleado.segundo_apellido?.slice(1) ?? ''}`,
-              empleado.correo_institucional,
-              empleado.programa,
-              empleado.celular,
-              `$ ${empleado.saldo}`,
-              empleado.estado
+              estudiante.numero_documento,
+              `${estudiante.primer_nombre[0]?.toUpperCase() ?? ''}${estudiante.primer_nombre?.slice(1) ?? ''} ${estudiante.segundo_nombre[0]?.toUpperCase() ?? ''}${estudiante.segundo_nombre?.slice(1) ?? ''} ${estudiante.primer_apellido[0]?.toUpperCase() ?? ''}${estudiante.primer_apellido?.slice(1) ?? ''} ${estudiante.segundo_apellido[0]?.toUpperCase() ?? ''}${estudiante.segundo_apellido?.slice(1) ?? ''}`,
+              estudiante.correo_institucional,
+              estudiante.programa,
+              estudiante.celular,
+              `$ ${estudiante.saldo}`,
+              estudiante.estado
             ])}
             orientationLandscape
           />

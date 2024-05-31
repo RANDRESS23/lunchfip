@@ -9,9 +9,12 @@ export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, 
 
   const estudiantesAlmuerzos = useEstudianteStore(state => state.estudiantesAlmuerzos)
   const setEstudiantesAlmuerzos = useEstudianteStore(state => state.setEstudiantesAlmuerzos)
+  const totalEstudiantesAlmuerzos = useEstudianteStore(state => state.totalEstudiantesAlmuerzos)
+  const setTotalEstudiantesAlmuerzos = useEstudianteStore(state => state.setTotalEstudiantesAlmuerzos)
   const estudiantesAlmuerzosCount = useEstudianteStore(state => state.estudiantesAlmuerzosCount)
   const setEstudiantesAlmuerzosCount = useEstudianteStore(state => state.setEstudiantesAlmuerzosCount)
   const [loadingEstudiantesAlmuerzos, setLoadingEstudiantesAlmuerzos] = useState(false)
+  const [loadingTotalEstudiantesAlmuerzos, setLoadingTotalEstudiantesAlmuerzos] = useState(false)
 
   useEffect(() => {
     const getEstudiantesAlmuerzos = async () => {
@@ -32,5 +35,23 @@ export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, 
     getEstudiantesAlmuerzos()
   }, [page, rows, fecha])
 
-  return { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos, setEstudiantesAlmuerzos }
+  useEffect(() => {
+    const getTotalEstudiantesAlmuerzos = async () => {
+      try {
+        setLoadingTotalEstudiantesAlmuerzos(true)
+
+        const response = await api.get(`/estudiantes/almuerzos/total/${todayDate.toString()}`)
+
+        setTotalEstudiantesAlmuerzos(response.data.totalEstudiantesAlmuerzos as EstudianteAlmuerzo[])
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoadingTotalEstudiantesAlmuerzos(false)
+      }
+    }
+
+    getTotalEstudiantesAlmuerzos()
+  }, [fecha])
+
+  return { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos, loadingTotalEstudiantesAlmuerzos, totalEstudiantesAlmuerzos, setEstudiantesAlmuerzos }
 }

@@ -37,8 +37,7 @@ export const StudentsTable = () => {
     column: 'nombre',
     direction: 'ascending'
   })
-  const { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos } = useEstudiantesAlmuerzos({ fecha: fecha.toString(), page: page.toString(), rows: rowsPerPage.toString() })
-  console.log({ estudiantesAlmuerzos })
+  const { estudiantesAlmuerzos, estudiantesAlmuerzosCount, loadingEstudiantesAlmuerzos, loadingTotalEstudiantesAlmuerzos, totalEstudiantesAlmuerzos } = useEstudiantesAlmuerzos({ fecha: fecha.toString(), page: page.toString(), rows: rowsPerPage.toString() })
 
   const hasSearchFilter = Boolean(filterValue)
 
@@ -95,7 +94,7 @@ export const StudentsTable = () => {
       aria-label="Tabla de estudiantes registrados en LunchFip"
       isHeaderSticky
       shadow='md'
-      topContent={<TopContentTable estudiantesCount={estudiantesAlmuerzosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} fecha={fecha} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} setFecha={setFecha} loadingEstudiantesAlmuerzos={loadingEstudiantesAlmuerzos} />}
+      topContent={<TopContentTable estudiantesCount={estudiantesAlmuerzosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} fecha={fecha} totalEstudiantesAlmuerzos={totalEstudiantesAlmuerzos} loadingTotalEstudiantesAlmuerzos={loadingTotalEstudiantesAlmuerzos} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} setFecha={setFecha} loadingEstudiantesAlmuerzos={loadingEstudiantesAlmuerzos} />}
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       topContentPlacement="outside"
