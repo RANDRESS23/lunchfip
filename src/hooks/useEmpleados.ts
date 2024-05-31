@@ -11,6 +11,8 @@ interface EmpleadoProps {
 export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
   const empleados = useEmpleadoStore(state => state.empleados)
   const setEmpleados = useEmpleadoStore(state => state.setEmpleados)
+  const totalEmpleados = useEmpleadoStore(state => state.totalEmpleados)
+  const setTotalEmpleados = useEmpleadoStore(state => state.setTotalEmpleados)
   const empleadosCount = useEmpleadoStore(state => state.empleadosCount)
   const setEmpleadosCount = useEmpleadoStore(state => state.setEmpleadosCount)
   const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
@@ -25,6 +27,7 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
         const emails: string[] = response.data.totalEmpleados.map((empleado: Empleado) => empleado.correo)
 
         setEmpleados(response.data.empleados as Empleado[])
+        setTotalEmpleados(response.data.totalEmpleados as Empleado[])
         setEmailsEmpleados(emails)
         setEmpleadosCount(response.data.empleadosCount as number)
       } catch (error) {
@@ -37,5 +40,5 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
     getEmpleados()
   }, [page, rows])
 
-  return { empleados, empleadosCount, emailsEmpleados, loadingEmpleados, setEmpleados }
+  return { empleados, empleadosCount, emailsEmpleados, totalEmpleados, loadingEmpleados, setEmpleados }
 }

@@ -33,15 +33,6 @@ export default async function ReportLunchesPage () {
         isTextLeft
       />
       <p className='w-full z-10 -mt-3 mb-9 text-p-light dark:text-p-dark'>En esta sección podrás visualizar diferentes estadísticas referente a los almuerzos. Esta información la encontrarás en gráficas minimalistas para que te ayuden a una mejor comprensión de las estadísticas.</p>
-      {/*
-        - Gráfica de cuantos almuerzos se definieron en el rango de fecha seleccionado
-        - Gráfica de cuantos almuerzos se reservaron en total en el rango de fecha seleccionado
-        - Gráfica de cuantos almuerzos reservados fueron presencialmente en el rango de fecha seleccionado
-        - Gráfica de cuantos almuerzos reservados fueron virtualmente en el rango de fecha seleccionado
-        - Gráfica de cuantos almuerzos se entregaron en el rango de fecha seleccionado
-        - Gráfica de cuantos almuerzos se faltaron por entregar en el rango de fecha seleccionado
-        - Gráfica de cuantos recargas se hicieron en el rango de fecha seleccionado
-      */}
       <DashBoardSection />
     </div>
   )

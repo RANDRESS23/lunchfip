@@ -3,6 +3,8 @@ import { ChevronDownIcon } from '../icons/ChevronDownIcon'
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { cn } from '@/libs/utils'
+import { PDFGenerator } from '@/components/PDFGenerator'
+import { type Empleado } from '@/types/empleados'
 
 const STATUS_OPTIONS = [
   { name: 'Activo', uid: 'Activo' },
@@ -25,6 +27,7 @@ interface TopContentTableProps {
   statusFilter: any
   visibleColumns: any
   loadingEmpleados: boolean
+  totalEmpleados: Empleado[]
   setVisibleColumns: (value: any) => void
   setStatusFilter: (value: any) => void
   setFilterValue: (value: string) => void
@@ -32,7 +35,7 @@ interface TopContentTableProps {
   setRowsPerPage: (rowsPerPage: number) => void
 }
 
-export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, visibleColumns, loadingEmpleados, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
+export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, visibleColumns, loadingEmpleados, totalEmpleados, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value)
@@ -76,6 +79,57 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
           />
         </div>
         <div className="flex gap-3">
+          <PDFGenerator
+            fileName='Empleados-Registro-LunchFip'
+            contactLabel='Tabla Registros de:'
+            contactName='Empleados'
+            invoiceHeader={[
+              {
+                title: '#',
+                style: {
+                  width: 10
+                }
+              },
+              {
+                title: 'Documento',
+                style: {
+                  width: 30
+                }
+              },
+              {
+                title: 'Nombre Completo',
+                style: {
+                  width: 60
+                }
+              },
+              {
+                title: 'Correo',
+                style: {
+                  width: 50
+                }
+              },
+              {
+                title: 'Celular',
+                style: {
+                  width: 30
+                }
+              },
+              {
+                title: 'Estado',
+                style: {
+                  width: 30
+                }
+              }
+            ]}
+            invoiceTable={totalEmpleados.map((empleado, index) => [
+              index + 1,
+              empleado.numero_documento,
+              `${empleado.primer_nombre[0]?.toUpperCase() ?? ''}${empleado.primer_nombre?.slice(1) ?? ''} ${empleado.segundo_nombre[0]?.toUpperCase() ?? ''}${empleado.segundo_nombre?.slice(1) ?? ''} ${empleado.primer_apellido[0]?.toUpperCase() ?? ''}${empleado.primer_apellido?.slice(1) ?? ''} ${empleado.segundo_apellido[0]?.toUpperCase() ?? ''}${empleado.segundo_apellido?.slice(1) ?? ''}`,
+              empleado.correo,
+              empleado.celular,
+              empleado.estado
+            ])}
+          />
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

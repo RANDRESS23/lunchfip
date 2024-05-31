@@ -24,6 +24,18 @@ export async function GET (request: Request) {
     }
 
     const empleadosTotal = await db.empleados.findMany()
+    const totalEmpleados = await Promise.all(empleadosTotal.map(async empleado => {
+      const estadoEmpleado = await db.estados_Empleados.findFirst({
+        where: { id_empleado: empleado.id_empleado }
+      })
+
+      const estado = await db.estados.findUnique({
+        where: { id_estado: estadoEmpleado?.id_estado }
+      })
+
+      return { ...empleado, estado: estado?.estado ?? '' }
+    }))
+
     const empleados = empleadosTotal.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
 
     const empleadosLunchFip = await Promise.all(empleados.map(async (empleado) => {
@@ -54,7 +66,7 @@ export async function GET (request: Request) {
 
     return NextResponse.json({
       empleados: empleadosLunchFip,
-      totalEmpleados: empleadosTotal,
+      totalEmpleados,
       empleadosCount: empleadosTotal.length
     })
   } catch (error) {
@@ -311,13 +323,14 @@ export async function PUT (request: Request) {
 
     const estados = await db.estados.findMany()
 
-    await db.estados_Empleados.create({
+    await db.estados_Empleados.updateMany({
       data: {
         id_empleado: updatedEmpleado.id_empleado,
         id_estado: estados[0].id_estado,
         createdAt: currentDate,
         updatedAt: currentDate
-      }
+      },
+      where: { id_empleado: idEmpleado }
     })
 
     const sexo = await db.sexos.findUnique({

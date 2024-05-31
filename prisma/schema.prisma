@@ -80,7 +80,7 @@ model Estados_Estudiantes {
 }
 
 model Estados_Empleados {
-  id_estado_estudiante  String      @id @default(uuid())
+  id_estado_empleado  String      @id @default(uuid())
   
   id_empleado           String
   empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)

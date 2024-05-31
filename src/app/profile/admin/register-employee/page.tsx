@@ -29,7 +29,7 @@ export default async function RegisterEmployeePage () {
   const serviceRolKey = process.env.SERVICE_ROL_KEY ?? ''
 
   return (
-    <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
+    <div className='lg:ml-[290px] pt-24 pb-10 relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <TitleAnimated
         text1='Registrar'

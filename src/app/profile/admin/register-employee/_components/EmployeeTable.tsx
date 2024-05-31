@@ -48,7 +48,7 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
     column: 'nombre',
     direction: 'ascending'
   })
-  const { empleados, empleadosCount, setEmpleados, loadingEmpleados } = useEmpleados({ page: page.toString(), rows: rowsPerPage.toString() })
+  const { empleados, empleadosCount, totalEmpleados, setEmpleados, loadingEmpleados } = useEmpleados({ page: page.toString(), rows: rowsPerPage.toString() })
   const { setEmpleado } = useEmpleado()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onInitHandler, onShoot } = useConfetti()
@@ -175,13 +175,13 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
   }, [sortDescriptor, items])
 
   return (
-    <section className='w-full'>
+    <section className='w-full h-[1500px] relative z-10'>
       <Table
         isStriped
         aria-label="Tabla de empleados registrados en LunchFip"
         isHeaderSticky
         shadow='md'
-        topContent={<TopContentTable empleadosCount={empleadosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEmpleados={loadingEmpleados} />}
+        topContent={<TopContentTable empleadosCount={empleadosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} totalEmpleados={totalEmpleados} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEmpleados={loadingEmpleados} />}
         sortDescriptor={sortDescriptor}
         onSortChange={setSortDescriptor}
         topContentPlacement="outside"
