@@ -1,6 +1,6 @@
 import { SearchIcon } from '../icons/SearchIcon'
 import { ChevronDownIcon } from '../icons/ChevronDownIcon'
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from '@nextui-org/react'
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Spinner } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { cn } from '@/libs/utils'
 import { PDFGenerator } from '@/components/PDFGenerator'
@@ -79,58 +79,66 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
           />
         </div>
         <div className="flex gap-3">
-          <PDFGenerator
-            fileName='Empleados-Registro-LunchFip'
-            contactLabel='Tabla Registros de:'
-            contactName='Empleados'
-            invoiceHeader={[
-              {
-                title: '#',
-                style: {
-                  width: 10
-                }
-              },
-              {
-                title: 'Documento',
-                style: {
-                  width: 30
-                }
-              },
-              {
-                title: 'Nombre Completo',
-                style: {
-                  width: 60
-                }
-              },
-              {
-                title: 'Correo',
-                style: {
-                  width: 50
-                }
-              },
-              {
-                title: 'Celular',
-                style: {
-                  width: 30
-                }
-              },
-              {
-                title: 'Estado',
-                style: {
-                  width: 30
-                }
-              }
-            ]}
-            invoiceTable={totalEmpleados.map((empleado, index) => [
-              index + 1,
-              empleado.numero_documento,
-              `${empleado.primer_nombre[0]?.toUpperCase() ?? ''}${empleado.primer_nombre?.slice(1) ?? ''} ${empleado.segundo_nombre[0]?.toUpperCase() ?? ''}${empleado.segundo_nombre?.slice(1) ?? ''} ${empleado.primer_apellido[0]?.toUpperCase() ?? ''}${empleado.primer_apellido?.slice(1) ?? ''} ${empleado.segundo_apellido[0]?.toUpperCase() ?? ''}${empleado.segundo_apellido?.slice(1) ?? ''}`,
-              empleado.correo,
-              empleado.celular,
-              empleado.estado
-            ])}
-            orientationLandscape={false}
-          />
+          {
+            loadingEmpleados
+              ? <Spinner color='secondary' />
+              : totalEmpleados.length !== 0
+                ? (
+                  <PDFGenerator
+                    fileName='Empleados-Registro-LunchFip'
+                    contactLabel='Tabla Registros de:'
+                    contactName='Empleados'
+                    invoiceHeader={[
+                      {
+                        title: '#',
+                        style: {
+                          width: 10
+                        }
+                      },
+                      {
+                        title: 'Documento',
+                        style: {
+                          width: 30
+                        }
+                      },
+                      {
+                        title: 'Nombre Completo',
+                        style: {
+                          width: 60
+                        }
+                      },
+                      {
+                        title: 'Correo',
+                        style: {
+                          width: 50
+                        }
+                      },
+                      {
+                        title: 'Celular',
+                        style: {
+                          width: 30
+                        }
+                      },
+                      {
+                        title: 'Estado',
+                        style: {
+                          width: 30
+                        }
+                      }
+                    ]}
+                    invoiceTable={totalEmpleados.map((empleado, index) => [
+                      index + 1,
+                      empleado.numero_documento,
+                      `${empleado.primer_nombre[0]?.toUpperCase() ?? ''}${empleado.primer_nombre?.slice(1) ?? ''} ${empleado.segundo_nombre[0]?.toUpperCase() ?? ''}${empleado.segundo_nombre?.slice(1) ?? ''} ${empleado.primer_apellido[0]?.toUpperCase() ?? ''}${empleado.primer_apellido?.slice(1) ?? ''} ${empleado.segundo_apellido[0]?.toUpperCase() ?? ''}${empleado.segundo_apellido?.slice(1) ?? ''}`,
+                      empleado.correo,
+                      empleado.celular,
+                      empleado.estado
+                    ])}
+                    orientationLandscape={false}
+                  />
+                  )
+                : null
+            }
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

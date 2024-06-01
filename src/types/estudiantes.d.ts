@@ -60,3 +60,12 @@ export interface EstudianteAlmuerzo {
   reserva_empleado: boolean
   reserva_virtual: boolean
 }
+
+export interface EstudianteHistorialReservas {
+  tipo_reserva: string
+  fecha_reserva: string
+  hora_reserva: string
+  estado_reserva: string
+  fecha_entrega: string
+  hora_entrega: string
+}

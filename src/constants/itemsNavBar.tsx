@@ -35,6 +35,10 @@ export const menuItemsStudent = [
     href: '/profile/student/reservation'
   },
   {
+    title: 'Historial',
+    href: '/profile/student/history'
+  },
+  {
     title: 'Perfil',
     href: '/profile/student/info'
   }

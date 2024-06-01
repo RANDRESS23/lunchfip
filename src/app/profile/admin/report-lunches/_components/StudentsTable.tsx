@@ -91,7 +91,7 @@ export const StudentsTable = () => {
     <section className='w-full'>
       <Table
       isStriped
-      aria-label="Tabla de estudiantes registrados en LunchFip"
+      aria-label="Tabla de reportes de almuerzos en LunchFip"
       isHeaderSticky
       shadow='md'
       topContent={<TopContentTable estudiantesCount={estudiantesAlmuerzosCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} fecha={fecha} totalEstudiantesAlmuerzos={totalEstudiantesAlmuerzos} loadingTotalEstudiantesAlmuerzos={loadingTotalEstudiantesAlmuerzos} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} setFecha={setFecha} loadingEstudiantesAlmuerzos={loadingEstudiantesAlmuerzos} />}

@@ -44,3 +44,12 @@ export const ESTUDIANTE_ALMUERZO_INITIAL_VALUES = {
   reserva_empleado: false,
   reserva_virtual: false
 }
+
+export const ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES = {
+  tipo_reserva: '',
+  fecha_reserva: '',
+  hora_reserva: '',
+  estado_reserva: '',
+  fecha_entrega: '',
+  hora_entrega: ''
+}
