@@ -1,7 +1,7 @@
 import { cn } from '@/libs/utils'
 import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input } from '@nextui-org/react'
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Spinner } from '@nextui-org/react'
 import { useCallback } from 'react'
 import { PDFGenerator } from '@/components/PDFGenerator'
 import { type Estudiante } from '@/types/estudiantes'
@@ -29,6 +29,7 @@ interface TopContentTableProps {
   visibleColumns: any
   loadingEstudiantes: boolean
   totalEstudiantes: Estudiante[]
+  loadingTotalEstudiantes: boolean
   setVisibleColumns: (value: any) => void
   setStatusFilter: (value: any) => void
   setFilterValue: (value: string) => void
@@ -36,7 +37,7 @@ interface TopContentTableProps {
   setRowsPerPage: (rowsPerPage: number) => void
 }
 
-export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, loadingEstudiantes, totalEstudiantes, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
+export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, visibleColumns, loadingEstudiantes, totalEstudiantes, loadingTotalEstudiantes, setVisibleColumns, setStatusFilter, setFilterValue, setPage, setRowsPerPage }: TopContentTableProps) => {
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value)
@@ -80,72 +81,80 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
           />
         </div>
         <div className="flex gap-3">
-          <PDFGenerator
-            fileName='Estudiantes-Registro-LunchFip'
-            contactLabel='Tabla Registros de:'
-            contactName='Estudiantes'
-            invoiceHeader={[
-              {
-                title: '#',
-                style: {
-                  width: 10
-                }
-              },
-              {
-                title: 'Documento',
-                style: {
-                  width: 30
-                }
-              },
-              {
-                title: 'Nombre Completo',
-                style: {
-                  width: 60
-                }
-              },
-              {
-                title: 'Correo',
-                style: {
-                  width: 50
-                }
-              },
-              {
-                title: 'Programa',
-                style: {
-                  width: 50
-                }
-              },
-              {
-                title: 'Celular',
-                style: {
-                  width: 30
-                }
-              },
-              {
-                title: 'Saldo',
-                style: {
-                  width: 20
-                }
-              },
-              {
-                title: 'Estado',
-                style: {
-                  width: 30
-                }
-              }
-            ]}
-            invoiceTable={totalEstudiantes.map((estudiante, index) => [
-              index + 1,
-              estudiante.numero_documento,
-              `${estudiante.primer_nombre[0]?.toUpperCase() ?? ''}${estudiante.primer_nombre?.slice(1) ?? ''} ${estudiante.segundo_nombre[0]?.toUpperCase() ?? ''}${estudiante.segundo_nombre?.slice(1) ?? ''} ${estudiante.primer_apellido[0]?.toUpperCase() ?? ''}${estudiante.primer_apellido?.slice(1) ?? ''} ${estudiante.segundo_apellido[0]?.toUpperCase() ?? ''}${estudiante.segundo_apellido?.slice(1) ?? ''}`,
-              estudiante.correo_institucional,
-              estudiante.programa,
-              estudiante.celular,
-              `$ ${estudiante.saldo}`,
-              estudiante.estado
-            ])}
-            orientationLandscape
-          />
+          {
+            loadingTotalEstudiantes
+              ? <Spinner color='secondary' />
+              : totalEstudiantes.length !== 0
+                ? (
+                  <PDFGenerator
+                    fileName='Estudiantes-Registro-LunchFip'
+                    contactLabel='Tabla Registros de:'
+                    contactName='Estudiantes'
+                    invoiceHeader={[
+                      {
+                        title: '#',
+                        style: {
+                          width: 10
+                        }
+                      },
+                      {
+                        title: 'Documento',
+                        style: {
+                          width: 30
+                        }
+                      },
+                      {
+                        title: 'Nombre Completo',
+                        style: {
+                          width: 60
+                        }
+                      },
+                      {
+                        title: 'Correo Institucional',
+                        style: {
+                          width: 50
+                        }
+                      },
+                      {
+                        title: 'Programa',
+                        style: {
+                          width: 50
+                        }
+                      },
+                      {
+                        title: 'Celular',
+                        style: {
+                          width: 30
+                        }
+                      },
+                      {
+                        title: 'Saldo',
+                        style: {
+                          width: 20
+                        }
+                      },
+                      {
+                        title: 'Estado',
+                        style: {
+                          width: 30
+                        }
+                      }
+                    ]}
+                    invoiceTable={totalEstudiantes.map((estudiante, index) => [
+                      index + 1,
+                      estudiante.numero_documento,
+                      `${estudiante.primer_nombre[0]?.toUpperCase() ?? ''}${estudiante.primer_nombre?.slice(1) ?? ''} ${estudiante.segundo_nombre[0]?.toUpperCase() ?? ''}${estudiante.segundo_nombre?.slice(1) ?? ''} ${estudiante.primer_apellido[0]?.toUpperCase() ?? ''}${estudiante.primer_apellido?.slice(1) ?? ''} ${estudiante.segundo_apellido[0]?.toUpperCase() ?? ''}${estudiante.segundo_apellido?.slice(1) ?? ''}`,
+                      estudiante.correo_institucional,
+                      estudiante.programa,
+                      estudiante.celular,
+                      `$ ${estudiante.saldo}`,
+                      estudiante.estado
+                    ])}
+                    orientationLandscape
+                  />
+                  )
+                : null
+          }
           <Dropdown>
             <DropdownTrigger className="hidden sm:flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">

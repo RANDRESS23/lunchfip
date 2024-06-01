@@ -46,7 +46,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
     column: 'nombre',
     direction: 'ascending'
   })
-  const { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes, totalEstudiantes } = useEstudiantes({ page: page.toString(), rows: rowsPerPage.toString() })
+  const { estudiantes, estudiantesCount, setEstudiantes, loadingEstudiantes, totalEstudiantes, loadingTotalEstudiantes } = useEstudiantes({ page: page.toString(), rows: rowsPerPage.toString() })
   const { onInitHandler, onShoot } = useConfetti()
 
   const handleChangeState = (estado: string, idEstudiante: string, primerNombre: string, primerApellido: string) => {
@@ -172,7 +172,7 @@ export const StudentsTable = ({ supabaseUrl, serviceRolKey }: StudentsTableProps
       aria-label="Tabla de estudiantes registrados en LunchFip"
       isHeaderSticky
       shadow='md'
-      topContent={<TopContentTable estudiantesCount={estudiantesCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} totalEstudiantes={totalEstudiantes} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEstudiantes={loadingEstudiantes} />}
+      topContent={<TopContentTable estudiantesCount={estudiantesCount} filterValue={filterValue} statusFilter={statusFilter} visibleColumns={visibleColumns} totalEstudiantes={totalEstudiantes} loadingTotalEstudiantes={loadingTotalEstudiantes} setVisibleColumns={setVisibleColumns} setStatusFilter={setStatusFilter} setFilterValue={setFilterValue} setPage={setPage} setRowsPerPage={setRowsPerPage} loadingEstudiantes={loadingEstudiantes} />}
       sortDescriptor={sortDescriptor}
       onSortChange={setSortDescriptor}
       topContentPlacement="outside"

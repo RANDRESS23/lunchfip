@@ -11,6 +11,7 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
   const estudiantesCount = useEstudianteStore(state => state.estudiantesCount)
   const setEstudiantesCount = useEstudianteStore(state => state.setEstudiantesCount)
   const [loadingEstudiantes, setLoadingEstudiantes] = useState(false)
+  const [loadingTotalEstudiantes, setLoadingTotalEstudiantes] = useState(false)
 
   useEffect(() => {
     const getEstudiantes = async () => {
@@ -20,7 +21,6 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
         const response = await api.get(`/estudiantes/?page=${page}&rows=${rows}`)
 
         setEstudiantes(response.data.estudiantes as Estudiante[])
-        setTotalEstudiantes(response.data.totalEstudiantes as Estudiante[])
         setEstudiantesCount(response.data.estudiantesCount as number)
       } catch (error) {
         console.log(error)
@@ -32,5 +32,23 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
     getEstudiantes()
   }, [page, rows])
 
-  return { estudiantes, estudiantesCount, loadingEstudiantes, totalEstudiantes, setEstudiantes }
+  useEffect(() => {
+    const getTotalEstudiantes = async () => {
+      try {
+        setLoadingTotalEstudiantes(true)
+
+        const response = await api.get('/estudiantes/total')
+
+        setTotalEstudiantes(response.data.totalEstudiantes as Estudiante[])
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setLoadingTotalEstudiantes(false)
+      }
+    }
+
+    getTotalEstudiantes()
+  }, [])
+
+  return { estudiantes, estudiantesCount, loadingEstudiantes, totalEstudiantes, loadingTotalEstudiantes, setEstudiantes }
 }

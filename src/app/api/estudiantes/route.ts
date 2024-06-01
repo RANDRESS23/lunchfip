@@ -32,23 +32,6 @@ export async function GET (request: Request) {
     }
 
     const estudiantesTotal = await db.estudiantes.findMany()
-    const totalEstudiantes = await Promise.all(estudiantesTotal.map(async (estudiante) => {
-      const programa = await db.programas.findUnique({
-        where: { id_programa: estudiante.id_programa }
-      })
-
-      const estadoEstudiante = await db.estados_Estudiantes.findFirst({
-        where: { id_estudiante: estudiante.id_estudiante }
-      })
-
-      const estado = await db.estados.findUnique({
-        where: { id_estado: estadoEstudiante?.id_estado }
-      })
-
-      return {
-        ...estudiante, programa: programa?.programa, estado: estado?.estado
-      }
-    }))
     const estudiantes = estudiantesTotal.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
 
     const estudiantesLunchFip = await Promise.all(estudiantes.map(async (estudiante) => {
@@ -115,7 +98,6 @@ export async function GET (request: Request) {
 
     return NextResponse.json({
       estudiantes: estudiantesLunchFip,
-      totalEstudiantes,
       estudiantesCount: estudiantesTotal.length
     })
   } catch (error) {
