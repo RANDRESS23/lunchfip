@@ -36,8 +36,12 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
     const estudianteReservas = await db.estudiantes_Reservas.findMany({
       where: { id_estudiante: idEstudiante }
     })
+    const estudianteRecargas = await db.estudiantes_Recargas.findMany({
+      where: { id_estudiante: idEstudiante }
+    })
 
     const estudianteReservasSliced = estudianteReservas.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
+    const estudianteRecargasSliced = estudianteRecargas.slice(Number(rows) * (Number(page) - 1), Number(rows) * Number(page))
 
     const estudianteHistorialReservas = await Promise.all(estudianteReservasSliced.map(async (reservaEstudiante) => {
       const reservaPromise = await db.reservas.findUnique({
@@ -133,10 +137,44 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
       }
     }))
 
+    const estudianteHistorialRecargas = await Promise.all(estudianteRecargasSliced.map(async (recargaEstudiante) => {
+      const recargaPromise = await db.recargas.findUnique({
+        where: { id_recarga: recargaEstudiante?.id_recarga }
+      })
+
+      const [
+        recarga
+      ] = await Promise.all([
+        recargaPromise
+      ])
+
+      const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
+      fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
+
+      const yearRecarga = fechaRecargaAux.getFullYear()
+      const monthRecarga = fechaRecargaAux.getMonth() + 1
+      const dayRecarga = fechaRecargaAux.getDate()
+      const horaRecarga = fechaRecargaAux.toLocaleString('es-ES', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      })
+
+      const fechaRecarga = `${yearRecarga < 10 ? '0' : ''}${dayRecarga}/${monthRecarga < 10 ? '0' : ''}${monthRecarga}/${yearRecarga}`
+
+      return {
+        id_recarga: recarga?.id_recarga,
+        fecha_recarga: fechaRecarga,
+        hora_recarga: horaRecarga,
+        saldo_recargado: recarga?.saldo
+      }
+    }))
+
     return NextResponse.json({
       estudianteHistorialReservas,
       estudianteHistorialReservasCount: estudianteReservas.length,
-      estudianteHistorialRecargas: []
+      estudianteHistorialRecargas,
+      estudianteHistorialRecargasCount: estudianteRecargas.length
     })
   } catch (error) {
     console.error({ error })

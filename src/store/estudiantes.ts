@@ -1,5 +1,5 @@
-import { ESTUDIANTE_ALMUERZO_INITIAL_VALUES, ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES, ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
-import { type EstudianteAlmuerzo, type Estudiante, type EstudianteHistorialReservas } from '@/types/estudiantes'
+import { ESTUDIANTE_ALMUERZO_INITIAL_VALUES, ESTUDIANTE_HISTORIAL_RECARGAS_INITIAL_VALUES, ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES, ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
+import { type EstudianteAlmuerzo, type Estudiante, type EstudianteHistorialReservas, type EstudianteHistorialRecargas } from '@/types/estudiantes'
 import { create } from 'zustand'
 
 interface EstudianteStore {
@@ -11,7 +11,7 @@ interface EstudianteStore {
   estudianteHistorialRecargasCount: number
   estudiantesAlmuerzos: EstudianteAlmuerzo[]
   estudianteHistorialReservas: EstudianteHistorialReservas[]
-  estudianteHistorialRecargas: EstudianteHistorialReservas[]
+  estudianteHistorialRecargas: EstudianteHistorialRecargas[]
   totalEstudiantesAlmuerzos: EstudianteAlmuerzo[]
   estudiantesAlmuerzosCount: number
   codigoQRReserva: string
@@ -20,7 +20,7 @@ interface EstudianteStore {
   setTotalEstudiantes: (totalEstudiantes: Estudiante[]) => void
   setEstudiantesAlmuerzos: (estudiantesAlmuerzos: EstudianteAlmuerzo[]) => void
   setEstudianteHistorialReservas: (estudianteHistorialReservas: EstudianteHistorialReservas[]) => void
-  setEstudianteHistorialRecargas: (estudianteHistorialReservas: EstudianteHistorialReservas[]) => void
+  setEstudianteHistorialRecargas: (estudianteHistorialRecargas: EstudianteHistorialRecargas[]) => void
   setTotalEstudiantesAlmuerzos: (totalEstudiantesAlmuerzos: EstudianteAlmuerzo[]) => void
   setEstudiantesCount: (estudiantesCount: number) => void
   setEstudianteHistorialReservasCount: (estudianteHistorialReservasCount: number) => void
@@ -36,7 +36,7 @@ export const useEstudianteStore = create<EstudianteStore>((set) => ({
   estudiantesCount: 0,
   estudiantesAlmuerzos: [ESTUDIANTE_ALMUERZO_INITIAL_VALUES],
   estudianteHistorialReservas: [ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES],
-  estudianteHistorialRecargas: [ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES],
+  estudianteHistorialRecargas: [ESTUDIANTE_HISTORIAL_RECARGAS_INITIAL_VALUES],
   totalEstudiantesAlmuerzos: [ESTUDIANTE_ALMUERZO_INITIAL_VALUES],
   estudiantesAlmuerzosCount: 0,
   estudianteHistorialReservasCount: 0,
@@ -47,7 +47,7 @@ export const useEstudianteStore = create<EstudianteStore>((set) => ({
   setTotalEstudiantes: (totalEstudiantes: Estudiante[]) => { set({ totalEstudiantes }) },
   setEstudiantesAlmuerzos: (estudiantesAlmuerzos: EstudianteAlmuerzo[]) => { set({ estudiantesAlmuerzos }) },
   setEstudianteHistorialReservas: (estudianteHistorialReservas: EstudianteHistorialReservas[]) => { set({ estudianteHistorialReservas }) },
-  setEstudianteHistorialRecargas: (estudianteHistorialReservas: EstudianteHistorialReservas[]) => { set({ estudianteHistorialReservas }) },
+  setEstudianteHistorialRecargas: (estudianteHistorialRecargas: EstudianteHistorialRecargas[]) => { set({ estudianteHistorialRecargas }) },
   setTotalEstudiantesAlmuerzos: (totalEstudiantesAlmuerzos: EstudianteAlmuerzo[]) => { set({ totalEstudiantesAlmuerzos }) },
   setEstudiantesCount: (estudiantesCount: number) => { set({ estudiantesCount }) },
   setEstudianteHistorialReservasCount: (estudianteHistorialReservasCount: number) => { set({ estudianteHistorialReservasCount }) },

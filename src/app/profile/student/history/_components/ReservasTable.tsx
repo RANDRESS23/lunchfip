@@ -68,7 +68,7 @@ export const ReservasTable = () => {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={items} emptyContent={'No hay estudiantes registrados en LunchFip.'} isLoading={loadingEstudianteHistorial} loadingContent={<Spinner label="Cargando..." />}>
+        <TableBody items={items} emptyContent={'No hay reservas registradas en LunchFip.'} isLoading={loadingEstudianteHistorial} loadingContent={<Spinner label="Cargando..." />}>
           {items.filter((item) => item.fecha_reserva !== '').map((item, index) => (
             <TableRow key={item.fecha_reserva}>
               {(columnKey) => {

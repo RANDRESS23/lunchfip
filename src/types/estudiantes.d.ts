@@ -69,3 +69,10 @@ export interface EstudianteHistorialReservas {
   fecha_entrega: string
   hora_entrega: string
 }
+
+export interface EstudianteHistorialRecargas {
+  id_recarga: string
+  fecha_recarga: string
+  hora_recarga: string
+  saldo_recargado: number
+}

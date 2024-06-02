@@ -53,3 +53,10 @@ export const ESTUDIANTE_HISTORIAL_RESERVAS_INITIAL_VALUES = {
   fecha_entrega: '',
   hora_entrega: ''
 }
+
+export const ESTUDIANTE_HISTORIAL_RECARGAS_INITIAL_VALUES = {
+  id_recarga: '',
+  fecha_recarga: '',
+  hora_recarga: '',
+  saldo_recargado: 0
+}

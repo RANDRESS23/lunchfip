@@ -2,6 +2,7 @@
 
 import { Tabs, Tab } from '@nextui-org/react'
 import { ReservasTable } from './ReservasTable'
+import { RecargasTable } from './RecargasTable'
 
 export const TabSections = () => {
   return (
@@ -10,7 +11,7 @@ export const TabSections = () => {
         <ReservasTable />
       </Tab>
       <Tab key="recargas" title="Recargas" className='w-full'>
-        {/* <StudentData /> */}
+        <RecargasTable />
       </Tab>
     </Tabs>
   )
