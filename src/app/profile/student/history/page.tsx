@@ -30,6 +30,7 @@ export default async function HistoryPage () {
         text1='Mi'
         text2='Historial'
         textSize='text-4xl lg:text-[42px]'
+        isTextRowMobile
       />
       <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes visualizar tanto tu historial de las reservas que has realizado, así como también aquellas recargas que hayas hecho.</p>
       <TabSections />

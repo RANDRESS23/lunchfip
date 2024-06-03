@@ -94,7 +94,7 @@ export async function POST (request: Request) {
     const nameCodigoQR = urlArr[urlArr.length - 1]
     const [idCodigoQR] = nameCodigoQR.split('.')
 
-    await cloudinary.uploader.destroy(idCodigoQR)
+    await cloudinary.uploader.destroy(`codigos_qr_reservas/${idCodigoQR}`)
 
     const updatedAlmuerzosEntregados = await db.almuerzos_Entregados.update({
       data: {
