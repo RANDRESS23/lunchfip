@@ -146,6 +146,7 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
           minute: 'numeric',
           hour12: true
         })
+        horaEntrega = horaEntrega[0] === '0' ? `12${horaEntrega.slice(1)}` : horaEntrega
       }
 
       const fechaReserva = `${yearReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`

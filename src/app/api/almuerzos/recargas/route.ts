@@ -60,7 +60,7 @@ export async function POST (request: Request) {
 
     return NextResponse.json(
       {
-        message: '¡Reserva realizada exitosamente!'
+        message: '¡Recarga realizada exitosamente!'
       },
       { status: 201 }
     )

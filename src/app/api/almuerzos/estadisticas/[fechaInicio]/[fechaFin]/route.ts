@@ -49,7 +49,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
           gte: fechaInicioParsed,
           lte: fechaFinParsed
         }
-      }
+      },
+      orderBy: { fecha: 'asc' }
     })
 
     if (almuerzos === null) {
@@ -75,59 +76,66 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
       })
     }
 
-    const dataTotalAlmuerzosReservados: Array<{ name: string, cantidad: number }> = []
-    const dataTotalAlmuerzosReservadosPresencial: Array<{ name: string, cantidad: number }> = []
-    const dataTotalAlmuerzosReservadosVirtual: Array<{ name: string, cantidad: number }> = []
-    const dataTotalAlmuerzosEntregados: Array<{ name: string, cantidad: number }> = []
-    const dataTotalAlmuerzosSinEntregar: Array<{ name: string, cantidad: number }> = []
-    const dataTotalRecargas: Array<{ name: string, cantidad: number }> = []
-
-    almuerzos.forEach(async (almuerzo) => {
-      const reservasDate = await db.reservas.findMany({
+    const dataTotalAlmuerzosEstadisticas = await Promise.all(almuerzos.map(async (almuerzo) => {
+      const reservasDatePromise = await db.reservas.findMany({
         where: { id_almuerzo: almuerzo.id_almuerzo }
       })
-      const entregasDate = await db.entregas.findMany({
+      const entregasDatePromise = await db.entregas.findMany({
         where: { id_almuerzo: almuerzo.id_almuerzo }
       })
 
-      let reservasPresenciales = 0
-      let reservasVirtuales = 0
+      const [
+        reservasDate,
+        entregasDate
+      ] = await Promise.all([
+        reservasDatePromise,
+        entregasDatePromise
+      ])
 
-      reservasDate.forEach(async (reserva, index) => {
-        const reservaPresencialDate = await db.reservas_Empleados.findFirst({
-          where: { id_reserva: reserva.id_reserva }
-        })
-        const reservaVirtualDate = await db.reservas_Virtuales.findFirst({
-          where: { id_reserva: reserva.id_reserva }
-        })
+      const reservaPresencialDatePromise = await db.reservas_Empleados.count({
+        where: { id_reserva: { in: reservasDate.map((reserva) => reserva.id_reserva) } }
+      })
+      const reservaVirtualDatePromise = await db.reservas_Virtuales.count({
+        where: { id_reserva: { in: reservasDate.map((reserva) => reserva.id_reserva) } }
+      })
 
-        if (reservaPresencialDate !== null) reservasPresenciales += 1
-        if (reservaVirtualDate !== null) reservasVirtuales += 1
+      const [
+        reservaPresencialDate,
+        reservaVirtualDate
+      ] = await Promise.all([
+        reservaPresencialDatePromise,
+        reservaVirtualDatePromise
+      ])
 
-        if (index === reservasDate.length - 1) {
-          dataTotalAlmuerzosReservados.push({
-            name: getDayAndMonthString(almuerzo.fecha),
-            cantidad: reservasDate.length
-          })
-          dataTotalAlmuerzosReservadosPresencial.push({
-            name: getDayAndMonthString(almuerzo.fecha),
-            cantidad: reservasPresenciales
-          })
-          dataTotalAlmuerzosReservadosVirtual.push({
-            name: getDayAndMonthString(almuerzo.fecha),
-            cantidad: reservasVirtuales
-          })
-          dataTotalAlmuerzosSinEntregar.push({
-            name: getDayAndMonthString(almuerzo.fecha),
-            cantidad: reservasDate.length - entregasDate.length
-          })
-          dataTotalAlmuerzosEntregados.push({
-            name: getDayAndMonthString(almuerzo.fecha),
-            cantidad: entregasDate.length
-          })
+      return {
+        dataTotalAlmuerzosReservados: {
+          name: getDayAndMonthString(almuerzo.fecha),
+          cantidad: reservasDate.length
+        },
+        dataTotalAlmuerzosReservadosPresencial: {
+          name: getDayAndMonthString(almuerzo.fecha),
+          cantidad: reservaPresencialDate
+        },
+        dataTotalAlmuerzosReservadosVirtual: {
+          name: getDayAndMonthString(almuerzo.fecha),
+          cantidad: reservaVirtualDate
+        },
+        dataTotalAlmuerzosSinEntregar: {
+          name: getDayAndMonthString(almuerzo.fecha),
+          cantidad: reservasDate.length - entregasDate.length
+        },
+        dataTotalAlmuerzosEntregados: {
+          name: getDayAndMonthString(almuerzo.fecha),
+          cantidad: entregasDate.length
         }
-      })
-    })
+      }
+    }))
+
+    const dataTotalAlmuerzosReservados: Array<{ name: string, cantidad: number }> = dataTotalAlmuerzosEstadisticas.map(({ dataTotalAlmuerzosReservados }) => dataTotalAlmuerzosReservados)
+    const dataTotalAlmuerzosReservadosPresencial: Array<{ name: string, cantidad: number }> = dataTotalAlmuerzosEstadisticas.map(({ dataTotalAlmuerzosReservadosPresencial }) => dataTotalAlmuerzosReservadosPresencial)
+    const dataTotalAlmuerzosReservadosVirtual: Array<{ name: string, cantidad: number }> = dataTotalAlmuerzosEstadisticas.map(({ dataTotalAlmuerzosReservadosVirtual }) => dataTotalAlmuerzosReservadosVirtual)
+    const dataTotalAlmuerzosEntregados: Array<{ name: string, cantidad: number }> = dataTotalAlmuerzosEstadisticas.map(({ dataTotalAlmuerzosEntregados }) => dataTotalAlmuerzosEntregados)
+    const dataTotalAlmuerzosSinEntregar: Array<{ name: string, cantidad: number }> = dataTotalAlmuerzosEstadisticas.map(({ dataTotalAlmuerzosSinEntregar }) => dataTotalAlmuerzosSinEntregar)
 
     const totalRecargasFecha = await db.recargas.findMany({
       where: {
@@ -135,25 +143,30 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
           gte: fechaInicioParsed,
           lte: fechaFinParsed
         }
-      }
+      },
+      orderBy: { fecha: 'asc' }
     })
 
-    let fechaAux = ''
+    let fechasAux: string[] = []
 
-    totalRecargasFecha.forEach(async recarga => {
+    const dataTotalRecargasEstadisticas = await Promise.all(totalRecargasFecha.map(async (recarga) => {
       const startDate = new Date(recarga.fecha)
       startDate.setUTCHours(startDate.getUTCHours() + 5)
       startDate.setUTCHours(0, 0, 0, 0)
-      startDate.setUTCHours(startDate.getUTCHours() - 19)
+      // startDate.setUTCHours(startDate.getUTCHours() - 19)
 
-      if (fechaAux === startDate.toString()) return
+      if (fechasAux.includes(startDate.toString())) {
+        return {
+          dataTotalRecargas: null
+        }
+      }
 
-      fechaAux = startDate.toString()
+      fechasAux = [...fechasAux, startDate.toString()]
 
       const endDate = new Date(startDate)
       endDate.setUTCDate(startDate.getUTCDate() + 1)
 
-      const recargasDate = await db.recargas.findMany({
+      const recargasDatePromise = await db.recargas.count({
         where: {
           fecha: {
             gte: startDate,
@@ -162,11 +175,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
         }
       })
 
-      dataTotalRecargas.push({
-        name: getDayAndMonthString(recarga.fecha, true),
-        cantidad: recargasDate.length
-      })
-    })
+      const [
+        recargasDate
+      ] = await Promise.all([
+        recargasDatePromise
+      ])
+
+      return {
+        dataTotalRecargas: {
+          name: getDayAndMonthString(recarga.fecha, true),
+          cantidad: recargasDate
+        }
+      }
+    }))
+
+    const dataTotalRecargas: Array<{ name: string, cantidad: number } | null> = dataTotalRecargasEstadisticas
+      .filter(data => data.dataTotalRecargas !== null)
+      .map(({ dataTotalRecargas }) => dataTotalRecargas)
 
     const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
 
