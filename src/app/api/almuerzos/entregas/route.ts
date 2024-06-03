@@ -34,13 +34,24 @@ export async function POST (request: Request) {
       id_almuerzo: idAlmuerzo
     } = entregasSchema.parse(body)
 
+    const reservas = await db.reservas.findMany({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    if (reservas.length === 0) {
+      return NextResponse.json(
+        { message: '¡No existen reservas disponibles para el día indicado!' },
+        { status: 400 }
+      )
+    }
+
     const estudianteReserva = await db.estudiantes_Reservas.findFirst({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante, id_reserva: { in: reservas.map((reserva) => reserva.id_reserva) } }
     })
 
     if (estudianteReserva === null) {
       return NextResponse.json(
-        { message: '¡No existe reserva disponible para el código QR escaneado!' },
+        { message: '¡No existe reserva disponible para el estudiante!' },
         { status: 400 }
       )
     }
