@@ -71,7 +71,7 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
         )
       }
       {
-        (almuerzosReservados.cantidad - almuerzosEntregados.cantidad === 0) && (codigoQRReserva === '') && isValidHourToReserve && (
+        (almuerzosTotales.id_almuerzo !== '') && (almuerzosReservados.cantidad - almuerzosEntregados.cantidad === 0) && (codigoQRReserva === '') && isValidHourToReserve && (
           <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡Mala suerte, se agotaron los almuerzos disponibles para reservar, atento para la próxima vez!. ⚠</p>
         )
       }
