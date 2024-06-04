@@ -5,8 +5,8 @@ export default function getNextDate () {
   const nextDate = new Date(todayDate.toString())
   const hour = nextDate.getUTCHours()
   const isValidHour = hour >= 15
-  const isValidHourToReserve = (hour >= 17 || hour < 11) || nextDate.getDay() === 6 || nextDate.getDay() === 0
-  const isValidHourToDelivery = (hour >= 11 && hour < 14) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
+  const isValidHourToReserve = (hour >= 14 || hour < 11) || nextDate.getDay() === 6 || nextDate.getDay() === 0
+  const isValidHourToDelivery = (hour >= 11 && hour < 17) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
   const isValidHourToDeliveryStats = (hour >= 14 && hour < 17) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
 
   if (isValidHour) {
