@@ -148,7 +148,6 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
       ])
 
       const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
-      fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
 
       const yearRecarga = fechaRecargaAux.getFullYear()
       const monthRecarga = fechaRecargaAux.getMonth() + 1

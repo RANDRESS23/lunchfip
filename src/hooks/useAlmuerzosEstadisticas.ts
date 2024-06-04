@@ -6,8 +6,6 @@ import { useAlmuerzosStore } from '@/store/almuerzos'
 export const useAlmuerzosEstadisticas = ({ fechaInicio, fechaFin }: { fechaInicio: string, fechaFin: string }) => {
   const fechaInicioFinal = new Date(fechaInicio)
   const fechaFinFinal = new Date(fechaFin)
-  fechaInicioFinal.setDate(fechaInicioFinal.getDate() + 1)
-  fechaFinFinal.setDate(fechaFinFinal.getDate() + 1)
 
   const almuerzosEstadisticas = useAlmuerzosStore(state => state.almuerzosEstadisticas)
   const setAlmuerzosEstadisticas = useAlmuerzosStore(state => state.setAlmuerzosEstadisticas)
