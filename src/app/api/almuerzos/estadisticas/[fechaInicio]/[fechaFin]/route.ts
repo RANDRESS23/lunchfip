@@ -1,9 +1,8 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 
-const getDayAndMonthString = (fechaAux: Date, notSumDay?: boolean) => {
+const getDayAndMonthString = (fechaAux: Date) => {
   const fechaAuxParsed = new Date(fechaAux.toString())
-  if (!notSumDay) fechaAuxParsed.setDate(fechaAuxParsed.getDate() + 1)
 
   const mesAux = new Date(fechaAuxParsed.toString()).getMonth() + 1
   const diaAux = new Date(fechaAuxParsed.toString()).getDate()
@@ -151,9 +150,7 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
     const dataTotalRecargasEstadisticas = await Promise.all(totalRecargasFecha.map(async (recarga) => {
       const startDate = new Date(recarga.fecha)
-      startDate.setUTCHours(startDate.getUTCHours() + 5)
       startDate.setUTCHours(0, 0, 0, 0)
-      // startDate.setUTCHours(startDate.getUTCHours() - 19)
 
       if (fechasAux.includes(startDate.toString())) {
         return {
@@ -183,7 +180,7 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
       return {
         dataTotalRecargas: {
-          name: getDayAndMonthString(recarga.fecha, true),
+          name: getDayAndMonthString(recarga.fecha),
           cantidad: recargasDate
         }
       }
