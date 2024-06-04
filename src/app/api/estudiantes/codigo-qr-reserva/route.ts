@@ -54,6 +54,17 @@ export async function POST (request: Request) {
       )
     }
 
+    const estudianteEntrega = await db.estudiantes_Entregas.findFirst({
+      where: { id_estudiante_reserva: estudianteReserva.id_estudiante_reserva }
+    })
+
+    if (estudianteEntrega !== null) {
+      return NextResponse.json(
+        { message: '¡Ya se ha realizado la entrega de la reserva!' },
+        { status: 400 }
+      )
+    }
+
     const codigoQRReserva = await db.codigos_QR_Reservas.findFirst({
       where: { id_reserva: estudianteReserva.id_reserva }
     })

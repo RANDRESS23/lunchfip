@@ -36,7 +36,7 @@ export default async function ReservePage () {
         text2='Almuerzo'
         isTextLeft
       />
-      <p className='w-full z-10 -mt-3 mb-8 text-p-light dark:text-p-dark'>Reservar almuerzo a estudiante mediante su código QR personal o número de documento.</p>
+      <p className='w-full z-10 -mt-3 mb-8 text-p-light dark:text-p-dark'>En esta sección podrás reservar el almuerzo al estudiante escaneando su código QR personal o mediante la digitalización de su número de documento.</p>
       <div className='w-full flex gap-6'>
         {
           isValidHourToReserve

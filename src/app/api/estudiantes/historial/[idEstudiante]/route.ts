@@ -95,7 +95,6 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
       ])
 
       const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
-      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
 
       const yearReserva = fechaReservaAux.getFullYear()
       const monthReserva = fechaReservaAux.getMonth() + 1
@@ -111,13 +110,12 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
 
       if (entrega !== null) {
         const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
-        fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
 
         const yearEntrega = fechaEntregaAux?.getFullYear()
         const monthEntrega = fechaEntregaAux?.getMonth() + 1
         const dayEntrega = fechaEntregaAux?.getDate()
 
-        fechaEntrega = `${yearEntrega < 10 ? '0' : ''}${dayEntrega}/${monthEntrega < 10 ? '0' : ''}${monthEntrega}/${yearEntrega}`
+        fechaEntrega = `${dayEntrega < 10 ? '0' : ''}${dayEntrega}/${monthEntrega < 10 ? '0' : ''}${monthEntrega}/${yearEntrega}`
         horaEntrega = fechaEntregaAux?.toLocaleString('es-ES', {
           hour: 'numeric',
           minute: 'numeric',
@@ -126,7 +124,7 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
         horaEntrega = horaEntrega[0] === '0' ? `12${horaEntrega.slice(1)}` : horaEntrega
       }
 
-      const fechaReserva = `${yearReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
+      const fechaReserva = `${dayReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
 
       return {
         tipo_reserva: reservaEmpleado ? 'Presencial' : reservaVirtual ? 'Virtual' : 'N/A',
