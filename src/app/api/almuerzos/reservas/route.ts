@@ -87,6 +87,14 @@ export async function POST (request: Request) {
           updatedAt: currentDate
         }
       })
+
+      await db.estudiantes.update({
+        data: {
+          saldo: { decrement: 1500 },
+          updatedAt: currentDate
+        },
+        where: { id_estudiante: idEstudiante }
+      })
     }
 
     const estados = await db.estados.findMany()

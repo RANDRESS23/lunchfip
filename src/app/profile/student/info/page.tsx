@@ -31,6 +31,7 @@ export default async function InfoPage () {
         text1='Mi'
         text2='Perfil'
         textSize='text-4xl lg:text-[42px]'
+        isTextRowMobile
       />
       <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes visualizar tu perfil y tu código QR personal, además de actualizar tus datos cuando desees.</p>
       <StudentInfo />

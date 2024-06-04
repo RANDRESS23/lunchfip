@@ -7,7 +7,7 @@ export const CodigoQR = () => {
   return (
     <section className='flex flex-col items-center justify-center gap-7 font-inter-sans'>
       <p className='w-full text-sm z-10 -mt-2 text-center italic text-p-light dark:text-p-dark'>Aqui encontrarás tu códgio QR Personal, con el cual podrás presentarselo al personal encargado para que sea más fácil y eficiente tus reservas, como también tus recargas a la plataforma.</p>
-      <div className='flex justify-center items-center'>
+      <div className='w-full flex justify-center items-center'>
         {
           estudiante.codigoUrl !== ''
             ? (

@@ -10,10 +10,10 @@ import { toast } from 'sonner'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
 import { AvailableLunchs } from './AvailableLunchs'
 import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
-import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
 import { cn } from '@/libs/utils'
 import { useEstudianteCodigoQRReserva } from '@/hooks/useEstudianteCodigoQRReserva'
 import { ReserveCodeQR } from './ReserveCodeQR'
+import { type AlmuerzosReservados } from '@/types/almuerzos'
 
 interface ReserveLunchProps {
   nextDate: Date
@@ -24,13 +24,11 @@ interface ReserveLunchProps {
 }
 
 export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats }: ReserveLunchProps) => {
-  const { estudiante } = useEstudiante()
-  const [loadingReservation, setLoadingReservation] = useState(false)
+  const { estudiante, setEstudiante } = useEstudiante()
   const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
-  const { almuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
-  const { almuerzosEntregados } = useAlmuerzosEntregados({ nextDate: nextDate.toString() })
-
-  const { codigoQRReserva } = useEstudianteCodigoQRReserva({ idEstudiante: estudiante.id_estudiante, idAlmuerzo: almuerzosTotales.id_almuerzo })
+  const { almuerzosReservados, setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
+  const { codigoQRReserva } = useEstudianteCodigoQRReserva({ estudiante, idAlmuerzo: almuerzosTotales.id_almuerzo })
+  const [loadingReservation, setLoadingReservation] = useState(false)
 
   const saldoString = estudiante.saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
@@ -38,6 +36,17 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
   const saldoParsed3 = saldoParsed !== '' ? `$ ${saldoParsed}.${saldoParsed2}` : '$ 0'
 
   const { onInitHandler, onShoot } = useConfetti()
+
+  const confirmReservation = () => {
+    if (estudiante.saldo < 1500) return toast.error('¡No cuentas con el saldo suficiente para reservar tu almuerzo!.')
+
+    toast(`¿Estás seguro que deseas reservar el almuerzos para el día "${nextFullDate}?"`, {
+      action: {
+        label: 'Reservar',
+        onClick: () => { saveReservation() }
+      }
+    })
+  }
 
   const saveReservation = async () => {
     try {
@@ -51,6 +60,8 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
       if (response.status === 201) {
         onShoot()
         toast.success('¡Reserva realizada exitosamente!')
+        setEstudiante({ ...estudiante, saldo: estudiante.saldo - 1500 })
+        setAlmuerzosReservados(response.data.almuerzosReservados as AlmuerzosReservados)
       }
     } catch (error: any) {
       if (error.response.data !== undefined) {
@@ -71,7 +82,7 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
         )
       }
       {
-        (almuerzosTotales.id_almuerzo !== '') && (almuerzosReservados.cantidad - almuerzosEntregados.cantidad === 0) && (codigoQRReserva === '') && isValidHourToReserve && (
+        (almuerzosTotales.id_almuerzo !== '') && (almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad === 0) && (codigoQRReserva === '') && isValidHourToReserve && (
           <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡Mala suerte, se agotaron los almuerzos disponibles para reservar, atento para la próxima vez!. ⚠</p>
         )
       }
@@ -85,36 +96,32 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
           <p className='w-full z-10 mt-14 italic text-center text-color-secondary'>⚠ ¡El administrador no ha definido la cantidad total de almuerzos para reservar, intente más tarde!. ⚠</p>
         )
       }
-      <div className={'flex flex-col items-center justify-center'}>
+      <div className='w-full flex flex-col items-center justify-center'>
         {
-          (codigoQRReserva !== '') && isValidHourToReserve && isValidHourToDelivery && (
-            <>
-              <p className='w-full z-10 mt-14 italic text-center text-color-primary'>✔ ¡Reservaste, puedes visualizar tu código QR de reserva a continuación, presenta este código QR al personal encargado para reclamar tu almuerzo!. ✔</p>
-              <ReserveCodeQR
-                primerNombre={estudiante.primer_nombre}
-                primerApellido={estudiante.primer_apellido}
-                codigoQRReserva={codigoQRReserva}
-                isAvailableReserve={almuerzosTotales.id_almuerzo !== ''}
-              />
-            </>
+          (codigoQRReserva !== '') && (isValidHourToReserve || isValidHourToDelivery) && (
+            <ReserveCodeQR
+              primerNombre={estudiante.primer_nombre}
+              primerApellido={estudiante.primer_apellido}
+              codigoQRReserva={codigoQRReserva}
+            />
           )
         }
         <div className={cn(
           'flex flex-col md:flex-row items-center justify-center md:gap-10',
           almuerzosTotales.id_almuerzo === '' && '-mt-10',
-          codigoQRReserva !== '' && '-mt-24 md:-mt-16'
+          codigoQRReserva !== '' && 'mt-0 md:-mt-10'
         )}>
           <AvailableLunchs
             amounthLunch={isValidHourToReserve ? almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad : 'N/A'}
             nextFullDate={nextFullDate}
-            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosReservados.cantidad - almuerzosEntregados.cantidad !== 0 && isValidHourToReserve}
+            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad !== 0 && isValidHourToReserve}
           />
           <BalanceCard
             nextFullDate={nextFullDate}
             saldoParsed={saldoParsed3}
             loadingReservation={loadingReservation}
-            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosReservados.cantidad - almuerzosEntregados.cantidad !== 0 && isValidHourToReserve}
-            saveReservation={saveReservation}
+            isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad !== 0 && isValidHourToReserve}
+            saveReservation={confirmReservation}
           />
         </div>
       </div>

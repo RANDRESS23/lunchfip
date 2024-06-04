@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
+import { type Estudiante } from '@/types/estudiantes'
 
-export const useEstudianteCodigoQRReserva = ({ idEstudiante, idAlmuerzo }: { idEstudiante: string, idAlmuerzo: string }) => {
+export const useEstudianteCodigoQRReserva = ({ estudiante, idAlmuerzo }: { estudiante: Estudiante, idAlmuerzo: string }) => {
   const codigoQRReserva = useEstudianteStore(state => state.codigoQRReserva)
   const setCodigoQRReserva = useEstudianteStore(state => state.setCodigoQRReserva)
   const [loadingCodigoQRReserva, setLoadingCodigoQRReserva] = useState(false)
@@ -12,8 +13,10 @@ export const useEstudianteCodigoQRReserva = ({ idEstudiante, idAlmuerzo }: { idE
       try {
         setLoadingCodigoQRReserva(true)
 
+        if (!estudiante.id_estudiante || !idAlmuerzo) return
+
         const response = await api.post('/estudiantes/codigo-qr-reserva', {
-          id_estudiante: idEstudiante,
+          id_estudiante: estudiante.id_estudiante,
           id_almuerzo: idAlmuerzo
         })
 
@@ -28,7 +31,7 @@ export const useEstudianteCodigoQRReserva = ({ idEstudiante, idAlmuerzo }: { idE
     }
 
     getCodigoQRReserva()
-  }, [idEstudiante, idAlmuerzo])
+  }, [estudiante, idAlmuerzo])
 
   return { codigoQRReserva, loadingCodigoQRReserva }
 }
