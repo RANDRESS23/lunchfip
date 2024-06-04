@@ -41,7 +41,6 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
     })
 
     const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
-    fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
 
     const yearReserva = fechaReservaAux.getFullYear()
     const monthReserva = fechaReservaAux.getMonth() + 1
@@ -49,7 +48,6 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
     const fechaReserva = `${dayReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
 
     const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
-    fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
 
     const yearEntrega = fechaEntregaAux?.getFullYear()
     const monthEntrega = fechaEntregaAux?.getMonth() + 1
@@ -58,7 +56,6 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
     const fechaEntrega = `${dayEntrega < 10 ? '0' : ''}${dayEntrega}/${monthEntrega < 10 ? '0' : ''}${monthEntrega}/${yearEntrega}`
 
     const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
-    fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
 
     const yearRecarga = fechaRecargaAux?.getFullYear()
     const monthRecarga = fechaRecargaAux?.getMonth() + 1
