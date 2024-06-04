@@ -47,8 +47,9 @@ export const FormForgotPassword = () => {
         setEstudiante({ ...ESTUDIANTE_INITIAL_VALUES, correo_institucional: data.correo_institucional, numero_documento: response.data.numero_documento })
 
         const supabase = createClient()
+        const origin = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://www.lunchfip.online'
 
-        const { error } = await supabase.auth.resetPasswordForEmail(data.correo_institucional as string, { redirectTo: `${window.location.origin}/reset-password` })
+        const { error } = await supabase.auth.resetPasswordForEmail(data.correo_institucional as string, { redirectTo: `${origin}/reset-password` })
 
         if (error) {
           console.log({ error })
@@ -88,8 +89,8 @@ export const FormForgotPassword = () => {
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <TitleAnimated
-                  text1='Recuperar contraseña de'
-                  text2='Lunchfip'
+                  text1='Recuperar'
+                  text2='Contraseña'
                 />
                 <p className='-mt-5 text-center z-10 text-p-light dark:text-p-dark mb-7'>
                   Para cambiar tu contraseña escribe tu correo institucional, allí te llegará el enlace para el respectivo cambio de contraseña.

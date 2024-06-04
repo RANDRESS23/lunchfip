@@ -116,8 +116,8 @@ export const FormResetPassword = ({ token }: { token: string }) => {
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
       <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-[690px] mx-auto w-11/12 flex flex-col gap-5'>
         <TitleAnimated
-          text1='Confirmar cambio de contraseña en'
-          text2='Lunchfip'
+          text1='Confirmar cambio'
+          text2='Contraseña'
         />
         <p className='-mt-3 text-center z-10 text-p-light dark:text-p-dark'>
           Para finalizar el proceso de cambio de contraseña, escribe tu nueva contraseña.

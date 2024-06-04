@@ -95,6 +95,7 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
       ])
 
       const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
+      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
 
       const yearReserva = fechaReservaAux.getFullYear()
       const monthReserva = fechaReservaAux.getMonth() + 1
@@ -110,6 +111,7 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
 
       if (entrega !== null) {
         const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
+        fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
 
         const yearEntrega = fechaEntregaAux?.getFullYear()
         const monthEntrega = fechaEntregaAux?.getMonth() + 1
