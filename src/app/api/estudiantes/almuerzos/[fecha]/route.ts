@@ -145,7 +145,11 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
       const { id_tipo_documento: a, id_programa: b, id_rol: c, id_sexo: d, saldo: e, clave: f, createdAt: g, updatedAt: h, ...resEstudiantes } = estudiante
 
       const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
-      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+
+      if (process.env.NODE_ENV === 'development') {
+        fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+      }
+
       const fechaReservaAux2 = new Date(fechaReservaAux.toString())
 
       const fechaReserva = format(fechaReservaAux2, 'DD/MM/YYYY')
@@ -156,7 +160,11 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
 
       if (entrega !== null) {
         const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
-        fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+
+        if (process.env.NODE_ENV === 'development') {
+          fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+        }
+
         const fechaEntregaAux2 = new Date(fechaEntregaAux.toString())
 
         fechaEntrega = format(fechaEntregaAux2, 'DD/MM/YYYY')
