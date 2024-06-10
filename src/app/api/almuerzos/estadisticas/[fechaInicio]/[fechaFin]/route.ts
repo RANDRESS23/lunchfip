@@ -106,23 +106,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
       return {
         dataTotalAlmuerzosReservados: {
-          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
           cantidad: reservasDate.length
         },
         dataTotalAlmuerzosReservadosPresencial: {
-          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
           cantidad: reservaPresencialDate
         },
         dataTotalAlmuerzosReservadosVirtual: {
-          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
           cantidad: reservaVirtualDate
         },
         dataTotalAlmuerzosSinEntregar: {
-          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
           cantidad: reservasDate.length - entregasDate.length
         },
         dataTotalAlmuerzosEntregados: {
-          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
           cantidad: entregasDate.length
         }
       }
