@@ -3,7 +3,7 @@ import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 const getDayAndMonthString = (fechaAux: Date) => {
-  const fechaAuxParsed = new Date(fechaAux.toString())
+  const fechaAuxParsed = new Date(fechaAux)
 
   return format(fechaAuxParsed, 'DD/MM')
 }
@@ -106,23 +106,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
       return {
         dataTotalAlmuerzosReservados: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
           cantidad: reservasDate.length
         },
         dataTotalAlmuerzosReservadosPresencial: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
           cantidad: reservaPresencialDate
         },
         dataTotalAlmuerzosReservadosVirtual: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
           cantidad: reservaVirtualDate
         },
         dataTotalAlmuerzosSinEntregar: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
           cantidad: reservasDate.length - entregasDate.length
         },
         dataTotalAlmuerzosEntregados: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          name: getDayAndMonthString(almuerzoFecha?.fecha as Date),
           cantidad: entregasDate.length
         }
       }

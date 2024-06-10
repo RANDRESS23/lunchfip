@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { DefineLunches } from './_components/DefineLunches'
-import getNextDate from '@/libs/nextDate'
 import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { type Metadata } from 'next'
