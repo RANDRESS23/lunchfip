@@ -6,12 +6,16 @@ interface PDFGeneratorProps {
   fileName: string
   contactLabel: string
   contactName: string
+  invoiceLabel?: string
+  invoiceNum?: number
+  invoiceInvDate?: string
+  invoiceInvGenDate?: string
   invoiceHeader: Array<{ title: string, style: { width: number } }>
   invoiceTable: Array<Array<string | number>>
   orientationLandscape: boolean
 }
 
-export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceHeader, invoiceTable, orientationLandscape }: PDFGeneratorProps) => {
+export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceLabel, invoiceNum, invoiceInvDate, invoiceInvGenDate, invoiceHeader, invoiceTable, orientationLandscape }: PDFGeneratorProps) => {
   const getProps = () => {
     return {
       outputType: OutputType.Save,
@@ -58,10 +62,10 @@ export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceHeade
         otherInfo: ''
       },
       invoice: {
-        label: '',
-        num: undefined,
-        invDate: '',
-        invGenDate: '',
+        label: invoiceLabel,
+        num: invoiceNum,
+        invDate: invoiceInvDate,
+        invGenDate: invoiceInvGenDate,
         headerBorder: false,
         tableBodyBorder: false,
         header: invoiceHeader,

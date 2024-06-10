@@ -15,8 +15,10 @@ export const LunchesDeliveriedStats = () => {
 
   const horaParsed = (fechaUltimo: Date) => {
     const dateAux = new Date(fechaUltimo.toString())
+    dateAux.setUTCHours(dateAux.getUTCHours() + 5)
+    const fecha = new Date(dateAux.toString())
 
-    return format(dateAux, 'h:mm A')
+    return format(fecha, 'h:mm A')
   }
 
   const getNextFullDate = () => {
