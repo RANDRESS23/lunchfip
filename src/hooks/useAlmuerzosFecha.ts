@@ -4,10 +4,6 @@ import { type AlmuerzosFecha } from '@/types/almuerzos'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 
 export const useAlmuerzosFecha = () => {
-  // const fechaAux2 = new Date(fechaAux?.toString() ?? new Date().toString())
-  // const fechaAux3 = new Date(fechaAux2.setDate(fechaAux2.getDate() + 1))
-  // const fecha = format(fechaAux3, 'YYYY-MM-DD')
-
   const almuerzosFecha = useAlmuerzosStore(state => state.almuerzosFecha)
   const setAlmuerzosFecha = useAlmuerzosStore(state => state.setAlmuerzosFecha)
   const [loadingAlmuerzosFecha, setLoadingAlmuerzosFecha] = useState(false)

@@ -1,15 +1,11 @@
 import { db } from '@/libs/prismaDB'
+import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 const getDayAndMonthString = (fechaAux: Date) => {
   const fechaAuxParsed = new Date(fechaAux.toString())
 
-  const mesAux = new Date(fechaAuxParsed.toString()).getMonth() + 1
-  const diaAux = new Date(fechaAuxParsed.toString()).getDate()
-
-  const fechaString = `${diaAux < 10 ? '0' : ''}${diaAux}/${mesAux < 10 ? '0' : ''}${mesAux}`
-
-  return fechaString
+  return format(fechaAuxParsed, 'DD/MM')
 }
 
 const getDefaultData = (fechaInicioAux: Date, fechaFinAux: Date) => [
@@ -28,28 +24,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
     const fechaInicioAux = new Date(params.fechaInicio)
     const fechaFinAux = new Date(params.fechaFin)
 
-    const añoInicio = fechaInicioAux.getFullYear()
-    const mesInicio = fechaInicioAux.getMonth() + 1
-    const diaInicio = fechaInicioAux.getDate()
+    const fechaInicioString = format(fechaInicioAux, 'DD-MM-YYYY')
+    const fechaFinString = format(fechaFinAux, 'DD-MM-YYYY')
 
-    const añoFin = fechaFinAux.getFullYear()
-    const mesFin = fechaFinAux.getMonth() + 1
-    const diaFin = fechaFinAux.getDate()
-
-    const fechaInicioParsed = new Date(`${añoInicio}-${mesInicio < 10 ? '0' : ''}${mesInicio}-${diaInicio < 10 ? '0' : ''}${diaInicio}`)
-    const fechaFinParsed = new Date(`${añoFin}-${mesFin < 10 ? '0' : ''}${mesFin}-${diaFin < 10 ? '0' : ''}${diaFin}`)
-
-    const fechaInicioString = `${diaInicio < 10 ? '0' : ''}${diaInicio}/${mesInicio < 10 ? '0' : ''}${mesInicio}/${añoInicio}`
-    const fechaFinString = `${diaFin < 10 ? '0' : ''}${diaFin}/${mesFin < 10 ? '0' : ''}${mesFin}/${añoFin}`
-
-    const almuerzos = await db.almuerzos.findMany({
+    const existingLunchesDate = await db.almuerzos_Fecha.findMany({
       where: {
         fecha: {
-          gte: fechaInicioParsed,
-          lte: fechaFinParsed
+          gte: fechaInicioAux,
+          lte: fechaFinAux
         }
       },
       orderBy: { fecha: 'asc' }
+    })
+
+    const almuerzos = await db.almuerzos.findMany({
+      where: {
+        id_almuerzos_fecha: { in: existingLunchesDate.map(almuerzosFecha => almuerzosFecha.id_almuerzos_fecha) }
+      }
     })
 
     if (almuerzos === null) {
@@ -76,17 +67,24 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
     }
 
     const dataTotalAlmuerzosEstadisticas = await Promise.all(almuerzos.map(async (almuerzo) => {
+      const almuerzoFechaPromise = await db.almuerzos_Fecha.findUnique({
+        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha }
+      })
+
       const reservasDatePromise = await db.reservas.findMany({
         where: { id_almuerzo: almuerzo.id_almuerzo }
       })
+
       const entregasDatePromise = await db.entregas.findMany({
         where: { id_almuerzo: almuerzo.id_almuerzo }
       })
 
       const [
+        almuerzoFecha,
         reservasDate,
         entregasDate
       ] = await Promise.all([
+        almuerzoFechaPromise,
         reservasDatePromise,
         entregasDatePromise
       ])
@@ -108,23 +106,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
       return {
         dataTotalAlmuerzosReservados: {
-          name: getDayAndMonthString(almuerzo.fecha),
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
           cantidad: reservasDate.length
         },
         dataTotalAlmuerzosReservadosPresencial: {
-          name: getDayAndMonthString(almuerzo.fecha),
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
           cantidad: reservaPresencialDate
         },
         dataTotalAlmuerzosReservadosVirtual: {
-          name: getDayAndMonthString(almuerzo.fecha),
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
           cantidad: reservaVirtualDate
         },
         dataTotalAlmuerzosSinEntregar: {
-          name: getDayAndMonthString(almuerzo.fecha),
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
           cantidad: reservasDate.length - entregasDate.length
         },
         dataTotalAlmuerzosEntregados: {
-          name: getDayAndMonthString(almuerzo.fecha),
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
           cantidad: entregasDate.length
         }
       }
@@ -139,8 +137,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
     const totalRecargasFecha = await db.recargas.findMany({
       where: {
         fecha: {
-          gte: fechaInicioParsed,
-          lte: fechaFinParsed
+          gte: fechaInicioAux,
+          lte: fechaFinAux
         }
       },
       orderBy: { fecha: 'asc' }
@@ -192,9 +190,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
     const totalAlmuerzosDefinidos = almuerzos.reduce((acc, almuerzo) => acc + almuerzo.total_almuerzos, 0)
 
-    const dataTotalAlmuerzosDefinidos = almuerzos.map(almuerzo => ({
-      name: getDayAndMonthString(almuerzo.fecha),
-      cantidad: almuerzo.total_almuerzos
+    const dataTotalAlmuerzosDefinidos = await Promise.all(almuerzos.map(async (almuerzo) => {
+      const almuerzoFechaPromise = await db.almuerzos_Fecha.findUnique({
+        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha }
+      })
+
+      const [
+        almuerzoFecha
+      ] = await Promise.all([
+        almuerzoFechaPromise
+      ])
+
+      return {
+        dataTotalAlmuerzosReservados: {
+          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
+          cantidad: almuerzo.total_almuerzos
+        }
+      }
     }))
 
     const totalAlmuerzosReservados = await db.reservas.findMany({
@@ -218,8 +230,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
     const totalRecargas = await db.recargas.count({
       where: {
         fecha: {
-          gte: fechaInicioParsed,
-          lte: fechaFinParsed
+          gte: fechaInicioAux,
+          lte: fechaFinAux
         }
       }
     })

@@ -5,7 +5,7 @@ import { useAlmuerzosStore } from '@/store/almuerzos'
 import { format } from '@formkit/tempo'
 
 export const useAlmuerzosEntregados = ({ nextDate }: { nextDate: string }) => {
-  const fechaAux = new Date(nextDate?.toString() ?? new Date().toString())
+  const fechaAux = new Date(nextDate ?? new Date().toString())
   const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
   const fecha = format(fechaAux2, 'YYYY-MM-DD')
 

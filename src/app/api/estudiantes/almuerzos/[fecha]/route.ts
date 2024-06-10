@@ -3,12 +3,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET (request: Request, { params }: { params: { fecha: string } }) {
   try {
-    const fechaAux = new Date(params.fecha)
-    const año = fechaAux.getFullYear()
-    const mes = fechaAux.getMonth() + 1
-    const dia = fechaAux.getDate()
-
-    const fecha = new Date(`${año}-${mes < 10 ? '0' : ''}${mes}-${dia < 10 ? '0' : ''}${dia}`)
+    const fecha = new Date(params.fecha)
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
     const rows = searchParams.get('rows')
@@ -27,8 +22,19 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
       )
     }
 
-    const almuerzos = await db.almuerzos.findUnique({
+    const almuerzosFecha = await db.almuerzos_Fecha.findUnique({
       where: { fecha }
+    })
+
+    if (almuerzosFecha === null) {
+      return NextResponse.json(
+        { message: '¡No hay fecha definida para el servicio de almuerzos!' },
+        { status: 404 }
+      )
+    }
+
+    const almuerzos = await db.almuerzos.findFirst({
+      where: { id_almuerzos_fecha: almuerzosFecha.id_almuerzos_fecha }
     })
 
     if (almuerzos === null) {
