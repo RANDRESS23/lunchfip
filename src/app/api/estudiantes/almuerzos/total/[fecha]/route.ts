@@ -1,4 +1,5 @@
 import { db } from '@/libs/prismaDB'
+import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 export async function GET (_: Request, { params }: { params: { fecha: string } }) {
@@ -124,38 +125,31 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
       const { id_tipo_documento: a, id_programa: b, id_rol: c, id_sexo: d, saldo: e, clave: f, createdAt: g, updatedAt: h, ...resEstudiantes } = estudiante
 
       const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
-      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
 
-      const yearReserva = fechaReservaAux.getFullYear()
-      const monthReserva = fechaReservaAux.getMonth() + 1
-      const dayReserva = fechaReservaAux.getDate()
-      const horaReserva = fechaReservaAux.toLocaleString('es-ES', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      })
+      if (process.env.NODE_ENV === 'development') {
+        fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+      }
+
+      const fechaReservaAux2 = new Date(fechaReservaAux.toString())
+
+      const fechaReserva = format(fechaReservaAux2, 'DD/MM/YYYY')
+      const horaReserva = format(fechaReservaAux2, 'h:mm A')
 
       let fechaEntrega = null
       let horaEntrega = null
 
       if (entrega !== null) {
         const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
-        fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
 
-        const yearEntrega = fechaEntregaAux?.getFullYear()
-        const monthEntrega = fechaEntregaAux?.getMonth() + 1
-        const dayEntrega = fechaEntregaAux?.getDate()
+        if (process.env.NODE_ENV === 'development') {
+          fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+        }
 
-        fechaEntrega = `${yearEntrega < 10 ? '0' : ''}${dayEntrega}/${monthEntrega < 10 ? '0' : ''}${monthEntrega}/${yearEntrega}`
-        horaEntrega = fechaEntregaAux?.toLocaleString('es-ES', {
-          hour: 'numeric',
-          minute: 'numeric',
-          hour12: true
-        })
-        horaEntrega = horaEntrega[0] === '0' ? `12${horaEntrega.slice(1)}` : horaEntrega
+        const fechaEntregaAux2 = new Date(fechaEntregaAux.toString())
+
+        fechaEntrega = format(fechaEntregaAux2, 'DD/MM/YYYY')
+        horaEntrega = format(fechaEntregaAux2, 'h:mm A')
       }
-
-      const fechaReserva = `${yearReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
 
       return {
         ...resEstudiantes, tipo_documento: tipoDocumento?.tipo_documento, programa: programa?.programa, facultad: facultad?.facultad, imageUrl: imageEstudiante?.url_imagen_perfil, estado_reserva: estado?.estado, fecha_reserva: fechaReserva, hora_reserva: horaReserva, fecha_entrega: fechaEntrega ?? 'N/A', hora_entrega: horaEntrega ?? 'N/A', reserva_empleado: !!reservaEmpleado, reserva_virtual: !!reservaVirtual
