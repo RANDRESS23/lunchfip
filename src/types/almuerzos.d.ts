@@ -1,3 +1,10 @@
+export interface AlmuerzosFecha {
+  id_almuerzos_fecha: string
+  fecha: Date
+  createdAt: Date
+  updatedAt: Date
+}
+
 export interface Almuerzos {
   id_almuerzo: string
   fecha: Date

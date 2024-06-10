@@ -3,7 +3,7 @@ import { Button } from '@/components/Button'
 import { cn } from '@/libs/utils'
 
 interface BalanceCardProps {
-  nextFullDate: string
+  nextFullDate?: string
   saldoParsed: string
   loadingReservation: boolean
   isAvailableReserve: boolean

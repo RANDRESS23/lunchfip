@@ -2,8 +2,13 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type AlmuerzosReservados } from '@/types/almuerzos'
 import { useAlmuerzosStore } from '@/store/almuerzos'
+import { format } from '@formkit/tempo'
 
 export const useAlmuerzosReservados = ({ nextDate }: { nextDate: string }) => {
+  const fechaAux = new Date(nextDate?.toString() ?? new Date().toString())
+  const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+  const fecha = format(fechaAux2, 'YYYY-MM-DD')
+
   const almuerzosReservados = useAlmuerzosStore(state => state.almuerzosReservados)
   const setAlmuerzosReservados = useAlmuerzosStore(state => state.setAlmuerzosReservados)
   const [loadingAlmuerzosReservados, setLoadingAlmuerzosReservados] = useState(false)
@@ -13,7 +18,7 @@ export const useAlmuerzosReservados = ({ nextDate }: { nextDate: string }) => {
       try {
         setLoadingAlmuerzosReservados(true)
 
-        const response = await api.get(`/almuerzos/${nextDate}`)
+        const response = await api.get(`/almuerzos/${fecha}`)
 
         if (response.data === null) return
 
@@ -31,7 +36,7 @@ export const useAlmuerzosReservados = ({ nextDate }: { nextDate: string }) => {
     }
 
     getAlmuerzosReservados()
-  }, [])
+  }, [nextDate])
 
   return { almuerzosReservados, loadingAlmuerzosReservados, setAlmuerzosReservados }
 }

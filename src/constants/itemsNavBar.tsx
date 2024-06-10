@@ -7,7 +7,7 @@ import { GiBowlOfRice } from 'react-icons/gi'
 import { FaUserGraduate } from 'react-icons/fa'
 import { BiSolidFoodMenu } from 'react-icons/bi'
 import { ImStatsDots } from 'react-icons/im'
-
+import { BsCalendarDateFill } from 'react-icons/bs'
 import { cn } from '@/libs/utils'
 
 export const menuItems = [
@@ -45,6 +45,18 @@ export const menuItemsStudent = [
 ]
 
 export const menuItemsEmployee = [
+  {
+    title: 'Definir Próxima Fecha',
+    href: '/profile/employee/date-lunches',
+    icon: (pathname: string) => (
+      <BsCalendarDateFill
+        className={cn(
+          'text-2xl',
+          pathname === '/profile/employee/date-lunches' ? 'text-black dark:text-white' : 'text-nav-link-light dark:text-nav-link-dark'
+        )}
+      />
+    )
+  },
   {
     title: 'Reservar Almuerzo',
     href: '/profile/employee/reserve',

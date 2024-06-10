@@ -13,6 +13,8 @@ import { ModalDeliveryLunch } from './ModalDeliveryLunch'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useDisclosure } from '@nextui-org/react'
 import { type Estudiante } from '@/types/estudiantes'
+import { format } from '@formkit/tempo'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
 
 const numeroDocumentoSchema = z.object({
   numero_documento: z.string().min(7, {
@@ -26,6 +28,7 @@ export const FormDeliver = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { estudiante, setEstudiante } = useEstudiante()
+  const { almuerzosFecha } = useAlmuerzosFecha()
 
   const handleOpen = () => { onOpen() }
 
@@ -45,8 +48,13 @@ export const FormDeliver = () => {
     try {
       setIsLoading(true)
 
+      const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
+      const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+      const fechaDefinied = format(fechaAux2, 'YYYY-MM-DD')
+
       const response = await api.post('/estudiantes/id-estudiante', {
-        numero_documento: data.numero_documento
+        numero_documento: data.numero_documento,
+        nextDate: fechaDefinied
       })
 
       if (response.status === 200) {

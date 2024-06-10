@@ -25,7 +25,7 @@ export default async function ReservationPage () {
   if (isEmployee) return redirect('/profile/employee/home')
   if (isAdmin) return redirect('/profile/admin/home')
 
-  const { nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats } = getNextDate()
+  const { isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats } = getNextDate()
 
   return (
     <div className='container mx-auto py-[90px] px-6 font-inter-sans'>
@@ -36,8 +36,6 @@ export default async function ReservationPage () {
       />
       <p className='w-full z-10 -mt-2 text-center text-p-light dark:text-p-dark'>Puedes reservar tu almuerzo con anticipo si cuentas con el saldo suficiente, o por otro lado, visualizar tu código QR de reserva.</p>
       <ReserveLunch
-        nextDate={nextDate}
-        nextFullDate={nextFullDate}
         isValidHourToReserve={isValidHourToReserve}
         isValidHourToDelivery={isValidHourToDelivery}
         isValidHourToDeliveryStats={isValidHourToDeliveryStats}

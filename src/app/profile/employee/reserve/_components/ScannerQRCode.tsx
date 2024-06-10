@@ -9,15 +9,15 @@ import { type Estudiante } from '@/types/estudiantes'
 import { toast } from 'sonner'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
-import getNextDate from '@/libs/nextDate'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
 
 export const ScannerQRCode = () => {
   const [repeatScann, setRepeatScann] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { estudiante, setEstudiante } = useEstudiante()
 
-  const { nextDate } = getNextDate()
-  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { almuerzosFecha } = useAlmuerzosFecha()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
 
   const handleOpen = () => { onOpen() }
 

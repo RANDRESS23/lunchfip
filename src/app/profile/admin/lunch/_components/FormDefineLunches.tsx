@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useForm, type FieldValues, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import api from '@/libs/api'
-import { Input } from '@/components/Input'
 import { FaSortAmountUpAlt } from 'react-icons/fa'
 import { Button } from '@/components/Button'
 import { toast } from 'sonner'
@@ -17,35 +16,44 @@ import Realistic from 'react-canvas-confetti/dist/presets/realistic'
 import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
 import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
+import { format } from '@formkit/tempo'
+import { InputControlled } from '@/components/Input/InputControlled'
 
-interface FormDefineLunchesProps {
-  nextDate: Date
-  nextFullDate: string
-}
-
-export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesProps) => {
+export const FormDefineLunches = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
-  const { setAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: nextDate.toString() })
-  const { almuerzosTotales, loadingAlmuerzosTotales, setAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { almuerzosFecha, loadingAlmuerzosFecha } = useAlmuerzosFecha()
+  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: almuerzosFecha.fecha.toString() })
+  const { setAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: almuerzosFecha.fecha.toString() })
+  const { almuerzosTotales, loadingAlmuerzosTotales, setAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
   const [editAmount, setEditAmount] = useState(true)
   const { onInitHandler, onShoot } = useConfetti()
+
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FieldValues>({
+    defaultValues: {
+      total_almuerzos: almuerzosTotales.total_almuerzos === 0 ? '' : almuerzosTotales.total_almuerzos.toString(),
+      nextDate: ''
+    },
+    resolver: zodResolver(totalLunchesSchema)
+  })
 
   useEffect(() => {
     setEditAmount(almuerzosTotales?.id_almuerzo === '')
   }, [almuerzosTotales])
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<FieldValues>({
-    defaultValues: {
-      total_almuerzos: '',
-      nextDate: new Date()
-    },
-    resolver: zodResolver(totalLunchesSchema)
-  })
+  useEffect(() => {
+    if (almuerzosTotales.id_almuerzo !== '') {
+      setValue('total_almuerzos', almuerzosTotales.total_almuerzos.toString(), {
+        shouldValidate: true,
+        shouldDirty: true
+      })
+    }
+  }, [almuerzosTotales.id_almuerzo])
 
   const onSubmit: SubmitHandler<FieldValues> = async data => {
     try {
@@ -70,13 +78,17 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
           setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
           setAlmuerzosEntregados(almuerzosEntregados as AlmuerzosEntregados)
 
-          toast.success(`¡Cantidad de almuerzos actualizada exitosamente para la fecha ${nextFullDate}!`)
+          toast.success(`¡Cantidad de almuerzos actualizada exitosamente para el día ${getNextFullDate()}!`)
           onShoot()
         }
       } else {
+        const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
+        const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+        const fechaDefinied = format(fechaAux2, 'YYYY-MM-DD')
+
         const response = await api.post('/almuerzos', {
           total_almuerzos: data.total_almuerzos,
-          nextDate
+          nextDate: fechaDefinied
         })
 
         if (response.status === 201) {
@@ -86,7 +98,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
           setAlmuerzosReservados(almuerzosReservados as AlmuerzosReservados)
           setAlmuerzosEntregados(almuerzosEntregados as AlmuerzosEntregados)
 
-          toast.success(`¡Cantidad de almuerzos asignada exitosamente para la fecha ${nextFullDate}!`)
+          toast.success(`¡Cantidad de almuerzos asignada exitosamente para el día ${format(fechaAux2, 'full')}!`)
           onShoot()
         }
       }
@@ -109,37 +121,56 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
     }
   }
 
+  const getNextFullDate = () => {
+    if (almuerzosFecha.id_almuerzos_fecha !== '') {
+      const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
+      const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+      return format(fechaAux2, 'full')
+    }
+  }
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-sm w-11/12 flex flex-col font-inter-sans'>
         <div className='mb-3'>
           {
-            almuerzosTotales?.id_almuerzo !== '' && !editAmount
+            almuerzosFecha.id_almuerzos_fecha === ''
               ? (
-                  <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
-                    Ya se registró la cantidad de almuerzos para el día <span className='font-semibold'>{nextFullDate}</span>
+                  <p className='w-full z-10 -mt-3 mb-6 text-color-secondary italic text-center'>
+                    ⚠ ¡No se ha definido la fecha de servicio de almuerzos! ⚠
                   </p>
                 )
               : (
-                  <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
-                    Registrar la cantidad de almuerzos para el día <span className='font-semibold'>{nextFullDate}</span>
-                  </p>
+                  <>
+                    {
+                      almuerzosTotales?.id_almuerzo !== '' && !editAmount
+                        ? (
+                            <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
+                              Ya se registró la cantidad de almuerzos para el día <span className='font-semibold'>{getNextFullDate()}</span>
+                            </p>
+                          )
+                        : (
+                            <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
+                              Registrar la cantidad de almuerzos para el día <span className='font-semibold'>{getNextFullDate()}</span>
+                            </p>
+                          )
+                    }
+                  </>
                 )
           }
         </div>
 
         {
-          !loadingAlmuerzosTotales
+          !loadingAlmuerzosTotales || !loadingAlmuerzosFecha
             ? (
                 <div className='flex flex-col justify-center items-center gap-5'>
-                  <Input
+                  <InputControlled
                     type="number"
+                    control={control}
                     label="Cantidad de Almuerzos"
                     isRequired
                     name="total_almuerzos"
-                    value={almuerzosTotales?.id_almuerzo !== '' ? almuerzosTotales?.total_almuerzos.toString() : ''}
-                    disabled={isLoading || !editAmount}
-                    register={register}
+                    disabled={isLoading || !editAmount || almuerzosFecha.id_almuerzos_fecha === ''}
                     endContent={
                       <div className="h-full flex justify-center items-center">
                         <FaSortAmountUpAlt className="text-2xl text-default-400 pointer-events-none" />
@@ -157,7 +188,7 @@ export const FormDefineLunches = ({ nextDate, nextFullDate }: FormDefineLunchesP
                           ? 'Actualizar Cantidad'
                           : 'Registrar Cantidad'
                     }
-                    disabled={isLoading || !editAmount}
+                    disabled={isLoading || !editAmount || almuerzosFecha.id_almuerzos_fecha === ''}
                   />
 
                   {

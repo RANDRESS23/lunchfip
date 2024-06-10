@@ -14,7 +14,8 @@ import { useEstudiante } from '@/hooks/useEstudiante'
 import { useDisclosure } from '@nextui-org/react'
 import { type Estudiante } from '@/types/estudiantes'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
-import getNextDate from '@/libs/nextDate'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
+import { format } from '@formkit/tempo'
 
 const numeroDocumentoSchema = z.object({
   numero_documento: z.string().min(7, {
@@ -29,8 +30,8 @@ export const FormReserve = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { estudiante, setEstudiante } = useEstudiante()
 
-  const { nextDate } = getNextDate()
-  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
+  const { almuerzosFecha } = useAlmuerzosFecha()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
 
   const handleOpen = () => { onOpen() }
 
@@ -50,8 +51,13 @@ export const FormReserve = () => {
     try {
       setIsLoading(true)
 
+      const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
+      const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+      const fechaDefinied = format(fechaAux2, 'YYYY-MM-DD')
+
       const response = await api.post('/estudiantes/id-estudiante', {
-        numero_documento: data.numero_documento
+        numero_documento: data.numero_documento,
+        nextDate: fechaDefinied
       })
 
       if (response.status === 200) {

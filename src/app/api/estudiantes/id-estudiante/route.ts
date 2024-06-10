@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/libs/prismaDB'
-import getNextDate from '@/libs/nextDate'
 
 export async function POST (request: Request) {
   try {
     const body = await request.json()
-    const { nextDate } = getNextDate()
 
-    const { numero_documento: numeroDocumento } = body
+    const { numero_documento: numeroDocumento, nextDate } = body
+
+    const fecha = new Date(nextDate as string)
 
     const estudiante = await db.estudiantes.findUnique({
       where: { numero_documento: numeroDocumento }
@@ -20,8 +20,19 @@ export async function POST (request: Request) {
       )
     }
 
+    const almuerzosDisponiblesFecha = await db.almuerzos_Fecha.findUnique({
+      where: { fecha }
+    })
+
+    if (almuerzosDisponiblesFecha === null) {
+      return NextResponse.json(
+        { message: '¡No se encontró la fecha del servicio de almuerzos!' },
+        { status: 404 }
+      )
+    }
+
     const almuerzosDisponibles = await db.almuerzos.findFirst({
-      where: { fecha: nextDate }
+      where: { id_almuerzos_fecha: almuerzosDisponiblesFecha.id_almuerzos_fecha }
     })
 
     if (almuerzosDisponibles === null) {

@@ -186,6 +186,7 @@ model Estados {
   estados_estudiantes  Estados_Estudiantes[]
   estados_empleados    Estados_Empleados[]
   estados_reservas     Estados_Reservas[]
+  estados_Almuerzos    Estados_Almuerzos[]
 
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
@@ -264,6 +265,22 @@ model Codigos_QR_Estudiantes {
   updatedAt                 DateTime    @updatedAt
 
   @@index([id_estudiante])
+}
+
+model Estados_Almuerzos {
+  id_estado_almuerzo  String      @id @default(uuid())
+  
+  id_almuerzo         String
+  almuerzo            Almuerzos    @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+
+  id_estado           String
+  estado              Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  @@index([id_almuerzo])
+  @@index([id_estado])
 }
 
 model Estados_Reservas {
@@ -414,18 +431,34 @@ model Estudiantes_Recargas {
   @@index([id_recarga])
 }
 
-model Almuerzos {
-  id_almuerzo           String      @id @default(uuid())
+model Almuerzos_Fecha {
+  id_almuerzos_fecha    String      @id @default(uuid())
   fecha                 DateTime    @db.Date @unique
+
+  almuerzos             Almuerzos[]
+
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt  
+}
+
+model Almuerzos {
+  id_almuerzo           String           @id @default(uuid())
+  
+  id_almuerzos_fecha    String
+  almuerzo_fecha        Almuerzos_Fecha  @relation(fields: [id_almuerzos_fecha], references: [id_almuerzos_fecha], onDelete: Cascade)
+
   total_almuerzos       Int
 
   almuerzos_entregados  Almuerzos_Entregados[]
   almuerzos_reservados  Almuerzos_Reservados[]
-  reservas  Reservas[]
-  entregas  Entregas[]
+  reservas              Reservas[]
+  entregas              Entregas[]
+  estados_almuerzos     Estados_Almuerzos[]
 
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt  
+
+  @@index([id_almuerzos_fecha])
 }
 
 model Almuerzos_Entregados {

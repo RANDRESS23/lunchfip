@@ -8,7 +8,6 @@ import { FaUniversity } from 'react-icons/fa'
 import { toast } from 'sonner'
 import api from '@/libs/api'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
-import getNextDate from '@/libs/nextDate'
 import { useState } from 'react'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
@@ -19,6 +18,7 @@ import { Button } from '@/components/Button'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
 import { useAlmuerzosReservados } from '@/hooks/useAlmuerzosReservados'
 import { type AlmuerzosReservados } from '@/types/almuerzos'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
 
 interface ModalConfirmReservationProps {
   numeroDocumento: string
@@ -40,9 +40,9 @@ export const ModalConfirmReservation = ({
   const { empleado } = useEmpleado()
   const { estudiante } = useEstudiante()
 
-  const { nextDate } = getNextDate()
-  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
-  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
+  const { almuerzosFecha } = useAlmuerzosFecha()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
+  const { setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: almuerzosFecha.fecha.toString() })
 
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)

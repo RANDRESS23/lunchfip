@@ -14,19 +14,20 @@ import { cn } from '@/libs/utils'
 import { useEstudianteCodigoQRReserva } from '@/hooks/useEstudianteCodigoQRReserva'
 import { ReserveCodeQR } from './ReserveCodeQR'
 import { type AlmuerzosReservados } from '@/types/almuerzos'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
+import { format } from '@formkit/tempo'
 
 interface ReserveLunchProps {
-  nextDate: Date
-  nextFullDate: string
   isValidHourToReserve: boolean
   isValidHourToDelivery: boolean
   isValidHourToDeliveryStats: boolean
 }
 
-export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats }: ReserveLunchProps) => {
+export const ReserveLunch = ({ isValidHourToReserve, isValidHourToDelivery, isValidHourToDeliveryStats }: ReserveLunchProps) => {
   const { estudiante, setEstudiante } = useEstudiante()
-  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
-  const { almuerzosReservados, setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: nextDate.toString() })
+  const { almuerzosFecha } = useAlmuerzosFecha()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
+  const { almuerzosReservados, setAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: almuerzosFecha.fecha.toString() })
   const { codigoQRReserva } = useEstudianteCodigoQRReserva({ estudiante, idAlmuerzo: almuerzosTotales.id_almuerzo })
   const [loadingReservation, setLoadingReservation] = useState(false)
 
@@ -37,10 +38,18 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
 
   const { onInitHandler, onShoot } = useConfetti()
 
+  const getNextFullDate = () => {
+    if (almuerzosFecha.id_almuerzos_fecha !== '') {
+      const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
+      const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
+      return format(fechaAux2, 'full')
+    }
+  }
+
   const confirmReservation = () => {
     if (estudiante.saldo < 1500) return toast.error('¡No cuentas con el saldo suficiente para reservar tu almuerzo!.')
 
-    toast(`¿Estás seguro que deseas reservar el almuerzos para el día "${nextFullDate}?"`, {
+    toast(`¿Estás seguro que deseas reservar el almuerzos para el día "${getNextFullDate()}?"`, {
       action: {
         label: 'Reservar',
         onClick: () => { saveReservation() }
@@ -113,11 +122,11 @@ export const ReserveLunch = ({ nextDate, nextFullDate, isValidHourToReserve, isV
         )}>
           <AvailableLunchs
             amounthLunch={isValidHourToReserve ? almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad : 'N/A'}
-            nextFullDate={nextFullDate}
+            nextFullDate={getNextFullDate()}
             isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad !== 0 && isValidHourToReserve}
           />
           <BalanceCard
-            nextFullDate={nextFullDate}
+            nextFullDate={getNextFullDate()}
             saldoParsed={saldoParsed3}
             loadingReservation={loadingReservation}
             isAvailableReserve={almuerzosTotales.id_almuerzo !== '' && codigoQRReserva === '' && almuerzosTotales.total_almuerzos - almuerzosReservados.cantidad !== 0 && isValidHourToReserve}

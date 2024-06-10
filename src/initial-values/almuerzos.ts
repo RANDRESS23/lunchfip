@@ -1,3 +1,10 @@
+export const ALMUERZOS_FECHA_INITIAL_VALUES = {
+  id_almuerzos_fecha: '',
+  fecha: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
+
 export const ALMUERZOS_TOTALES_INITIAL_VALUES = {
   id_almuerzo: '',
   fecha: new Date(),

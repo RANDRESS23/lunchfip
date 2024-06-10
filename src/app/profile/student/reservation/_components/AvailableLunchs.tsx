@@ -3,7 +3,7 @@ import { cn } from '@/libs/utils'
 
 interface AvailableLunchsProps {
   amounthLunch: number | string
-  nextFullDate: string
+  nextFullDate?: string
   isAvailableReserve: boolean
 }
 

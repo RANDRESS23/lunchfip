@@ -18,34 +18,46 @@ export async function GET () {
 }
 
 export async function POST (request: Request) {
-  const body = await request.json()
-  body.nextDate = new Date(body.nextDate as string)
-
   try {
+    const body = await request.json()
+
     const {
       total_almuerzos: totalAlmuerzos,
       nextDate
     } = totalLunchesSchema.parse(body)
 
-    const existingLunchesInDate = await db.almuerzos.findUnique({
-      where: { fecha: nextDate }
-    })
-
-    if (existingLunchesInDate !== null) {
-      return NextResponse.json(
-        { messsage: '¡El servicio de almuerzos ya se ejecutó en la fecha seleccionada!' },
-        { status: 400 }
-      )
-    }
+    const fecha = new Date(nextDate)
 
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
 
+    const existingLunchesDate = await db.almuerzos_Fecha.findUnique({
+      where: { fecha }
+    })
+
+    if (existingLunchesDate === null) {
+      return NextResponse.json(
+        { messsage: '¡No se encontró la fecha del servicio de almuerzos!' },
+        { status: 400 }
+      )
+    }
+
+    const existingLunchesInDate = await db.almuerzos.findFirst({
+      where: { id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha }
+    })
+
+    if (existingLunchesInDate !== null) {
+      return NextResponse.json(
+        { messsage: '¡Ya hubo servicio de almuerzos para la fecha seleccionada!' },
+        { status: 400 }
+      )
+    }
+
     const newAlmuerzo = await db.almuerzos.create({
       data: {
+        id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha,
         total_almuerzos: Number(totalAlmuerzos),
-        fecha: nextDate,
         createdAt: currentDate,
         updatedAt: currentDate
       }
@@ -66,6 +78,24 @@ export async function POST (request: Request) {
         cantidad: 0,
         createdAt: currentDate,
         updatedAt: currentDate
+      }
+    })
+
+    const estados = await db.estados.findFirst({
+      where: { estado: 'Activo' }
+    })
+
+    if (estados === null) {
+      return NextResponse.json(
+        { message: '¡No se encontró el estado activo para los almuerzos!' },
+        { status: 404 }
+      )
+    }
+
+    await db.estados_Almuerzos.create({
+      data: {
+        id_estado: estados.id_estado,
+        id_almuerzo: newAlmuerzo.id_almuerzo
       }
     })
 
@@ -104,10 +134,10 @@ export async function POST (request: Request) {
 }
 
 export async function PATCH (request: Request) {
-  const body = await request.json()
-  const { id_almuerzo: idAlmuerzo, cantidad } = body
-
   try {
+    const body = await request.json()
+    const { id_almuerzo: idAlmuerzo, cantidad } = body
+
     const dateAux = new Date()
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())

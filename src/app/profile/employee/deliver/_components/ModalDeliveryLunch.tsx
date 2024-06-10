@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 import api from '@/libs/api'
 import { type AlmuerzosEntregados } from '@/types/almuerzos'
 import { useAlmuerzosTotales } from '@/hooks/useAlmuerzosTotales'
-import getNextDate from '@/libs/nextDate'
 import { useState } from 'react'
 import { useEstudiante } from '@/hooks/useEstudiante'
 import { useEmpleado } from '@/hooks/useEmpleado'
@@ -19,6 +18,7 @@ import { TitleAnimated } from '@/components/TitleAnimated'
 import { ButtonLitUpBorders } from '@/components/Button/ButtonLitUpBoders'
 import { Button } from '@/components/Button'
 import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
+import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
 
 interface ModalDeliveryLunchProps {
   numeroDocumento: string
@@ -40,9 +40,9 @@ export const ModalDeliveryLunch = ({
   const { empleado } = useEmpleado()
   const { estudiante } = useEstudiante()
 
-  const { nextDate } = getNextDate()
-  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: nextDate.toString() })
-  const { setAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: nextDate.toString() })
+  const { almuerzosFecha } = useAlmuerzosFecha()
+  const { almuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
+  const { setAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: almuerzosFecha.fecha.toString() })
 
   const saldoString = saldo.toString()
   const saldoParsed = saldoString.slice(0, saldoString.length - 3)
