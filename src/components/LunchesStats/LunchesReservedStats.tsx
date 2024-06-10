@@ -16,10 +16,12 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
   const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })
   const { almuerzosReservados, loadingAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: almuerzosFecha.fecha.toString() })
 
-  const fechaParsed = (fechaUltimo: Date) => {
-    const dateAux = new Date(fechaUltimo)
+  const horaParsed = (fechaUltimo: Date) => {
+    const dateAux = new Date(fechaUltimo.toString())
+    dateAux.setUTCHours(dateAux.getUTCHours() + 5)
+    const fecha = new Date(dateAux.toString())
 
-    return format(dateAux, 'h:mm A')
+    return format(fecha, 'h:mm A')
   }
 
   const getNextFullDate = () => {
@@ -45,7 +47,7 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
                 />
                 <StatCard
                   label="Hora de Última Reserva"
-                  value={fechaParsed(almuerzosReservados.updatedAt)}
+                  value={horaParsed(almuerzosReservados.updatedAt)}
                   loading={loadingAlmuerzosReservados || loadingAlmuerzosFecha}
                 />
                 <StatCard

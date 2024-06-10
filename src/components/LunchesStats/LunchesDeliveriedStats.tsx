@@ -13,8 +13,8 @@ export const LunchesDeliveriedStats = () => {
   const { almuerzosReservados, loadingAlmuerzosReservados } = useAlmuerzosReservados({ nextDate: almuerzosFecha.fecha.toString() })
   const { almuerzosEntregados, loadingAlmuerzosEntregados } = useAlmuerzosEntregados({ nextDate: almuerzosFecha.fecha.toString() })
 
-  const fechaParsed = (fechaUltimo: Date) => {
-    const dateAux = new Date(fechaUltimo)
+  const horaParsed = (fechaUltimo: Date) => {
+    const dateAux = new Date(fechaUltimo.toString())
 
     return format(dateAux, 'h:mm A')
   }
@@ -40,7 +40,7 @@ export const LunchesDeliveriedStats = () => {
                 />
                 <StatCard
                   label="Hora de Última Entrega"
-                  value={fechaParsed(almuerzosEntregados.updatedAt)}
+                  value={horaParsed(almuerzosEntregados.updatedAt)}
                   loading={loadingAlmuerzosEntregados || loadingAlmuerzosFecha}
                 />
                 <StatCard
