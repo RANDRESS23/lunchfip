@@ -23,6 +23,25 @@ export async function POST (request: Request) {
       )
     }
 
+    const estadoInactivo = await db.estados.findFirst({
+      where: { estado: 'Inactivo' }
+    })
+
+    const reserva = await db.reservas.findUnique({
+      where: { id_reserva: estudianteReserva.id_reserva }
+    })
+
+    const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
+      where: { id_almuerzo: reserva?.id_almuerzo }
+    })
+
+    if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
+      return NextResponse.json(
+        { message: '¡Ya finalizó el servicio de almuerzos!.' },
+        { status: 404 }
+      )
+    }
+
     const [estadosReserva] = await db.estados_Reservas.findMany({
       where: { id_reserva: estudianteReserva.id_reserva }
     })

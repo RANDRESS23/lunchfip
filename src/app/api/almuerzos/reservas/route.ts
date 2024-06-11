@@ -46,6 +46,21 @@ export async function POST (request: Request) {
       where: { id_almuerzo: idAlmuerzo }
     })
 
+    const estadoInactivo = await db.estados.findFirst({
+      where: { estado: 'Inactivo' }
+    })
+
+    const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
+      return NextResponse.json(
+        { message: '¡Ya finalizó el servicio de almuerzos!.' },
+        { status: 404 }
+      )
+    }
+
     const almuerzosReservadosTotales = await db.almuerzos_Reservados.findUnique({
       where: { id_almuerzo: idAlmuerzo }
     })

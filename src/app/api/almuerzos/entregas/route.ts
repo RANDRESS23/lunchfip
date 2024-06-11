@@ -34,6 +34,21 @@ export async function POST (request: Request) {
       id_almuerzo: idAlmuerzo
     } = entregasSchema.parse(body)
 
+    const estadoInactivo = await db.estados.findFirst({
+      where: { estado: 'Inactivo' }
+    })
+
+    const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
+      where: { id_almuerzo: idAlmuerzo }
+    })
+
+    if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
+      return NextResponse.json(
+        { message: '¡Ya finalizó el servicio de almuerzos!.' },
+        { status: 404 }
+      )
+    }
+
     const reservas = await db.reservas.findMany({
       where: { id_almuerzo: idAlmuerzo }
     })

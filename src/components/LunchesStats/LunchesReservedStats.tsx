@@ -64,7 +64,7 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
             )
           : (
               <div className='relative w-full z-10 mt-32'>
-                <p className='w-full italic text-center text-color-secondary'>⚠ ¡No hay datos para mostrar debido a que el administrador no ha definido la cantidad de almuerzos para el dia {getNextFullDate()}.!. ⚠</p>
+                <p className='w-full italic text-center text-color-secondary'>⚠ ¡No hay datos para mostrar debido a que el administrador no ha definido la cantidad de almuerzos para el dia {getNextFullDate()}.! ⚠</p>
               </div>
             )
       }

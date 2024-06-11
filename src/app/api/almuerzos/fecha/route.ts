@@ -1,4 +1,5 @@
 import { db } from '@/libs/prismaDB'
+import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 export async function GET () {
@@ -9,13 +10,30 @@ export async function GET () {
       return NextResponse.json({ message: '¡No hay fechas registradas para habilitar el servicio de almuerzos!' }, { status: 404 })
     }
 
-    // const almuerzos = await db.almuerzos.findFirst({
-    //   where: { id_almuerzos_fecha: almuerzosFecha[almuerzosFecha.length - 1].id_almuerzos_fecha }
-    // })
+    const almuerzos = await db.almuerzos.findFirst({
+      where: { id_almuerzos_fecha: almuerzosFecha[almuerzosFecha.length - 1].id_almuerzos_fecha }
+    })
 
-    // if (almuerzos) {
-    //   return NextResponse.json({ message: `¡Ya hubo servicio de almuerzos habilitados para la fecha ${almuerzosFecha[almuerzosFecha.length - 1].fecha}.!` }, { status: 404 })
-    // }
+    const estadoActivo = await db.estados.findFirst({
+      where: { estado: 'Activo' }
+    })
+
+    const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
+      where: { id_almuerzo: almuerzos?.id_almuerzo }
+    })
+
+    const fechaAlmuerzosAux = new Date(almuerzosFecha[almuerzosFecha.length - 1].fecha?.toString() ?? '')
+
+    if (process.env.NODE_ENV === 'development') {
+      fechaAlmuerzosAux.setUTCHours(fechaAlmuerzosAux.getUTCHours() + 5)
+    }
+
+    const fechaAlmuerzosAux2 = new Date(fechaAlmuerzosAux.toString())
+    const fechaAlmuerzo = format(fechaAlmuerzosAux2, 'DD/MM/YYYY')
+
+    if (estadoAlmuerzos?.id_estado !== estadoActivo?.id_estado) {
+      return NextResponse.json({ message: `¡Ya hubo servicio de almuerzos habilitados para la fecha ${fechaAlmuerzo}.!` }, { status: 404 })
+    }
 
     return NextResponse.json({
       almuerzosFecha: almuerzosFecha[almuerzosFecha.length - 1]
@@ -41,9 +59,17 @@ export async function POST (request: Request) {
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
 
+    const almuerzosFecha = await db.almuerzos_Fecha.findMany()
     const existingLunchesDate = await db.almuerzos_Fecha.findUnique({
       where: { fecha }
     })
+
+    if (fecha < almuerzosFecha[almuerzosFecha.length - 1].fecha) {
+      return NextResponse.json(
+        { messsage: '¡No puedes seleccionar una fecha menor a la ultima fecha de servicio!' },
+        { status: 400 }
+      )
+    }
 
     if (existingLunchesDate !== null) {
       return NextResponse.json(

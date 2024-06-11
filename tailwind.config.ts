@@ -76,10 +76,12 @@ const config: Config = {
         },
         shimmer: {
           from: {
-            backgroundPosition: '0 0'
+            backgroundPosition: '0 0',
+            transform: 'translateX(0%)'
           },
           to: {
-            backgroundPosition: '-200% 0'
+            backgroundPosition: '-200% 0',
+            transform: 'translateX(0%)'
           }
         }
       },
@@ -88,7 +90,7 @@ const config: Config = {
         'color-cycle-2': 'animation-title-2 10s ease-in-out infinite',
         'color-cycle-3': 'animation-title-3 10s ease-in-out infinite',
         spotlight: 'spotlight 2s ease .75s 1 forwards',
-        shimmer: 'shimmer 2s linear infinite'
+        shimmer: 'shimmer 3s linear infinite'
       }
     }
   },

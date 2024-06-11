@@ -149,7 +149,7 @@ export const FormDefineDateLunches = () => {
             )
           : (
               <p className='w-full z-10 -mt-3 mb-6 text-p-light dark:text-p-dark italic text-center'>
-                Registrar la fecha de servicio de almuerzos
+                Registrar la fecha para habilitar el servicio de almuerzos a los estudiantes
               </p>
             )
       }

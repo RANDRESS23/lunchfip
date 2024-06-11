@@ -6,7 +6,7 @@ export default function getNextDate () {
   const hour = nextDate.getUTCHours()
   const isValidHour = hour >= 15
   const isValidHourToReserve = (hour >= 14 || hour < 11) || nextDate.getDay() === 6 || nextDate.getDay() === 0
-  const isValidHourToDelivery = (hour >= 11 && hour < 17) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
+  const isValidHourToDelivery = (hour >= 11 && hour < 20) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
   const isValidHourToDeliveryStats = (hour >= 14 && hour < 17) && nextDate.getDay() !== 6 && nextDate.getDay() !== 0
 
   if (isValidHour) {

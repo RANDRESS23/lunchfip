@@ -7,6 +7,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { getAdminEmails } from '@/services/getAdminEmails'
 import { LunchesDeliveriedStats } from '@/components/LunchesStats/LunchesDeliveriedStats'
+import { ButtonFinishService } from './_components/ButtonFinishService'
 import Image from 'next/image'
 
 export async function generateMetadata (): Promise<Metadata> {
@@ -46,7 +47,8 @@ export default async function ReservePage () {
                   <div className='w-2/5'>
                     <TabSections />
                   </div>
-                  <div className='w-3/5'>
+                  <div className='w-3/5 flex flex-col items-center gap-7'>
+                    <ButtonFinishService />
                     <LunchesDeliveriedStats />
                   </div>
                 </>
