@@ -9,3 +9,16 @@
     margin: 0;
   }
 }
+
+html::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: light-dark(#141414, #fff);
+  border-radius: 4rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}

@@ -20,13 +20,6 @@ export const MyInput = extendVariants(Input, {
           'dark:data-[hover=true]:bg-zinc-800',
           'dark:focus-within:bg-zinc-900',
           'dark:group-data-[focus=true]:bg-zinc-800'
-        ],
-        input: [
-          'text-zinc-900',
-          'placeholder:text-zinc-600',
-          // dark theme
-          'dark:text-zinc-100',
-          'dark:placeholder:text-zinc-600'
         ]
       }
     },

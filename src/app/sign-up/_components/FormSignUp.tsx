@@ -114,7 +114,7 @@ export const FormSignUp = () => {
 
             <TitleAnimated
               text1='Registrarse en'
-              text2='Lunchfip'
+              text2='LunchFip'
             />
 
             <Input
@@ -238,7 +238,7 @@ export const FormSignUp = () => {
             />
 
             <Input
-              type="email"
+              type="text"
               label="Correo institucional"
               isRequired
               name="correo_institucional"

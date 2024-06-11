@@ -6,6 +6,7 @@ import type {
 } from 'react-hook-form'
 import { MyInput } from './InputExtend'
 import { usePathname } from 'next/navigation'
+import '../../app/globals.css'
 
 const PATHNAMES_WITHOUT_SPINNER_ANIMATION = ['/sign-up', '/profile/student/info']
 
@@ -35,7 +36,7 @@ export const Input = (
   const pathname = usePathname()
 
   return (
-    <>
+    <div className='relative w-full'>
       <div className='relative overflow-hidden p-[1px] rounded-xl w-full'>
         <MyInput
           type={type}
@@ -47,12 +48,16 @@ export const Input = (
           defaultValue={value}
           {...register(name)}
           endContent={endContent}
+          isInvalid={false}
           className={cn(
             'z-10',
             className
           )}
           classNames={{
-            input: [...(classNamesInput ?? [])]
+            input: [...(classNamesInput ?? []), cn(
+              errors[name]?.message !== undefined ? 'text-color-secondary placeholder:text-color-secondary' : 'text-zinc-900 placeholder:text-zinc-600 dark:text-zinc-100 dark:placeholder:text-zinc-600'
+            )],
+            errorMessage: ['bg-white dark:bg-black py-2 px-2 rounded-md ']
           }}
           onKeyDown={(e) => {
             if (keyDown !== undefined) keyDown(e)
@@ -76,9 +81,9 @@ export const Input = (
       </div>
       {
         errors[name]?.message !== undefined && (
-          <p className='text-color-secondary -mt-3 text-sm z-10'>{String(errors[name]?.message)}</p>
+          <p className='text-color-secondary mt-1 text-sm z-10'>{String(errors[name]?.message)}</p>
         )
       }
-    </>
+    </div>
   )
 }

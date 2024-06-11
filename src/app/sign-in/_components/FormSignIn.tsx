@@ -117,7 +117,7 @@ export const FormSignIn = () => {
 
         <TitleAnimated
           text1='Iniciar sesión en'
-          text2='Lunchfip'
+          text2='LunchFip'
         />
 
         <Input

@@ -19,21 +19,29 @@ export const estudianteSchema = z.object({
   segundo_apellido: z.string().optional().refine((value = '') => nameOptionalRegex.test(value), {
     message: 'El segundo apellido solo puede contener letras.'
   }),
-  id_tipo_documento: z.string(),
+  id_tipo_documento: z.string({
+    required_error: 'Debes seleccionar un tipo de documento.'
+  }),
   numero_documento: z.string().min(7, {
     message: 'El número de documento debe tener al menos 7 caracteres.'
   }).max(12, {
     message: 'El número de documento debe tener máximo 12 caracteres.'
   }),
-  id_programa: z.string(),
-  correo_institucional: z.string().refine(value => emailRegex.test(value), {
+  id_programa: z.string({
+    required_error: 'Debes seleccionar un programa.'
+  }),
+  correo_institucional: z.string().email({
+    message: 'El correo debe ser válido, no olvides el dominio @itfip.edu.co'
+  }).refine(value => emailRegex.test(value), {
     message: 'Debes usar un correo institucional. (@itfip.edu.co)'
   }),
   clave: z.string().refine(value => passwordRegex.test(value), {
     message: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.'
   }),
   clave_2: z.string(),
-  id_sexo: z.string(),
+  id_sexo: z.string({
+    required_error: 'Debes seleccionar tu sexo.'
+  }),
   celular: z.string().length(10, {
     message: 'El número de celular debe tener 10 caracteres.'
   })
