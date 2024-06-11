@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/libs/prismaDB'
+import { format } from '@formkit/tempo'
 
 export async function GET (_: Request, { params }: { params: { idEstudiante: string } }) {
   try {
@@ -42,26 +43,30 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
 
     const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
 
-    const yearReserva = fechaReservaAux.getFullYear()
-    const monthReserva = fechaReservaAux.getMonth() + 1
-    const dayReserva = fechaReservaAux.getDate()
-    const fechaReserva = `${dayReserva < 10 ? '0' : ''}${dayReserva}/${monthReserva < 10 ? '0' : ''}${monthReserva}/${yearReserva}`
+    if (process.env.NODE_ENV === 'development') {
+      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+    }
+
+    const fechaReservaAux2 = new Date(fechaReservaAux.toString())
+    const fechaReserva = format(fechaReservaAux2, 'DD/MM/YYYY')
 
     const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
 
-    const yearEntrega = fechaEntregaAux?.getFullYear()
-    const monthEntrega = fechaEntregaAux?.getMonth() + 1
-    const dayEntrega = fechaEntregaAux?.getDate()
+    if (process.env.NODE_ENV === 'development') {
+      fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+    }
 
-    const fechaEntrega = `${dayEntrega < 10 ? '0' : ''}${dayEntrega}/${monthEntrega < 10 ? '0' : ''}${monthEntrega}/${yearEntrega}`
+    const fechaEntregaAux2 = new Date(fechaEntregaAux.toString())
+    const fechaEntrega = format(fechaEntregaAux2, 'DD/MM/YYYY')
 
     const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
 
-    const yearRecarga = fechaRecargaAux?.getFullYear()
-    const monthRecarga = fechaRecargaAux?.getMonth() + 1
-    const dayRecarga = fechaRecargaAux?.getDate()
+    if (process.env.NODE_ENV === 'development') {
+      fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
+    }
 
-    const fechaRecarga = `${dayRecarga < 10 ? '0' : ''}${dayRecarga}/${monthRecarga < 10 ? '0' : ''}${monthRecarga}/${yearRecarga}`
+    const fechaRecargaAux2 = new Date(fechaRecargaAux.toString())
+    const fechaRecarga = format(fechaRecargaAux2, 'DD/MM/YYYY')
 
     return NextResponse.json(
       {
