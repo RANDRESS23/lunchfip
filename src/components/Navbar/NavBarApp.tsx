@@ -119,7 +119,7 @@ export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
           showSignOutButton
             ? (
                 <NavbarItem className="hidden lg:flex">
-                    <ButtonsCard>
+                    <ButtonsCard className='group hover:shadow-[-10px_-10px_30px_4px_rgba(0,170,255,0.15),_10px_10px_30px_4px_rgba(255,51,102,0.15)] rounded-lg transition-all'>
                       <button className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px] disabled:cursor-not-allowed" onClick={signOut} disabled={isSignOut}>
                         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
                         <span className={cn(
@@ -146,7 +146,7 @@ export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
                     </Link>
                   </NavbarItem>
                   <NavbarItem className="hidden lg:flex">
-                    <ButtonsCard>
+                    <ButtonsCard className='group hover:shadow-[-10px_-10px_30px_4px_rgba(0,170,255,0.15),_10px_10px_30px_4px_rgba(255,51,102,0.15)] rounded-lg transition-all'>
                       <Link href="/sign-up" className="relative inline-flex h-10 overflow-hidden rounded-lg p-[1px]">
                         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)]" />
                         <span className={cn(

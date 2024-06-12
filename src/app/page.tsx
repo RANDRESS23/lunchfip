@@ -1,4 +1,5 @@
-import { HomeSection } from '@/components/Title/HomeSection'
+import { BecauseSection } from '@/components/Home/BecauseSection'
+import { HomeSection } from '@/components/Home/HomeSection'
 import { getAdminEmails } from '@/services/getAdminEmails'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { createClient } from '@/utils/supabase/server'
@@ -23,6 +24,7 @@ export default async function Home () {
   return (
     <main className='w-4/5 mx-auto'>
       <HomeSection />
+      <BecauseSection />
     </main>
   )
 }

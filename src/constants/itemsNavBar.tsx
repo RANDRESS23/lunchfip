@@ -16,10 +16,6 @@ export const menuItems = [
     href: '/'
   },
   {
-    title: 'Contacto',
-    href: '/contact'
-  },
-  {
     title: 'Nosotros',
     href: '/about'
   }
