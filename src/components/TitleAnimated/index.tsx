@@ -15,7 +15,7 @@ export const TitleAnimated = ({ text1, text2, textSize, isTextLeft, isTextCol, i
   return (
     <div className={cn(
       'w-full relative flex flex-col items-center text-center mb-5 md:gap-3 reveal-object',
-      isTextLeft === undefined && 'justify-center',
+      isTextLeft === undefined ? 'justify-center' : 'justify-center lg:justify-start',
       isTextCol ? 'lg:flex-col' : 'lg:flex-row',
       isTextRowMobile && 'flex-row gap-3'
     )}>

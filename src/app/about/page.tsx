@@ -28,7 +28,7 @@ export default async function AboutPage () {
   }
 
   return (
-    <main className='w-4/5 lg:w-3/5 mx-auto py-[110px] bg-grid-small-black dark:bg-grid-small-white'>
+    <main className='w-4/5 lg:w-3/5 mx-auto py-[110px] px-5 bg-grid-small-black dark:bg-grid-small-white'>
       <AboutUsSection />
     </main>
   )
