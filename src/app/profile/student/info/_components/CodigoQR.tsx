@@ -11,7 +11,7 @@ export const CodigoQR = () => {
         {
           estudiante.codigoUrl !== ''
             ? (
-                <section className='w-full relative flex justify-center items-center overflow-hidden z-10'>
+                <section className='w-full md:w-72 relative flex justify-center items-center overflow-hidden z-10'>
                   <Image
                     src={estudiante.codigoUrl}
                     alt={`${estudiante.primer_nombre} ${estudiante.primer_apellido}`}

@@ -29,44 +29,56 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
       where: { id_estudiante: idEstudiante }
     })
 
-    const reserva = await db.reservas.findUnique({
-      where: { id_reserva: estudianteReservas[estudianteReservas.length - 1]?.id_reserva }
+    const reserva = await db.reservas.findFirst({
+      where: { id_reserva: estudianteReservas[estudianteReservas.length - 1]?.id_reserva || '' }
     })
 
-    const entrega = await db.entregas.findUnique({
-      where: { id_entrega: estudianteEntregas[estudianteEntregas.length - 1]?.id_entrega }
+    const entrega = await db.entregas.findFirst({
+      where: { id_entrega: estudianteEntregas[estudianteEntregas.length - 1]?.id_entrega || '' }
     })
 
-    const recarga = await db.recargas.findUnique({
-      where: { id_recarga: estudianteRecargas[estudianteRecargas.length - 1]?.id_recarga }
+    const recarga = await db.recargas.findFirst({
+      where: { id_recarga: estudianteRecargas[estudianteRecargas.length - 1]?.id_recarga || '' }
     })
 
-    const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
+    let fechaReserva = 'N/A'
+    let fechaEntrega = 'N/A'
+    let fechaRecarga = 'N/A'
 
-    if (process.env.NODE_ENV === 'development') {
-      fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+    if (reserva) {
+      const fechaReservaAux = new Date(reserva?.fecha?.toString() ?? '')
+
+      if (process.env.NODE_ENV === 'development') {
+        fechaReservaAux.setUTCHours(fechaReservaAux.getUTCHours() + 5)
+      }
+
+      const fechaReservaAux2 = new Date(fechaReservaAux.toString())
+      fechaReserva = format(fechaReservaAux2, 'DD/MM/YYYY')
     }
 
-    const fechaReservaAux2 = new Date(fechaReservaAux.toString())
-    const fechaReserva = format(fechaReservaAux2, 'DD/MM/YYYY')
+    if (entrega) {
+      const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
 
-    const fechaEntregaAux = new Date(entrega?.fecha?.toString() ?? '')
+      if (process.env.NODE_ENV === 'development') {
+        fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+      }
 
-    if (process.env.NODE_ENV === 'development') {
-      fechaEntregaAux.setUTCHours(fechaEntregaAux.getUTCHours() + 5)
+      const fechaEntregaAux2 = new Date(fechaEntregaAux.toString())
+      fechaEntrega = format(fechaEntregaAux2, 'DD/MM/YYYY')
     }
 
-    const fechaEntregaAux2 = new Date(fechaEntregaAux.toString())
-    const fechaEntrega = format(fechaEntregaAux2, 'DD/MM/YYYY')
+    if (recarga) {
+      const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
 
-    const fechaRecargaAux = new Date(recarga?.fecha?.toString() ?? '')
+      if (process.env.NODE_ENV === 'development') {
+        fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
+      }
 
-    if (process.env.NODE_ENV === 'development') {
-      fechaRecargaAux.setUTCHours(fechaRecargaAux.getUTCHours() + 5)
+      const fechaRecargaAux2 = new Date(fechaRecargaAux.toString())
+      fechaRecarga = format(fechaRecargaAux2, 'DD/MM/YYYY')
     }
 
-    const fechaRecargaAux2 = new Date(fechaRecargaAux.toString())
-    const fechaRecarga = format(fechaRecargaAux2, 'DD/MM/YYYY')
+    console.log({ estudianteEntregas, entrega })
 
     return NextResponse.json(
       {
@@ -74,9 +86,9 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
         cantidadReclamados: estudianteEntregas.length,
         cantidadSinReclamar: estudianteReservas.length - estudianteEntregas.length,
         cantidadRecargas: estudianteRecargas.length,
-        fechaUltimaReserva: fechaReserva ?? 'N/A',
-        fechaUltimoReclamo: fechaEntrega ?? 'N/A',
-        fechaUltimaRecarga: fechaRecarga ?? 'N/A',
+        fechaUltimaReserva: fechaReserva,
+        fechaUltimoReclamo: fechaEntrega,
+        fechaUltimaRecarga: fechaRecarga,
         message: '¡Estadísticas obtenidas exitosamente!'
       },
       { status: 200 }

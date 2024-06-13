@@ -15,6 +15,7 @@ export const useEstudianteEstadisticas = ({ idEstudiante }: useEstudianteEstadis
         setLoadingStudentStats(true)
 
         const response = await api.get(`/estudiantes/estadisticas/${idEstudiante}`)
+
         const { message: _, ...stats }: Record<string, string | number> = response.data
 
         setStudentStats(stats)
@@ -26,7 +27,7 @@ export const useEstudianteEstadisticas = ({ idEstudiante }: useEstudianteEstadis
     }
 
     getStudentStats()
-  }, [])
+  }, [idEstudiante])
 
   return {
     cantidadReservas: studentStats.cantidadReservas,

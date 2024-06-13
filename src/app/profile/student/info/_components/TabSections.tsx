@@ -14,7 +14,7 @@ export const TabSections = () => {
       <Tab key="datos" title="Datos" className='w-full'>
         <StudentData />
       </Tab>
-      <Tab key="codigo" title="Códgio QR" className='flex justify-center items-center'>
+      <Tab key="codigo" title="Código QR" className='flex justify-center items-center'>
         <CodigoQR />
       </Tab>
     </Tabs>

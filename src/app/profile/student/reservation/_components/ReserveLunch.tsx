@@ -44,6 +44,8 @@ export const ReserveLunch = ({ isValidHourToReserve, isValidHourToDelivery, isVa
       const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
       return format(fechaAux2, 'full')
     }
+
+    return 'N/A'
   }
 
   const confirmReservation = () => {
