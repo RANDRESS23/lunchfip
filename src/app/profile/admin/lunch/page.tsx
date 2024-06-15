@@ -25,14 +25,15 @@ export default async function LunchPage () {
   if (!isAdmin) return redirect('/profile/student/home')
 
   return (
-    <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
+    <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative px-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <TitleAnimated
         text1='Definir'
         text2='Almuerzos'
         isTextLeft
+        isTextRowMobile
       />
-      <p className='w-full z-10 -mt-3 mb-7 text-p-light dark:text-p-dark'>En esta sección podrás definir la cantidad de almuerzos para los días hábiles del servicio de alimentación, así como también modificar dicha cantidad de almuerzos.</p>
+      <p className='w-full z-10 -mt-3 mb-7 text-p-light dark:text-p-dark text-center lg:text-left'>En esta sección podrás definir la cantidad de almuerzos para los días hábiles del servicio de alimentación, así como también modificar dicha cantidad de almuerzos.</p>
       <DefineLunches />
     </div>
   )

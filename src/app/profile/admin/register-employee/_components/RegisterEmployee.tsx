@@ -14,7 +14,7 @@ export const RegisterEmployee = ({ supabaseUrl, serviceRolKey }: RegisterEmploye
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <div className='w-full flex justify-start mb-3 font-inter-sans'>
+    <div className='w-full flex justify-center lg:justify-start mb-3 font-inter-sans'>
       <Button
         color="success"
         variant="bordered"

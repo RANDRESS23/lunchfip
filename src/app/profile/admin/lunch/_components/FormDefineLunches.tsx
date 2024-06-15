@@ -131,7 +131,7 @@ export const FormDefineLunches = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className='lg:max-w-sm w-11/12 flex flex-col font-inter-sans'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-full lg:w-96 flex flex-col justify-center items-center font-inter-sans'>
         <div className='mb-3'>
           {
             almuerzosFecha.id_almuerzos_fecha === ''
@@ -215,7 +215,7 @@ export const FormDefineLunches = () => {
                 </div>
               )
             : (
-                <div className='flex flex-col justify-center items-center gap-5'>
+                <div className='w-full flex flex-col justify-center items-center gap-5'>
                   <Skeleton className="flex w-full h-[60px] rounded-xl"/>
                   <Skeleton className="flex w-full h-[60px] rounded-xl"/>
                 </div>

@@ -29,14 +29,15 @@ export default async function RegisterEmployeePage () {
   const serviceRolKey = process.env.SERVICE_ROL_KEY ?? ''
 
   return (
-    <div className='lg:ml-[290px] pt-24 pb-10 relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
+    <div className='lg:ml-[290px] pt-24 pb-10 relative px-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <TitleAnimated
         text1='Registrar'
         text2='Empleado'
         isTextLeft
+        isTextRowMobile
       />
-      <p className='w-full z-10 -mt-3 mb-9 text-p-light dark:text-p-dark'>En esta sección podrás registrar un nuevo empleado, modificar la información de los empleados ya registrados, o simplemente eliminar la cuenta de algún empleado.</p>
+      <p className='w-full z-10 -mt-3 mb-9 text-p-light dark:text-p-dark text-center lg:text-left'>En esta sección podrás registrar un nuevo empleado, modificar la información de los empleados ya registrados, o simplemente eliminar la cuenta de algún empleado.</p>
       <RegisterEmployee
         supabaseUrl={supabaseUrl}
         serviceRolKey={serviceRolKey}

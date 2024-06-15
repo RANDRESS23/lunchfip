@@ -175,7 +175,7 @@ export const EmployeeTable = ({ supabaseUrl, serviceRolKey }: EmployeeTableProps
   }, [sortDescriptor, items])
 
   return (
-    <section className='w-full h-[1500px] relative z-10'>
+    <section className='w-full relative z-10'>
       <Table
         isStriped
         aria-label="Tabla de empleados registrados en LunchFip"

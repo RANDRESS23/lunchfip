@@ -57,7 +57,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between gap-3 items-end">
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-3 lg:items-end">
         <div className='relative overflow-hidden p-[1px] rounded-xl w-full sm:max-w-[44%]'>
           <Input
             isClearable
@@ -78,7 +78,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
             )}
           />
         </div>
-        <div className="flex gap-3">
+        <div className="flex justify-evenly gap-3">
           {
             loadingEmpleados
               ? <Spinner color='secondary' />
@@ -140,7 +140,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
                 : null
             }
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                 Estados
               </Button>
@@ -161,7 +161,7 @@ export const TopContentTable = ({ empleadosCount, filterValue, statusFilter, vis
             </DropdownMenu>
           </Dropdown>
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                 Columas
               </Button>

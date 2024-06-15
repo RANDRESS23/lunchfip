@@ -3,7 +3,7 @@ import { FormDefineLunches } from './FormDefineLunches'
 
 export const DefineLunches = () => {
   return (
-    <section className='w-full z-10 flex justify-center items-center gap-5'>
+    <section className='w-full z-10 flex flex-col lg:flex-row justify-center items-center gap-5 pb-10'>
       <FormDefineLunches />
       <Image
         src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1716165613/svgs/define-lunches-gif-dark_sxoiim.gif'

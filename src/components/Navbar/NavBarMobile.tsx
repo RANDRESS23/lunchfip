@@ -14,7 +14,7 @@ import { useAdministrador } from '@/hooks/useAdministrador'
 import { ADMINISTRADOR_INITIAL_VALUES } from '@/initial-values/administrador'
 
 interface NavBarMobileProps {
-  items: Array<{ title: string, href: string }>
+  items: Array<{ title: string, href: string, icon?: any }>
   pathname: string
   setIsMenuOpen: (value: boolean) => void
   isMenuItemsGeneral: boolean
@@ -53,14 +53,27 @@ export const NavBarMobile = (
   return (
     <>
       {
-        items.map(({ title, href }, index) => (
-          <NavbarMenuItem isActive={pathname === href} key={`${title}-${index}`} className='w-full flex flex-col'>
+        items.map((item, index) => (
+          <NavbarMenuItem isActive={pathname === item.href} key={`${item.title}-${index}`} className='w-full flex flex-col'>
             <Link
-              className="w-full py-1"
-              href={href}
+              className="w-full flex py-1"
+              href={item.href}
               onClick={() => { setIsMenuOpen(false) }}
             >
-              {title}
+              {
+                (pathname.includes('/profile/admin') || pathname.includes('/profile/employee'))
+                  ? (
+                      <>
+                        {item.icon(pathname)}
+                        <span
+                          className='ml-3'
+                        >
+                          {item.title}
+                        </span>
+                      </>
+                    )
+                  : item.title
+              }
             </Link>
             <Divider className='mt-2' />
 

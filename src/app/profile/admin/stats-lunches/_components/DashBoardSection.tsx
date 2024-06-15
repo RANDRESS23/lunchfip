@@ -19,7 +19,7 @@ export const DashBoardSection = () => {
   const { almuerzosEstadisticas, loadingAlmuerzosEstadisticas } = useAlmuerzosEstadisticas({ fechaInicio: fecha.start.toString(), fechaFin: fecha.end.toString() })
 
   return (
-    <section className='w-full flex flex-col'>
+    <section className='w-full flex items-center lg:items-start flex-col'>
       <I18nProvider locale="co-CO">
         <DateRangePicker
           label="Rango de Fecha"
@@ -41,59 +41,68 @@ export const DashBoardSection = () => {
           loadingAlmuerzosEstadisticas
             ? (
                 <>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='w-full h-full lg:w-1/3'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
-                    <div className='w-4/6'>
-                      <Skeleton className="flex w-full h-full rounded-lg"/>
-                    </div>
-                  </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
-                      <Skeleton className="flex w-full h-full rounded-lg"/>
-                    </div>
-                    <div className='w-1/3'>
+                    <div className='w-full h-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='hidden lg:flex w-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full h-full lg:w-1/3'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
-                  </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
-                      <Skeleton className="flex w-full h-full rounded-lg"/>
-                    </div>
-                    <div className='w-1/3'>
+                    <div className='flex lg:hidden w-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='w-full h-full lg:w-1/3'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
-                    <div className='w-4/6'>
-                      <Skeleton className="flex w-full h-full rounded-lg"/>
-                    </div>
-                  </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
-                      <Skeleton className="flex w-full h-full rounded-lg"/>
-                    </div>
-                    <div className='w-1/3'>
+                    <div className='w-full h-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='hidden lg:flex w-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full h-full lg:w-1/3'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                    <div className='flex lg:hidden w-full lg:w-4/6'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                  </div>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='w-full h-full lg:w-1/3'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                    <div className='w-full h-full lg:w-4/6'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                  </div>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='hidden lg:flex w-full lg:w-4/6'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                    <div className='w-full h-full lg:w-1/3'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                    <div className='flex lg:hidden w-full lg:w-4/6'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                  </div>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-96'>
+                    <div className='w-full h-full lg:w-1/3'>
+                      <Skeleton className="flex w-full h-full rounded-lg"/>
+                    </div>
+                    <div className='w-full h-full lg:w-4/6'>
                       <Skeleton className="flex w-full h-full rounded-lg"/>
                     </div>
                   </div>
@@ -101,8 +110,8 @@ export const DashBoardSection = () => {
               )
             : (
                 <>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Almuerzos Definidos'
                         amount={almuerzosEstadisticas.totalAlmuerzosDefinidos}
@@ -110,7 +119,7 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full lg:w-4/6'>
                       <TabCharts
                         text1='Almuerzos Definidos'
                         text2='Cantidad de almuerzos definidos el'
@@ -118,15 +127,15 @@ export const DashBoardSection = () => {
                       />
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='hidden lg:block w-full lg:w-4/6'>
                       <TabCharts
                         text1='Total Almuerzos Reservados'
                         text2='Cantidad total de almuerzos reservados el'
                         data={almuerzosEstadisticas.dataTotalAlmuerzosReservados}
                       />
                     </div>
-                    <div className='w-1/3'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Total Almuerzos Reservados'
                         amount={almuerzosEstadisticas.totalAlmuerzosReservados}
@@ -134,9 +143,16 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
+                    <div className='block lg:hidden w-full lg:w-4/6'>
+                      <TabCharts
+                        text1='Total Almuerzos Reservados'
+                        text2='Cantidad total de almuerzos reservados el'
+                        data={almuerzosEstadisticas.dataTotalAlmuerzosReservados}
+                      />
+                    </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Almuerzos Reservados Presencialmente'
                         amount={almuerzosEstadisticas.totalAlmuerzosReservadosPresencial}
@@ -144,7 +160,7 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full lg:w-4/6'>
                       <TabCharts
                         text1='Almuerzos Reservados Presencialmente'
                         text2='Cantidad total de almuerzos reservados presencialmente el'
@@ -152,15 +168,15 @@ export const DashBoardSection = () => {
                       />
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='hidden lg:block w-full lg:w-4/6'>
                       <TabCharts
                         text1='Almuerzos Reservados Virtualmente'
                         text2='Cantidad total de almuerzos reservados virtualmente el'
                         data={almuerzosEstadisticas.dataTotalAlmuerzosReservadosVirtual}
                       />
                     </div>
-                    <div className='w-1/3'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Almuerzos Reservados Virtualmente'
                         amount={almuerzosEstadisticas.totalAlmuerzosReservadosVirtual}
@@ -168,9 +184,16 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
+                    <div className='block lg:hidden w-full lg:w-4/6'>
+                      <TabCharts
+                        text1='Almuerzos Reservados Virtualmente'
+                        text2='Cantidad total de almuerzos reservados virtualmente el'
+                        data={almuerzosEstadisticas.dataTotalAlmuerzosReservadosVirtual}
+                      />
+                    </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Almuerzos Entregados'
                         amount={almuerzosEstadisticas.totalAlmuerzosEntregados}
@@ -178,7 +201,7 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full lg:w-4/6'>
                       <TabCharts
                         text1='Almuerzos Entregados'
                         text2='Cantidad total de almuerzos entregados el'
@@ -186,15 +209,15 @@ export const DashBoardSection = () => {
                       />
                     </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-4/6'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='hidden lg:block w-full lg:w-4/6'>
                       <TabCharts
                         text1='Almuerzos Sin Entregar'
                         text2='Cantidad total de almuerzos sin entregar el'
                         data={almuerzosEstadisticas.dataTotalAlmuerzosSinEntregar}
                       />
                     </div>
-                    <div className='w-1/3'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Almuerzos Sin Entregar'
                         amount={almuerzosEstadisticas.totalAlmuerzosSinEntregar}
@@ -202,9 +225,16 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
+                    <div className='block lg:hidden w-full lg:w-4/6'>
+                      <TabCharts
+                        text1='Almuerzos Sin Entregar'
+                        text2='Cantidad total de almuerzos sin entregar el'
+                        data={almuerzosEstadisticas.dataTotalAlmuerzosSinEntregar}
+                      />
+                    </div>
                   </div>
-                  <div className='w-full flex gap-5 h-96'>
-                    <div className='w-1/3'>
+                  <div className='w-full flex flex-col lg:flex-row gap-5 h-[600px] lg:h-96'>
+                    <div className='w-full lg:w-1/3'>
                       <DashBoardCard
                         label='Recargas Realizadas'
                         amount={almuerzosEstadisticas.totalRecargas}
@@ -212,7 +242,7 @@ export const DashBoardSection = () => {
                         Icon={<ImListNumbered className='text-2xl text-black dark:text-white' />}
                       />
                     </div>
-                    <div className='w-4/6'>
+                    <div className='w-full lg:w-4/6'>
                       <TabCharts
                         text1='Recargas Realizadas'
                         text2='Cantidad total de recargas realizadas el'

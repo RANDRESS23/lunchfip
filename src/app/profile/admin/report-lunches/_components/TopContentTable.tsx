@@ -82,7 +82,7 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-3 lg:items-end">
         <div className='w-full flex items-center justify-start gap-3 h-full'>
           <div className='relative overflow-hidden p-[1px] rounded-xl w-[30%]'>
             <I18nProvider locale="co-CO">
@@ -125,7 +125,7 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
             />
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex justify-evenly gap-3">
           {
             (loadingTotalEstudiantesAlmuerzos || loadingAlmuerzosTotales || loadingAlmuerzosReservados || loadingAlmuerzosEntregados)
               ? <Spinner color='secondary' />
@@ -212,7 +212,7 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
                 : null
           }
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                 Estados
               </Button>
@@ -233,7 +233,7 @@ export const TopContentTable = ({ estudiantesCount, filterValue, statusFilter, v
             </DropdownMenu>
           </Dropdown>
           <Dropdown>
-            <DropdownTrigger className="hidden sm:flex">
+            <DropdownTrigger className="flex">
               <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                 Columas
               </Button>

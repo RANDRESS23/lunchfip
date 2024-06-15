@@ -25,7 +25,7 @@ export default async function HomePage () {
   if (!isAdmin) return redirect('/profile/student/home')
 
   return (
-    <div className='lg:ml-[290px] h-screen relative px-9 pr-9 font-inter-sans flex flex-col items-center justify-center'>
+    <div className='lg:ml-[290px] h-screen relative px-9 font-inter-sans flex flex-col items-center justify-center'>
       <BgParticles />
       <WelcomeAdmin />
     </div>

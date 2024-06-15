@@ -2,10 +2,14 @@ import { db } from '@/libs/prismaDB'
 import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
-const getDayAndMonthString = (fechaAux: Date) => {
+const getDayAndMonthString = (fechaAux: Date, isDateLunch?: boolean) => {
   const fechaAuxParsed = new Date(fechaAux)
 
-  return format(fechaAuxParsed, 'DD/MM')
+  if (isDateLunch) fechaAuxParsed.setUTCHours(fechaAuxParsed.getUTCHours() + 5)
+
+  const fechaAuxParsedFinal = new Date(fechaAuxParsed)
+
+  return format(fechaAuxParsedFinal, 'DD/MM')
 }
 
 const getDefaultData = (fechaInicioAux: Date, fechaFinAux: Date) => [
@@ -23,9 +27,17 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
   try {
     const fechaInicioAux = new Date(params.fechaInicio)
     const fechaFinAux = new Date(params.fechaFin)
+    const fechaInicioAux2 = new Date(params.fechaInicio)
+    const fechaFinAux2 = new Date(params.fechaFin)
 
-    const fechaInicioString = format(fechaInicioAux, 'DD-MM-YYYY')
-    const fechaFinString = format(fechaFinAux, 'DD-MM-YYYY')
+    fechaInicioAux2.setUTCHours(fechaInicioAux2.getUTCHours() + 5)
+    fechaFinAux2.setUTCHours(fechaFinAux2.getUTCHours() + 5)
+
+    const fechaInicioAuxFinal = new Date(fechaInicioAux2)
+    const fechaFinAuxFinal = new Date(fechaFinAux2)
+
+    const fechaInicioString = format(fechaInicioAuxFinal, 'DD/MM/YYYY')
+    const fechaFinString = format(fechaFinAuxFinal, 'DD/MM/YYYY')
 
     const existingLunchesDate = await db.almuerzos_Fecha.findMany({
       where: {
@@ -106,23 +118,23 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
       return {
         dataTotalAlmuerzosReservados: {
-          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date, true),
           cantidad: reservasDate.length
         },
         dataTotalAlmuerzosReservadosPresencial: {
-          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date, true),
           cantidad: reservaPresencialDate
         },
         dataTotalAlmuerzosReservadosVirtual: {
-          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date, true),
           cantidad: reservaVirtualDate
         },
         dataTotalAlmuerzosSinEntregar: {
-          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date, true),
           cantidad: reservasDate.length - entregasDate.length
         },
         dataTotalAlmuerzosEntregados: {
-          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date),
+          name: getDayAndMonthString((almuerzoFecha?.fecha ?? new Date()) as Date, true),
           cantidad: entregasDate.length
         }
       }
@@ -202,10 +214,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
       ])
 
       return {
-        dataTotalAlmuerzosReservados: {
-          name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date),
-          cantidad: almuerzo.total_almuerzos
-        }
+        name: getDayAndMonthString((almuerzoFecha ? almuerzoFecha.fecha : new Date()) as Date, true),
+        cantidad: almuerzo.total_almuerzos
       }
     }))
 
