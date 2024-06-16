@@ -29,23 +29,24 @@ export default async function ReservePage () {
   const { isValidHourToReserve } = getNextDate()
 
   return (
-    <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative pr-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
+    <div className='lg:ml-[290px] pt-24 pb-10 h-screen relative px-9 font-inter-sans bg-grid-small-black dark:bg-grid-small-white flex flex-col items-center'>
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
       <TitleAnimated
         text1='Reservar'
         text2='Almuerzo'
         isTextLeft
+        isTextRowMobile
       />
-      <p className='w-full z-10 -mt-3 mb-8 text-p-light dark:text-p-dark'>En esta sección podrás reservar el almuerzo al estudiante escaneando su código QR personal o mediante la digitalización de su número de documento.</p>
-      <div className='w-full flex gap-6'>
+      <p className='w-full z-10 -mt-3 mb-8 text-p-light dark:text-p-dark text-center lg:text-left'>En esta sección podrás reservar el almuerzo al estudiante escaneando su código QR personal o mediante la digitalización de su número de documento.</p>
+      <div className='w-full flex flex-col lg:flex-row gap-6 pb-10'>
         {
           isValidHourToReserve
             ? (
                 <>
-                  <div className='w-2/5'>
+                  <div className='w-full lg:w-2/5'>
                     <TabSections />
                   </div>
-                  <div className='w-3/5'>
+                  <div className='w-full lg:w-3/5'>
                     <LunchesReservedStats />
                   </div>
                 </>

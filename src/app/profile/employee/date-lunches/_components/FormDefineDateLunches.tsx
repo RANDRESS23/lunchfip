@@ -139,7 +139,7 @@ export const FormDefineDateLunches = () => {
   }
 
   return (
-    <section className='w-2/5'>
+    <section className='w-full lg:w-2/5'>
       {
         almuerzosFecha.id_almuerzos_fecha !== '' && !editAmount
           ? (

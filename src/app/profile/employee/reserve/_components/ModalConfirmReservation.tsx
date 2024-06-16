@@ -83,17 +83,17 @@ export const ModalConfirmReservation = ({
 
   return (
     <>
-      <Modal backdrop='blur' size='3xl' isOpen={isOpen} onClose={onClose} className='border border-black dark:border-white font-inter-sans'>
+      <Modal backdrop='blur' scrollBehavior='outside' size='3xl' isOpen={isOpen} onClose={onClose} className='border border-black dark:border-white font-inter-sans'>
         <ModalContent>
           {(onClose) => (
             <>
               <div className='relative bg-grid-black dark:bg-grid-white'>
-                <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)]" />
+                <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_0.5%,black)] rounded-2xl" />
                 <ModalHeader className="flex justify-between items-center gap-1">
                   <TitleAnimated
                     text1='Reservar'
                     text2='Almuerzo'
-                    textSize='text-3xl'
+                    textSize='text-2xl lg:text-3xl'
                     isTextLeft
                   />
                   <Image
@@ -113,8 +113,8 @@ export const ModalConfirmReservation = ({
                 </ModalHeader>
                 <ModalBody>
                   <hr className='-mt-7 mb-3 border-black dark:border-white z-10' />
-                  <div className='flex gap-5'>
-                    <section className='w-2/5 flex justify-center items-center relative overflow-hidden rounded-xl z-10'>
+                  <div className='flex flex-col lg:flex-row gap-5'>
+                    <section className='w-full lg:w-2/5 flex justify-center items-center relative overflow-hidden rounded-xl z-10'>
                       <Image
                         src={`https://guia.itfip.edu.co/sgacampus/images/dynamic/foto/1/${numeroDocumento}/${numeroDocumento}.jpg?width=1000&cut=1`}
                         alt='Foto de perfil del estudiante'
@@ -124,10 +124,10 @@ export const ModalConfirmReservation = ({
                       />
                       <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00aaff_0%,#ff3366_50%,#00aaff_100%)] -z-10" />
                     </section>
-                    <section className='w-3/5 flex flex-col justify-between z-10'>
+                    <section className='w-full lg:w-3/5 flex flex-col justify-between z-10'>
                       <div>
                         <div>
-                          <p className='text-2xl font-semibold'>
+                          <p className='text-2xl font-semibold mb-1'>
                             {nombreCompleto}
                           </p>
                         </div>
@@ -137,42 +137,50 @@ export const ModalConfirmReservation = ({
                             {`${numeroDocumento} ${tipoDocumento === 'Cédula de Ciudadanía' ? 'C.C' : 'T.I'}`}
                           </p>
                         </div>
-                        <hr className='mt-2 border-black dark:border-white' />
+                        <hr className='my-4 border-black dark:border-white' />
                       </div>
-                      <div className='flex flex-col gap-4'>
+                      <div className='w-full flex flex-col gap-4'>
                         <div className={cn(
-                          'flex gap-2',
+                          'w-full flex gap-2',
                           programa.length > 45 ? '' : 'items-center'
                         )}>
-                          <FaUniversity className="text-2xl" />
-                          <p className='text-lg'>
+                          <div className='w-[10%] lg:w-[5%] flex justify-center items-center'>
+                            <FaUniversity className="text-2xl" />
+                          </div>
+                          <p className='flex-1 w-[90%] text-lg whitespace-normal break-words'>
                             {programa}
                           </p>
                         </div>
                         <div className={cn(
-                          'flex gap-2',
+                          'w-full flex gap-2',
                           correoInstitucional.length > 45 ? '' : 'items-center'
                         )}>
-                          <MdEmail className="text-2xl" />
-                          <p className='text-lg'>
+                          <div className='w-[10%] lg:w-[5%] flex justify-center items-center'>
+                            <MdEmail className="text-2xl" />
+                          </div>
+                          <p className='flex-1 w-[90%] text-lg whitespace-normal break-words'>
                             {correoInstitucional}
                           </p>
                         </div>
                         <div className={cn(
-                          'flex gap-2',
+                          'w-full flex gap-2',
                           celular.length > 45 ? '' : 'items-center'
                         )}>
-                          <MdPhoneIphone className="text-2xl" />
-                          <p className='text-lg'>
+                          <div className='w-[10%] lg:w-[5%] flex justify-center items-center'>
+                            <MdPhoneIphone className="text-2xl" />
+                          </div>
+                          <p className='flex-1 w-[90%] text-lg whitespace-normal break-words'>
                             {celular}
                           </p>
                         </div>
                         <div className={cn(
-                          'flex gap-2',
+                          'w-full flex gap-2',
                           celular.length > 45 ? '' : 'items-center'
                         )}>
-                          <BsCashCoin className="text-2xl" />
-                          <p className='text-lg'>
+                          <div className='w-[10%] lg:w-[5%] flex justify-center items-center'>
+                            <BsCashCoin className="text-2xl" />
+                          </div>
+                          <p className='flex-1 w-[90%] text-lg whitespace-normal break-words'>
                             {saldo === 0 ? '$ 0' : saldoParsed3}
                           </p>
                         </div>
@@ -182,7 +190,7 @@ export const ModalConfirmReservation = ({
                   <hr className='mt-3 border-black dark:border-white z-10' />
                 </ModalBody>
                 <ModalFooter>
-                  <div className='w-2/4 flex justify-center items-end gap-3 z-10'>
+                  <div className='w-full lg:w-2/4 flex flex-col lg:flex-row justify-center items-center lg:items-end gap-3 z-10'>
                     <ButtonLitUpBorders
                       type="button"
                       text='Cancelar Proceso'
