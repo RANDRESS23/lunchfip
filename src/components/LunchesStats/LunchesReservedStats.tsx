@@ -11,6 +11,7 @@ interface LunchesReservedStatsProps {
   isFlex?: boolean
 }
 
+/* ➡ Componente que renderiza las estadisticas de los almuerzos reservados */
 export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
   const { almuerzosFecha, loadingAlmuerzosFecha } = useAlmuerzosFecha()
   const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })

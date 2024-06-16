@@ -7,6 +7,7 @@ interface CheckboxProps {
   onChange?: () => void
 }
 
+/* ➡ Componente del checbox del aplicativo */
 export const Checkbox = ({ option, checked, className, onChange }: CheckboxProps) => {
   return (
     <CheckboxUI

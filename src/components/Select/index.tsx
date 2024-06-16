@@ -18,6 +18,7 @@ interface SelectProps {
   errors: FieldErrors<FieldValues>
 }
 
+/* ➡ Componente que renderiza el select customizable */
 export const Select = (
   { label, isRequired, name, options, disabled, register, errors }: SelectProps
 ) => {

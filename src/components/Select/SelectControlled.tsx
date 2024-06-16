@@ -20,6 +20,7 @@ interface SelectProps {
   setValue: (keys: any) => any
 }
 
+/* ➡ Componente que renderiza el select controlado customizable */
 export const SelectControlled = (
   { label, isRequired, name, control, value, options, disabled, errors, setValue }: SelectProps
 ) => {

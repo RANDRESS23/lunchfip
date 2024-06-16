@@ -7,6 +7,7 @@ interface AsideProps {
   items: Array<Record<string, any>>
 }
 
+/* ➡ Componente del aside tanto para el empleado, como para el administrador */
 export const Aside = ({ items }: AsideProps) => {
   const pathname = usePathname()
 

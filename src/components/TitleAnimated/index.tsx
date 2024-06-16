@@ -9,6 +9,7 @@ interface TitleAnimatedProps {
   isTextRowMobile?: boolean
 }
 
+/* ➡ Componente que renderiza un titulo principal animado */
 export const TitleAnimated = ({ text1, text2, textSize, isTextLeft, isTextCol, isTextRowMobile }: TitleAnimatedProps) => {
   const textSizeDefault = 'text-3xl lg:text-4xl'
 

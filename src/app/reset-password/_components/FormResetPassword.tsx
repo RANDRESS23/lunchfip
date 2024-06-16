@@ -28,6 +28,7 @@ const resetPasswordSchema = z.object({
   path: ['clave_2']
 })
 
+/* ➡ Este componente es el que se renderiza el formulario principal de la pagina "Reestablecer contraseña" del aplicativo */
 export const FormResetPassword = ({ token }: { token: string }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)

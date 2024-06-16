@@ -5,6 +5,7 @@ import IconPersonCheckFill from '@/components/Home/icons/IconPersonCheckFill'
 import IconServerSecurity from '@/components/Home/icons/IconServerSecurity'
 import IconShieldLockFill from '@/components/Home/icons/IconShieldLockFill'
 
+/* ➡ Items de "¿Por qué LunchFip?" en el Home Page */
 export const itemsBeacauseSection = [
   {
     icon: <IconLightningCharge />,

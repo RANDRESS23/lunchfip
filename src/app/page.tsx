@@ -5,6 +5,7 @@ import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
+/* ➡ Este componente es el que se renderiza en la pagina principal del aplicativo */
 export default async function Home () {
   const supabase = createClient()
   const { data } = await supabase.auth.getUser()

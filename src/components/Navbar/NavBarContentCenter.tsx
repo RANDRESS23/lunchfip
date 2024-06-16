@@ -13,6 +13,7 @@ interface NavBarContentCenterProps {
   user: any
 }
 
+/* ➡ Componente que renderiza los items del NavBar dependiendo que rol esté logueado */
 export const NavBarContentCenter = ({ items, pathname, id, user }: NavBarContentCenterProps) => {
   const { theme } = useTheme()
 

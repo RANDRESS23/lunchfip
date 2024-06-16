@@ -26,6 +26,7 @@ interface NavBarAppProps {
   isAdmin: boolean
 }
 
+/* ➡ Componente que renderiza la parte principal del NavBar */
 export const NavBarApp = ({ user, isEmployee, isAdmin }: NavBarAppProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showSignOutButton, setShowSignOutButton] = useState(false)

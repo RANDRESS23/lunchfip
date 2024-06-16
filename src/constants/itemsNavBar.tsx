@@ -10,6 +10,7 @@ import { ImStatsDots } from 'react-icons/im'
 import { BsCalendarDateFill } from 'react-icons/bs'
 import { cn } from '@/libs/utils'
 
+/* ➡ Items del NavBar sin loguearse ningún rol */
 export const menuItems = [
   {
     title: 'Inicio',
@@ -21,6 +22,7 @@ export const menuItems = [
   }
 ]
 
+/* ➡ Items del NavBar del estudiante */
 export const menuItemsStudent = [
   {
     title: 'Inicio',
@@ -40,6 +42,7 @@ export const menuItemsStudent = [
   }
 ]
 
+/* ➡ Items del NavBar del empleado */
 export const menuItemsEmployee = [
   {
     title: 'Definir Próxima Fecha',
@@ -91,6 +94,7 @@ export const menuItemsEmployee = [
   }
 ]
 
+/* ➡ Items del NavBar del administrador */
 export const menuItemsAdmin = [
   {
     title: 'Registrar Empleados',

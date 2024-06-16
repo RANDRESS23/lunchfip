@@ -1,6 +1,7 @@
 import { TextGenerateEffect } from '../ui/text-generate-effect'
 import { words } from '@/constants/wordsSubtitleHome'
 
+/* ➡ Componente del subtitle principal de la Home Page */
 export const SubTitle = () => {
   return (
     <TextGenerateEffect

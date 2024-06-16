@@ -30,6 +30,7 @@ interface InputProps {
   keyUp?: (event: React.KeyboardEvent<HTMLInputElement>, nextInputName?: string, previousInputName?: string) => void
 }
 
+/* ➡ Componente del Input customizable */
 export const Input = (
   { type, label, isRequired, name, size, value, variant, disabled, endContent, register, errors, className, classNamesInput, previousInputName, nextInputName, keyDown, keyUp }: InputProps
 ) => {

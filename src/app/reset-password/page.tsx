@@ -11,6 +11,7 @@ export async function generateMetadata (): Promise<Metadata> {
   }
 }
 
+/* ➡ Este componente es el que se renderiza en la pagina "Reestablecer contraseña" del aplicativo */
 export default async function ForgotPassword ({
   searchParams
 }: {

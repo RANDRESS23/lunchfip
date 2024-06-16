@@ -22,6 +22,7 @@ import { toast } from 'sonner'
 import { TitleAnimated } from '@/components/TitleAnimated'
 import { createClient } from '@/utils/supabase/client'
 
+/* ➡ Este componente es el que se renderiza el formulario principal de la pagina "Registrarse" del aplicativo */
 export const FormSignUp = () => {
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(false)

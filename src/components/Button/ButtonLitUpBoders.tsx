@@ -8,6 +8,7 @@ interface ButtonLitUpBordersProps {
   onClick?: () => void
 }
 
+/* ➡ Componente del boton customizable */
 export const ButtonLitUpBorders = ({ type, text, disabled, onClick }: ButtonLitUpBordersProps) => {
   return (
     <ButtonsCard className='w-full group hover:shadow-[-10px_-10px_30px_4px_rgba(253,44,97,0.15),_10px_10px_30px_4px_rgba(255,51,102,0.15)] rounded-xl transition-all z-10'>

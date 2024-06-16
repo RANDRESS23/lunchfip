@@ -5,6 +5,7 @@ import { Title } from '@/components/Home'
 import { Spotlight } from '../ui/Spotlight'
 import Link from 'next/link'
 
+/* ➡ Componente principal que renderiza la landing principal del aplicativo */
 export const HomeSection = () => {
   return (
     <section className='h-screen relative bg-grid-black dark:bg-grid-white flex flex-col justify-center items-center py-20 font-inter-sans'>

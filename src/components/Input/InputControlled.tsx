@@ -22,6 +22,7 @@ interface InputProps {
   classNamesInput?: string[]
 }
 
+/* ➡ Componente del input controlado customizable */
 export const InputControlled = (
   { type, name, label, disabled, isRequired, control, size, variant, endContent, errors, className, classNamesInput }: InputProps
 ) => {

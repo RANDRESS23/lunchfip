@@ -8,6 +8,7 @@ interface ButtonProps {
   onClick?: () => void
 }
 
+/* ➡ Componente del boton customizable */
 export const Button = ({ type, text, disabled, onClick }: ButtonProps) => {
   return (
     <ButtonsCard className='w-full group hover:shadow-[-10px_-10px_30px_4px_rgba(0,170,255,0.15),_10px_10px_30px_4px_rgba(255,51,102,0.15)] rounded-xl transition-all z-10'>

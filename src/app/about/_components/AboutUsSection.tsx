@@ -1,6 +1,7 @@
 import { TitleAnimated } from '@/components/TitleAnimated'
 import Image from 'next/image'
 
+/* ➡ Este componente es el que se renderiza todo el contenido de la pagina "nosotros" del aplicativo */
 export const AboutUsSection = () => {
   return (
     <section className='font-inter-sans flex flex-col justify-center items-center gap-24 lg:gap-32'>

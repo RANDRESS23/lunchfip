@@ -20,6 +20,7 @@ interface NavBarMobileProps {
   isMenuItemsGeneral: boolean
 }
 
+/* ➡ Componente que renderiza el NavBar para entornos móviles */
 export const NavBarMobile = (
   { items, pathname, setIsMenuOpen, isMenuItemsGeneral }: NavBarMobileProps
 ) => {

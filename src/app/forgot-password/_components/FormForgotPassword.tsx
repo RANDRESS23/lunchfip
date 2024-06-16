@@ -21,6 +21,7 @@ const correoEstudiantilSchema = z.object({
   })
 })
 
+/* ➡ Este componente es el que se renderiza el formulario principal de la pagina "¿Olvidaste tu contraseña?" del aplicativo */
 export const FormForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmSendedEmail, setIsConfirmSendedEmail] = useState(false)

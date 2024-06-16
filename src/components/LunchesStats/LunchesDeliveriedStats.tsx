@@ -7,6 +7,7 @@ import { useAlmuerzosEntregados } from '@/hooks/useAlmuerzosEntregados'
 import { useAlmuerzosFecha } from '@/hooks/useAlmuerzosFecha'
 import { format } from '@formkit/tempo'
 
+/* ➡ Componente que renderiza las estadisticas de los almuerzos entregados */
 export const LunchesDeliveriedStats = () => {
   const { almuerzosFecha, loadingAlmuerzosFecha } = useAlmuerzosFecha()
   const { almuerzosTotales, loadingAlmuerzosTotales } = useAlmuerzosTotales({ nextDate: almuerzosFecha.fecha.toString() })

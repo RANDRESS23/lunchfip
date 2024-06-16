@@ -1,6 +1,7 @@
 import { TitleAnimated } from '../TitleAnimated'
 import { ItemsBecauseCards } from './ItemsBecauseCards'
 
+/* ➡ Componente principal de la sección "¿Por qué LunchFip?" */
 export const BecauseSection = () => {
   return (
     <section className="relative flex flex-col justify-center items-center py-20 font-inter-sans">

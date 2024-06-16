@@ -3,6 +3,7 @@ import { NavBarApp } from './NavBarApp'
 import { getEmployeeEmails } from '@/services/getEmployeeEmails'
 import { getAdminEmails } from '@/services/getAdminEmails'
 
+/* ➡ Componente que renderiza el NavBar del aplicativo */
 export const NavBar = async () => {
   const supabase = createClient()
   const employeeEmails = await getEmployeeEmails()

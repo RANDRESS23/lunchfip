@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { MdWbSunny } from 'react-icons/md'
 import { TbMoonFilled } from 'react-icons/tb'
 
+/* ➡ Componente que renderiza el switch para cambiar el tema del aplicativo (light | dark) */
 export const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()

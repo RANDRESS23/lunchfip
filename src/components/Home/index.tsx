@@ -1,3 +1,4 @@
+/* ➡ Componente del title principal de la Home Page */
 export const Title = () => {
   return (
     <div className='relative z-10 flex flex-col justify-center items-center h-56'>

@@ -15,6 +15,7 @@ interface PDFGeneratorProps {
   orientationLandscape: boolean
 }
 
+/* ➡ Componente que se encarga de generar los PDFS de los reportes */
 export const PDFGenerator = ({ fileName, contactLabel, contactName, invoiceLabel, invoiceNum, invoiceInvDate, invoiceInvGenDate, invoiceHeader, invoiceTable, orientationLandscape }: PDFGeneratorProps) => {
   const getProps = () => {
     return {

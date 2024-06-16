@@ -23,6 +23,7 @@ import { useEmailsAdmin } from '@/hooks/useEmailsAdmin'
 import { useAdministrador } from '@/hooks/useAdministrador'
 import { type Administrador } from '@/types/administradores'
 
+/* ➡ Este componente es el que se renderiza el formulario principal de la pagina "Iniciar Sesión" del aplicativo */
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)

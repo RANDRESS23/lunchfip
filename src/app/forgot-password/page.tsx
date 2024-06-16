@@ -10,6 +10,7 @@ export async function generateMetadata (): Promise<Metadata> {
   }
 }
 
+/* ➡ Este componente es el que se renderiza en la pagina "¿Olvidaste tu contraseña?" del aplicativo */
 export default async function ForgotPassword () {
   const supabase = createClient()
   const { data } = await supabase.auth.getUser()

@@ -10,6 +10,7 @@ interface ItemListProps {
   title: string
 }
 
+/* ➡ Componente del item que va dentro del aside tanto para el empleado, como para el administrador */
 export const ItemList = ({ href, icon, title }: ItemListProps) => {
   const pathname = usePathname()
 

@@ -14,6 +14,7 @@ interface FormVerifyCodeProps {
   dataEstudiante: FieldValues
 }
 
+/* ➡ Este componente es el que se renderiza el formulario de verificar códgio de la pagina "Registrarse" del aplicativo */
 export const FormVerifyCode = ({ dataEstudiante }: FormVerifyCodeProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
