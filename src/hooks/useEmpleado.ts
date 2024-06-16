@@ -4,6 +4,7 @@ import { useEmpleadoStore } from '@/store/empleados'
 import { type Empleado } from '@/types/empleados'
 import { EMPLEADO_INITIAL_VALUES } from '@/initial-values/empleado'
 
+/* ➡ Hook para manejar los datos del empleado */
 export const useEmpleado = () => {
   const [loadingEmpleado, setLoadingEmpleado] = useState(false)
   const empleado = useEmpleadoStore(state => state.empleado)

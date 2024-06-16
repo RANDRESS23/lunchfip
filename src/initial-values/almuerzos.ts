@@ -1,3 +1,4 @@
+/* ➡ Valores iniciales para los almuerzos fecha */
 export const ALMUERZOS_FECHA_INITIAL_VALUES = {
   id_almuerzos_fecha: '',
   fecha: new Date(),
@@ -5,6 +6,7 @@ export const ALMUERZOS_FECHA_INITIAL_VALUES = {
   updatedAt: new Date()
 }
 
+/* ➡ Valores iniciales para los almuerzos totales */
 export const ALMUERZOS_TOTALES_INITIAL_VALUES = {
   id_almuerzo: '',
   fecha: new Date(),
@@ -13,6 +15,7 @@ export const ALMUERZOS_TOTALES_INITIAL_VALUES = {
   updatedAt: new Date()
 }
 
+/* ➡ Valores iniciales para los almuerzos reservados */
 export const ALMUERZOS_RESERVADOS_INITIAL_VALUES = {
   id_almuerzos_reservados: '',
   id_almuerzo: '',
@@ -21,6 +24,7 @@ export const ALMUERZOS_RESERVADOS_INITIAL_VALUES = {
   updatedAt: new Date()
 }
 
+/* ➡ Valores iniciales para los almuerzos entregados */
 export const ALMUERZOS_ENTREGADOS_INITIAL_VALUES = {
   id_almuerzos_entregados: '',
   id_almuerzo: '',
@@ -29,6 +33,7 @@ export const ALMUERZOS_ENTREGADOS_INITIAL_VALUES = {
   updatedAt: new Date()
 }
 
+/* ➡ Valores iniciales para las estadisticas de los almuerzos */
 export const ALMUERZOS_ESTADISTICAS_INITIAL_VALUES = {
   totalAlmuerzosDefinidos: 0,
   dataTotalAlmuerzosDefinidos: [{ name: '', cantidad: 0 }],

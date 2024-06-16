@@ -15,6 +15,7 @@ interface AlmuerzosStore {
   setAlmuerzosEstadisticas: (almuerzosEstadisticas: AlmuerzosEstadisticas) => void
 }
 
+/* ➡ Configurando el store para los almuerzos */
 export const useAlmuerzosStore = create<AlmuerzosStore>((set) => ({
   almuerzosFecha: ALMUERZOS_FECHA_INITIAL_VALUES,
   almuerzosTotales: ALMUERZOS_TOTALES_INITIAL_VALUES,

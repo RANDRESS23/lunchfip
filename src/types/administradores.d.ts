@@ -1,3 +1,4 @@
+/* ➡ Interfaz con los tipos de las propiedades del Administrador */
 export interface Administrador {
   id_administrador: string
   primer_nombre: string

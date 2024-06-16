@@ -4,6 +4,7 @@ import { type AlmuerzosEstadisticas } from '@/types/almuerzos'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 import { format } from '@formkit/tempo'
 
+/* ➡ Hook para manejar los datos de las estadisticas de los almuerzos */
 export const useAlmuerzosEstadisticas = ({ fechaInicio, fechaFin }: { fechaInicio: string, fechaFin: string }) => {
   const fechaAux = new Date(fechaInicio ?? new Date().toString())
   const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))

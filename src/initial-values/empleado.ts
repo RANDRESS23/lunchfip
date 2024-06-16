@@ -1,3 +1,4 @@
+/* ➡ Valores iniciales para el empleado */
 export const EMPLEADO_INITIAL_VALUES = {
   id_empleado: '',
   primer_nombre: '',

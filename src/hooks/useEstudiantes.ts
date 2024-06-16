@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type Estudiante } from '@/types/estudiantes'
 
+/* ➡ Hook para manejar los datos de los estudiantes */
 export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) => {
   const estudiantes = useEstudianteStore(state => state.estudiantes)
   const setEstudiantes = useEstudianteStore(state => state.setEstudiantes)

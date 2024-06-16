@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type Estudiante } from '@/types/estudiantes'
 
+/* ➡ Hook para manejar el codigo QR de reserva del estudiante */
 export const useEstudianteCodigoQRReserva = ({ estudiante, idAlmuerzo }: { estudiante: Estudiante, idAlmuerzo: string }) => {
   const codigoQRReserva = useEstudianteStore(state => state.codigoQRReserva)
   const setCodigoQRReserva = useEstudianteStore(state => state.setCodigoQRReserva)

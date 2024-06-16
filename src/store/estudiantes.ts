@@ -29,6 +29,7 @@ interface EstudianteStore {
   setCodigoQRReserva: (codigoQRReserva: string) => void
 }
 
+/* ➡ Configurando el store para el estudiante */
 export const useEstudianteStore = create<EstudianteStore>((set) => ({
   estudiante: ESTUDIANTE_INITIAL_VALUES,
   estudiantes: [ESTUDIANTE_INITIAL_VALUES],

@@ -1,3 +1,4 @@
+/* ➡ Función para obtener los días y la horas disponible para el servicio de almuerzos */
 export default function getNextDate () {
   const todayDate = new Date()
   todayDate.setUTCHours(todayDate.getUTCHours() - 5)

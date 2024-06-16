@@ -1,6 +1,7 @@
 import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
 
+/* ➡ Función para obtener los emails de todos los empleados */
 export const getEmployeeEmails = async () => {
   let employeeEmails: string[] = []
 

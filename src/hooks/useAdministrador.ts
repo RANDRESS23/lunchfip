@@ -4,6 +4,7 @@ import { type Administrador } from '@/types/administradores'
 import { ADMINISTRADOR_INITIAL_VALUES } from '@/initial-values/administrador'
 import { useAdministradorStore } from '@/store/administradores'
 
+/* ➡ Hook para manejar los datos del administrador */
 export const useAdministrador = () => {
   const administrador = useAdministradorStore(state => state.administrador)
   const setAdministrador = useAdministradorStore(state => state.setAdministrador)

@@ -13,6 +13,7 @@ interface EmpleadoStore {
   setEmpleado: (empleado: Empleado) => void
 }
 
+/* ➡ Configurando el store para el empleado */
 export const useEmpleadoStore = create<EmpleadoStore>((set) => ({
   empleado: EMPLEADO_INITIAL_VALUES,
   empleados: [EMPLEADO_INITIAL_VALUES],

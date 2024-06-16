@@ -5,6 +5,7 @@ import { type Estudiante } from '@/types/estudiantes'
 import { ESTUDIANTE_INITIAL_VALUES } from '@/initial-values/estudiante'
 import api from '@/libs/api'
 
+/* ➡ Hook para manejar los datos del estudiante */
 export const useEstudiante = () => {
   const [loadingStudent, setLoadingStudent] = useState(false)
   const estudiante = useEstudianteStore(state => state.estudiante)

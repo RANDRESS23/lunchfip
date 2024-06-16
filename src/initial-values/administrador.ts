@@ -1,3 +1,4 @@
+/* ➡ Valores iniciales para el administrador */
 export const ADMINISTRADOR_INITIAL_VALUES = {
   id_administrador: '',
   primer_nombre: '',

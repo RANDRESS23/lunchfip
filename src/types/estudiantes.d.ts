@@ -1,3 +1,4 @@
+/* ➡ Interfaz con los tipos de las propiedades del formulario del Estudiante */
 export interface EstudianteForm {
   primer_nombre: string
   segundo_nombre: string
@@ -14,6 +15,7 @@ export interface EstudianteForm {
   celular: string
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del Estudiante */
 export interface Estudiante {
   id_estudiante: string
   primer_nombre: string
@@ -39,6 +41,7 @@ export interface Estudiante {
   updatedAt: Date
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del Estudiante Almuerzo */
 export interface EstudianteAlmuerzo {
   id_estudiante: string
   primer_nombre: string
@@ -61,6 +64,7 @@ export interface EstudianteAlmuerzo {
   reserva_virtual: boolean
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del historial de reservas del Estudiante */
 export interface EstudianteHistorialReservas {
   tipo_reserva: string
   fecha_reserva: string
@@ -70,6 +74,7 @@ export interface EstudianteHistorialReservas {
   hora_entrega: string
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del historial de recargas del Estudiante */
 export interface EstudianteHistorialRecargas {
   id_recarga: string
   fecha_recarga: string

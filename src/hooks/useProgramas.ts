@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Programa } from '@/types/programas'
 
+/* ➡ Hook para manejar los datos de los programas */
 export const useProgramas = () => {
   const [programas, setProgramas] = useState<Programa[]>([])
   const [loadingProgramas, setLoadingProgramas] = useState(false)

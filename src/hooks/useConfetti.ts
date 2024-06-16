@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 
+/* ➡ Hook para manejar el confetti canvas */
 export const useConfetti = () => {
   const controller = useRef()
 

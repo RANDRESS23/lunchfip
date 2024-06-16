@@ -7,6 +7,7 @@ interface AdministradorStore {
   setAdministrador: (administrador: Administrador) => void
 }
 
+/* ➡ Configurando el store para el administrador */
 export const useAdministradorStore = create<AdministradorStore>((set) => ({
   administrador: ADMINISTRADOR_INITIAL_VALUES,
   setAdministrador: (administrador: Administrador) => { set({ administrador }) }

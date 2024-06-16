@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { type AlmuerzosFecha } from '@/types/almuerzos'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 
+/* ➡ Hook para manejar los datos de los almuerzos dependiendo de la fecha */
 export const useAlmuerzosFecha = () => {
   const almuerzosFecha = useAlmuerzosStore(state => state.almuerzosFecha)
   const setAlmuerzosFecha = useAlmuerzosStore(state => state.setAlmuerzosFecha)

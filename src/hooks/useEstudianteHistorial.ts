@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type EstudianteHistorialRecargas, type EstudianteHistorialReservas } from '@/types/estudiantes'
 
+/* ➡ Hook para manejar los datos del historial de reservas y recargas del estudiante */
 export const useEstudianteHistorial = ({ idEstudiante, page, rows }: { idEstudiante: string, page: string, rows: string }) => {
   const estudianteHistorialReservas = useEstudianteStore(state => state.estudianteHistorialReservas)
   const setEstudianteHistorialReservas = useEstudianteStore(state => state.setEstudianteHistorialReservas)

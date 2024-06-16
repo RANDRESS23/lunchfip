@@ -8,6 +8,7 @@ interface EmpleadoProps {
   rows?: string
 }
 
+/* ➡ Hook para manejar los datos de los empleados */
 export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
   const empleados = useEmpleadoStore(state => state.empleados)
   const setEmpleados = useEmpleadoStore(state => state.setEmpleados)

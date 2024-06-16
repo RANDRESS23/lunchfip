@@ -5,6 +5,7 @@ interface useEstudianteEstadisticasProps {
   idEstudiante: string
 }
 
+/* ➡ Hook para manejar los datos de las estadisticas de los estudiantes */
 export const useEstudianteEstadisticas = ({ idEstudiante }: useEstudianteEstadisticasProps) => {
   const [studentStats, setStudentStats] = useState<Record<string, string | number>>({})
   const [loadingStudentStats, setLoadingStudentStats] = useState(false)

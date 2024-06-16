@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '@/libs/api'
 import { type Administrador } from '@/types/administradores'
 
+/* ➡ Hook para manejar los emails de los administradores */
 export const useEmailsAdmin = () => {
   const [emailsAdmin, setEmailsAdmin] = useState<string[]>([])
   const [loadingEmailsAdmin, setLoadingEmailsAdmin] = useState(false)

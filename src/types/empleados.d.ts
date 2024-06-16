@@ -1,3 +1,4 @@
+/* ➡ Interfaz con los tipos de las propiedades del Empleado */
 export interface Empleado {
   id_empleado: string
   primer_nombre: string

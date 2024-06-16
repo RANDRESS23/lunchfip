@@ -1,3 +1,4 @@
+/* ➡ Interfaz con los tipos de las propiedades del objeto AlmuerzosFecha */
 export interface AlmuerzosFecha {
   id_almuerzos_fecha: string
   fecha: Date
@@ -5,6 +6,7 @@ export interface AlmuerzosFecha {
   updatedAt: Date
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del objeto Almuerzos */
 export interface Almuerzos {
   id_almuerzo: string
   fecha: Date
@@ -13,6 +15,7 @@ export interface Almuerzos {
   updatedAt: Date
 }
 
+/* ➡ Interfaz con los tipos de las propiedades del objeto AlmuerzosReservados */
 export interface AlmuerzosReservados {
   id_almuerzos_reservados: string
   id_almuerzo: string

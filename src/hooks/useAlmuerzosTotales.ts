@@ -4,6 +4,7 @@ import { type Almuerzos } from '@/types/almuerzos'
 import { useAlmuerzosStore } from '@/store/almuerzos'
 import { format } from '@formkit/tempo'
 
+/* ➡ Hook para manejar los datos de los almuerzos totales */
 export const useAlmuerzosTotales = ({ nextDate }: { nextDate: string }) => {
   const fechaAux = new Date(nextDate ?? new Date().toString())
   const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))

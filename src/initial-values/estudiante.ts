@@ -1,3 +1,4 @@
+/* ➡ Valores iniciales para el estudiante */
 export const ESTUDIANTE_INITIAL_VALUES = {
   id_estudiante: '',
   primer_nombre: '',

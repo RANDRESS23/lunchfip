@@ -4,6 +4,7 @@ import { useEstudianteStore } from '@/store/estudiantes'
 import { type EstudianteAlmuerzo } from '@/types/estudiantes'
 import { format } from '@formkit/tempo'
 
+/* ➡ Hook para manejar los datos de los almuerzos de los estudiantes */
 export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, page: string, rows: string }) => {
   const fechaAux = new Date(fecha ?? new Date().toString())
   const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
