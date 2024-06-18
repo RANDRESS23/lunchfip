@@ -64,7 +64,7 @@ export async function POST (request: Request) {
       where: { fecha }
     })
 
-    if (fecha < almuerzosFecha[almuerzosFecha.length - 1].fecha) {
+    if (fecha < almuerzosFecha[almuerzosFecha.length - 1]?.fecha) {
       return NextResponse.json(
         { messsage: '¡No puedes seleccionar una fecha menor a la ultima fecha de servicio!' },
         { status: 400 }
