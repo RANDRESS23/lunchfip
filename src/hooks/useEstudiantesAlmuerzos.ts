@@ -3,6 +3,7 @@ import api from '@/libs/api'
 import { useEstudianteStore } from '@/store/estudiantes'
 import { type EstudianteAlmuerzo } from '@/types/estudiantes'
 import { format } from '@formkit/tempo'
+import { ESTUDIANTE_ALMUERZO_INITIAL_VALUES } from '@/initial-values/estudiante'
 
 /* ➡ Hook para manejar los datos de los almuerzos de los estudiantes */
 export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, page: string, rows: string }) => {
@@ -29,6 +30,8 @@ export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, 
         setEstudiantesAlmuerzos(response.data.estudiantesAlmuerzos as EstudianteAlmuerzo[])
         setEstudiantesAlmuerzosCount(response.data.estudiantesAlmuerzosCount as number)
       } catch (error) {
+        setEstudiantesAlmuerzos([ESTUDIANTE_ALMUERZO_INITIAL_VALUES])
+        setEstudiantesAlmuerzosCount(0)
         console.log(error)
       } finally {
         setLoadingEstudiantesAlmuerzos(false)
@@ -47,6 +50,7 @@ export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, 
 
         setTotalEstudiantesAlmuerzos(response.data.totalEstudiantesAlmuerzos as EstudianteAlmuerzo[])
       } catch (error) {
+        setTotalEstudiantesAlmuerzos([ESTUDIANTE_ALMUERZO_INITIAL_VALUES])
         console.log(error)
       } finally {
         setLoadingTotalEstudiantesAlmuerzos(false)

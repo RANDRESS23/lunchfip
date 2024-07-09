@@ -12,7 +12,10 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
 
     if (almuerzosFecha === null) {
       return NextResponse.json(
-        { message: '¡No hay fecha definida para el servicio de almuerzos!' },
+        {
+          totalEstudiantesAlmuerzos: [],
+          message: '¡No hay fecha definida para el servicio de almuerzos!'
+        },
         { status: 404 }
       )
     }

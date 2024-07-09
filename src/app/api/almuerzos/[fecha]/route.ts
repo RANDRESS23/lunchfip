@@ -11,7 +11,10 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
 
     if (existingLunchesDate === null) {
       return NextResponse.json(
-        { messsage: '¡No se encontró la fecha del servicio de almuerzos!' },
+        {
+          almuerzosTotales: null,
+          messsage: '¡No se encontró la fecha del servicio de almuerzos!'
+        },
         { status: 400 }
       )
     }
@@ -22,12 +25,15 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
 
     if (almuerzo === null) {
       return NextResponse.json({
+        almuerzosTotales: null,
         message: `¡No se encontró el servicio de almuerzos para la fecha ${params.fecha}!`
       }, { status: 404 }
       )
     }
 
-    return NextResponse.json(almuerzo)
+    return NextResponse.json({
+      almuerzosTotales: almuerzo
+    })
   } catch (error) {
     console.error({ error })
 

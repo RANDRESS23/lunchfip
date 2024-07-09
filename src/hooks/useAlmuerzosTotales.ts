@@ -23,9 +23,7 @@ export const useAlmuerzosTotales = ({ nextDate }: { nextDate: string }) => {
 
         if (response.data === null) return
 
-        const almuerzosTotales: Almuerzos = response.data
-
-        setAlmuerzosTotales(almuerzosTotales)
+        setAlmuerzosTotales(response.data.almuerzosTotales as Almuerzos)
       } catch (error) {
         console.log(error)
       } finally {
