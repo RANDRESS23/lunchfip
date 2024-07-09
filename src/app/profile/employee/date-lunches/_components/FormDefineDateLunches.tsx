@@ -163,7 +163,7 @@ export const FormDefineDateLunches = () => {
                     value={fecha}
                     onChange={handleFecha}
                     minValue={today(getLocalTimeZone()).subtract({ days: 1 })}
-                    maxValue={parseDate('2024-06-22')}
+                    maxValue={parseDate('2024-07-22')}
                     isDateUnavailable={isDateUnavailable}
                     className="w-full"
                     granularity="day"

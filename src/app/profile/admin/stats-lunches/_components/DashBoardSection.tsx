@@ -26,7 +26,7 @@ export const DashBoardSection = () => {
           value={fecha}
           variant='bordered'
           minValue={parseDate('2024-03-13')}
-          maxValue={parseDate('2024-06-22')}
+          maxValue={parseDate('2024-07-22')}
           onChange={setFecha}
           className='w-full'
           classNames={{
