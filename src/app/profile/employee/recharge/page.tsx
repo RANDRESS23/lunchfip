@@ -39,7 +39,7 @@ export default async function RechargePage () {
         <div className='w-full lg:w-3/6'>
           <TabSections />
         </div>
-        <div className='w-full lg:w-3/6 relative z-10'>
+        <div className='w-full lg:w-3/6 flex justify-center items-center relative z-10'>
           <Image
             src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1716431225/svgs/recharge-balance-gif-dark_wxdcid.gif'
             alt='logo lunchfip'

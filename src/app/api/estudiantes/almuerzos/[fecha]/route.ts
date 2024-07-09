@@ -11,14 +11,22 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
 
     if (page === null) {
       return NextResponse.json(
-        { messsage: '¡El parámetro "page" es requerido!' },
+        {
+          estudiantesAlmuerzos: [],
+          estudiantesAlmuerzosCount: 0,
+          messsage: '¡El parámetro "page" es requerido!'
+        },
         { status: 400 }
       )
     }
 
     if (rows === null) {
       return NextResponse.json(
-        { messsage: '¡El parámetro "rows" es requerido!' },
+        {
+          estudiantesAlmuerzos: [],
+          estudiantesAlmuerzosCount: 0,
+          messsage: '¡El parámetro "rows" es requerido!'
+        },
         { status: 400 }
       )
     }
@@ -29,7 +37,11 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
 
     if (almuerzosFecha === null) {
       return NextResponse.json(
-        { message: '¡No hay fecha definida para el servicio de almuerzos!' },
+        {
+          estudiantesAlmuerzos: [],
+          estudiantesAlmuerzosCount: 0,
+          message: '¡No hay fecha definida para el servicio de almuerzos!'
+        },
         { status: 404 }
       )
     }
@@ -184,7 +196,12 @@ export async function GET (request: Request, { params }: { params: { fecha: stri
     console.error({ error })
 
     return NextResponse.json(
-      { message: 'Something went wrong.', error },
+      {
+        estudiantesAlmuerzos: [],
+        estudiantesAlmuerzosCount: 0,
+        message: 'Something went wrong.',
+        error
+      },
       { status: 500 }
     )
   }
