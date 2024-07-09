@@ -19,7 +19,7 @@ export async function GET () {
     })
 
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: almuerzos?.id_almuerzo }
+      where: { id_almuerzo: almuerzos?.id_almuerzo ?? '' }
     })
 
     const fechaAlmuerzosAux = new Date(almuerzosFecha[almuerzosFecha.length - 1].fecha?.toString() ?? '')
@@ -30,8 +30,8 @@ export async function GET () {
 
     const fechaAlmuerzosAux2 = new Date(fechaAlmuerzosAux.toString())
     const fechaAlmuerzo = format(fechaAlmuerzosAux2, 'DD/MM/YYYY')
-
-    if (estadoAlmuerzos?.id_estado !== estadoActivo?.id_estado) {
+    console.log({ almuerzos, estadoAlmuerzos, estadoActivo })
+    if ((estadoAlmuerzos?.id_estado !== estadoActivo?.id_estado) && estadoAlmuerzos !== null && almuerzos !== null) {
       return NextResponse.json({ message: `¡Ya hubo servicio de almuerzos habilitados para la fecha ${fechaAlmuerzo}.!` }, { status: 404 })
     }
 
