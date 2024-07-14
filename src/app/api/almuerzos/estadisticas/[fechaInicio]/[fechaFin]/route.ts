@@ -269,8 +269,43 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
   } catch (error) {
     console.error({ error })
 
+    const fechaInicioAux = new Date(params.fechaInicio)
+    const fechaFinAux = new Date(params.fechaFin)
+    const fechaInicioAux2 = new Date(params.fechaInicio)
+    const fechaFinAux2 = new Date(params.fechaFin)
+
+    fechaInicioAux2.setUTCHours(fechaInicioAux2.getUTCHours() + 5)
+    fechaFinAux2.setUTCHours(fechaFinAux2.getUTCHours() + 5)
+
+    const fechaInicioAuxFinal = new Date(fechaInicioAux2)
+    const fechaFinAuxFinal = new Date(fechaFinAux2)
+
+    const fechaInicioString = format(fechaInicioAuxFinal, 'DD/MM/YYYY')
+    const fechaFinString = format(fechaFinAuxFinal, 'DD/MM/YYYY')
+
     return NextResponse.json(
-      { message: 'Something went wrong.', error },
+      {
+        message: 'Something went wrong.',
+        error,
+        almuerzosEstadisticas: {
+          totalAlmuerzosDefinidos: 0,
+          dataTotalAlmuerzosDefinidos: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalAlmuerzosReservados: 0,
+          dataTotalAlmuerzosReservados: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalAlmuerzosReservadosPresencial: 0,
+          dataTotalAlmuerzosReservadosPresencial: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalAlmuerzosReservadosVirtual: 0,
+          dataTotalAlmuerzosReservadosVirtual: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalAlmuerzosEntregados: 0,
+          dataTotalAlmuerzosEntregados: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalAlmuerzosSinEntregar: 0,
+          dataTotalAlmuerzosSinEntregar: getDefaultData(fechaInicioAux, fechaFinAux),
+          totalRecargas: 0,
+          dataTotalRecargas: getDefaultData(fechaInicioAux, fechaFinAux),
+          fechaInicio: fechaInicioString,
+          fechaFin: fechaFinString
+        }
+      },
       { status: 500 }
     )
   }
