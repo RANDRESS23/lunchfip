@@ -39,7 +39,7 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
         almuerzosTotales.id_almuerzo !== '' && almuerzosFecha.id_almuerzos_fecha !== ''
           ? (
               <div className={cn(
-                isFlex ? 'flex flex-wrap justify-center items-center gap-7' : 'grid grid-cols-2 place-items-center gap-7'
+                isFlex ? 'flex flex-wrap justify-center items-center gap-7' : 'grid grid-cols-1 lg:grid-cols-2 place-items-center gap-7'
               )}>
                 <StatCard
                   label="Cantidad Total de Almuerzos"

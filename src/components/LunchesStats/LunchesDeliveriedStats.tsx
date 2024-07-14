@@ -35,7 +35,7 @@ export const LunchesDeliveriedStats = () => {
       {
         almuerzosTotales.id_almuerzo !== ''
           ? (
-              <div className='grid grid-cols-2 place-items-center gap-7'>
+              <div className='grid grid-cols-1 lg:grid-cols-2 place-items-center gap-7'>
                 <StatCard
                   label="Cantidad Total de Almuerzos"
                   value={almuerzosTotales.total_almuerzos}
