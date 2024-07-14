@@ -30,9 +30,9 @@ export async function GET () {
 
     const fechaAlmuerzosAux2 = new Date(fechaAlmuerzosAux.toString())
     const fechaAlmuerzo = format(fechaAlmuerzosAux2, 'DD/MM/YYYY')
-    console.log({ almuerzos, estadoAlmuerzos, estadoActivo })
+
     if ((estadoAlmuerzos?.id_estado !== estadoActivo?.id_estado) && estadoAlmuerzos !== null && almuerzos !== null) {
-      return NextResponse.json({ message: `¡Ya hubo servicio de almuerzos habilitados para la fecha ${fechaAlmuerzo}.!` }, { status: 404 })
+      return NextResponse.json({ message: `¡Ya hubo servicio de almuerzos habilitados para la fecha ${fechaAlmuerzo} o no hay fecha de servicio definida aún.!` }, { status: 404 })
     }
 
     return NextResponse.json({
