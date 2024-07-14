@@ -23,7 +23,7 @@ export const useAlmuerzosReservados = ({ nextDate }: { nextDate: string }) => {
 
         if (response.data === null) return
 
-        const idAlmuerzo = response.data.id_almuerzo
+        const idAlmuerzo = response.data.almuerzosTotales?.id_almuerzo
 
         const response2 = await api.get(`/almuerzos/reservas/${idAlmuerzo}`)
         const almuerzosReservados = response2.data
