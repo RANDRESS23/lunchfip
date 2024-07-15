@@ -33,7 +33,8 @@ export async function POST (request: Request) {
     const currentDate = new Date(dateAux.toString())
 
     const existingLunchesDate = await db.almuerzos_Fecha.findUnique({
-      where: { fecha }
+      where: { fecha },
+      select: { id_almuerzos_fecha: true }
     })
 
     if (existingLunchesDate === null) {
@@ -44,7 +45,8 @@ export async function POST (request: Request) {
     }
 
     const existingLunchesInDate = await db.almuerzos.findFirst({
-      where: { id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha }
+      where: { id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha },
+      select: { id_almuerzo: true }
     })
 
     if (existingLunchesInDate !== null) {

@@ -13,7 +13,8 @@ export async function POST (request: Request) {
     const estados = await db.estados.findMany()
 
     const estudianteReserva = await db.estudiantes_Reservas.findUnique({
-      where: { id_estudiante_reserva: idEstudianteReserva }
+      where: { id_estudiante_reserva: idEstudianteReserva },
+      select: { id_estudiante: true, id_reserva: true }
     })
 
     if (estudianteReserva === null) {
@@ -24,15 +25,18 @@ export async function POST (request: Request) {
     }
 
     const estadoInactivo = await db.estados.findFirst({
-      where: { estado: 'Inactivo' }
+      where: { estado: 'Inactivo' },
+      select: { id_estado: true }
     })
 
     const reserva = await db.reservas.findUnique({
-      where: { id_reserva: estudianteReserva.id_reserva }
+      where: { id_reserva: estudianteReserva.id_reserva },
+      select: { id_almuerzo: true }
     })
 
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: reserva?.id_almuerzo }
+      where: { id_almuerzo: reserva?.id_almuerzo },
+      select: { id_estado: true }
     })
 
     if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
@@ -43,7 +47,8 @@ export async function POST (request: Request) {
     }
 
     const [estadosReserva] = await db.estados_Reservas.findMany({
-      where: { id_reserva: estudianteReserva.id_reserva }
+      where: { id_reserva: estudianteReserva.id_reserva },
+      select: { id_estado: true }
     })
 
     if (estadosReserva.id_estado !== estados[0].id_estado) {
@@ -54,7 +59,8 @@ export async function POST (request: Request) {
     }
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: estudianteReserva.id_estudiante }
+      where: { id_estudiante: estudianteReserva.id_estudiante },
+      select: { id_estudiante: true, primer_nombre: true, id_tipo_documento: true, id_sexo: true, id_programa: true }
     })
 
     if (estudiante === null) {
@@ -65,7 +71,8 @@ export async function POST (request: Request) {
     }
 
     const [estadoEstudiante] = await db.estados_Estudiantes.findMany({
-      where: { id_estudiante: estudiante.id_estudiante }
+      where: { id_estudiante: estudiante.id_estudiante },
+      select: { id_estado: true }
     })
 
     if (estadoEstudiante.id_estado !== estados[0].id_estado) {
@@ -75,25 +82,28 @@ export async function POST (request: Request) {
       )
     }
 
-    const programa = await db.programas.findUnique({
-      where: { id_programa: estudiante.id_programa }
-    })
-
-    const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: estudiante.id_tipo_documento }
-    })
-
-    const sexo = await db.sexos.findUnique({
-      where: { id_sexo: estudiante.id_sexo }
-    })
-
-    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
+    const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante] = await Promise.all([
+      db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: estudiante.id_tipo_documento },
+        select: { tipo_documento: true }
+      }),
+      db.sexos.findUnique({
+        where: { id_sexo: estudiante.id_sexo },
+        select: { sexo: true }
+      }),
+      db.programas.findUnique({
+        where: { id_programa: estudiante.id_programa },
+        select: { programa: true }
+      }),
+      db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
+      }),
+      db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_codigo_qr: true }
+      })
+    ])
 
     return NextResponse.json(
       {

@@ -15,7 +15,8 @@ export async function POST (request: Request) {
     } = empleadosSchema.parse(body)
 
     const existingEmpleadoDocumento = await db.empleados.findUnique({
-      where: { numero_documento: numeroDocumento }
+      where: { numero_documento: numeroDocumento },
+      select: { numero_documento: true }
     })
 
     if (existingEmpleadoDocumento !== null) {
@@ -26,7 +27,8 @@ export async function POST (request: Request) {
     }
 
     const existingEmpleadoEmail = await db.empleados.findUnique({
-      where: { correo }
+      where: { correo },
+      select: { correo: true }
     })
 
     if (existingEmpleadoEmail !== null) {
@@ -37,7 +39,8 @@ export async function POST (request: Request) {
     }
 
     const existingEmpleadoCelular = await db.empleados.findUnique({
-      where: { celular }
+      where: { celular },
+      select: { celular: true }
     })
 
     if (existingEmpleadoCelular !== null) {

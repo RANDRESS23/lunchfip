@@ -8,7 +8,8 @@ export async function POST (request: Request) {
     const { correo_institucional: correoInstitucional } = body
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { correo_institucional: correoInstitucional }
+      where: { correo_institucional: correoInstitucional },
+      select: { id_estudiante: true, id_tipo_documento: true, id_sexo: true, id_programa: true, clave: true }
     })
 
     if (estudiante === null) {
@@ -18,25 +19,28 @@ export async function POST (request: Request) {
       )
     }
 
-    const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: estudiante.id_tipo_documento }
-    })
-
-    const sexo = await db.sexos.findUnique({
-      where: { id_sexo: estudiante.id_sexo }
-    })
-
-    const programa = await db.programas.findUnique({
-      where: { id_programa: estudiante.id_programa }
-    })
-
-    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
+    const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante] = await Promise.all([
+      db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: estudiante.id_tipo_documento },
+        select: { tipo_documento: true }
+      }),
+      db.sexos.findUnique({
+        where: { id_sexo: estudiante.id_sexo },
+        select: { sexo: true }
+      }),
+      db.programas.findUnique({
+        where: { id_programa: estudiante.id_programa },
+        select: { programa: true }
+      }),
+      db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
+      }),
+      db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_codigo_qr: true }
+      })
+    ])
 
     const { clave: _, ...infoEstudiante } = estudiante
 

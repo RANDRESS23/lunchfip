@@ -6,7 +6,8 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
     const fecha = new Date(params.fecha)
 
     const existingLunchesDate = await db.almuerzos_Fecha.findUnique({
-      where: { fecha }
+      where: { fecha },
+      select: { id_almuerzos_fecha: true }
     })
 
     if (existingLunchesDate === null) {
@@ -20,7 +21,8 @@ export async function GET (_: Request, { params }: { params: { fecha: string } }
     }
 
     const almuerzo = await db.almuerzos.findFirst({
-      where: { id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha }
+      where: { id_almuerzos_fecha: existingLunchesDate.id_almuerzos_fecha },
+      select: { id_almuerzo: true }
     })
 
     if (almuerzo === null) {

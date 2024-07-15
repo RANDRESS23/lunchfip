@@ -24,7 +24,8 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
     }
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_estudiante: true }
     })
 
     if (estudiante === null) {
@@ -46,23 +47,28 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
 
     const estudianteHistorialReservas = await Promise.all(estudianteReservasSliced.map(async (reservaEstudiante) => {
       const reservaPromise = await db.reservas.findUnique({
-        where: { id_reserva: reservaEstudiante?.id_reserva }
+        where: { id_reserva: reservaEstudiante?.id_reserva },
+        select: { fecha: true }
       })
 
       const reservaEmpleadoPromise = await db.reservas_Empleados.findFirst({
-        where: { id_reserva: reservaEstudiante.id_reserva }
+        where: { id_reserva: reservaEstudiante.id_reserva },
+        select: { id_reserva: true }
       })
 
       const reservaVirtualPromise = await db.reservas_Virtuales.findFirst({
-        where: { id_reserva: reservaEstudiante.id_reserva }
+        where: { id_reserva: reservaEstudiante.id_reserva },
+        select: { id_reserva: true }
       })
 
       const estadoReservaPromise = await db.estados_Reservas.findFirst({
-        where: { id_reserva: reservaEstudiante?.id_reserva }
+        where: { id_reserva: reservaEstudiante?.id_reserva },
+        select: { id_estado: true }
       })
 
       const estudianteEntregaPromise = await db.estudiantes_Entregas.findFirst({
-        where: { id_estudiante_reserva: reservaEstudiante?.id_estudiante_reserva }
+        where: { id_estudiante_reserva: reservaEstudiante?.id_estudiante_reserva },
+        select: { id_entrega: true }
       })
 
       const [
@@ -80,11 +86,13 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
       ])
 
       const estadoPromise = await db.estados.findUnique({
-        where: { id_estado: estadoReserva?.id_estado }
+        where: { id_estado: estadoReserva?.id_estado },
+        select: { estado: true }
       })
 
       const entregaPromise = await db.entregas.findUnique({
-        where: { id_entrega: estudianteEntrega?.id_entrega ?? '' }
+        where: { id_entrega: estudianteEntrega?.id_entrega ?? '' },
+        select: { fecha: true }
       })
 
       const [
@@ -134,7 +142,8 @@ export async function GET (request: Request, { params }: { params: { idEstudiant
 
     const estudianteHistorialRecargas = await Promise.all(estudianteRecargasSliced.map(async (recargaEstudiante) => {
       const recargaPromise = await db.recargas.findUnique({
-        where: { id_recarga: recargaEstudiante?.id_recarga }
+        where: { id_recarga: recargaEstudiante?.id_recarga },
+        select: { id_recarga: true, fecha: true, saldo: true }
       })
 
       const [

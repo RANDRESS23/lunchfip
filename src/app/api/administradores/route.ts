@@ -49,7 +49,8 @@ export async function POST (request: Request) {
     }
 
     const existingAdministradorEmail = await db.administradores.findUnique({
-      where: { correo }
+      where: { correo },
+      select: { correo: true }
     })
 
     if (existingAdministradorEmail !== null) {
@@ -66,7 +67,7 @@ export async function POST (request: Request) {
       )
     }
 
-    const roles = await db.roles.findMany({
+    const [rolAdministrador] = await db.roles.findMany({
       where: { rol: 'Administrador' }
     })
 
@@ -88,7 +89,7 @@ export async function POST (request: Request) {
         clave: hashedPassword,
         id_sexo: idSexo,
         celular,
-        id_rol: roles[0].id_rol,
+        id_rol: rolAdministrador?.id_rol ?? '',
         createdAt: currentDate,
         updatedAt: currentDate
       }

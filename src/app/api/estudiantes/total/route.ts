@@ -6,15 +6,18 @@ export async function GET () {
     const estudiantesTotal = await db.estudiantes.findMany()
     const totalEstudiantes = await Promise.all(estudiantesTotal.map(async (estudiante) => {
       const programa = await db.programas.findUnique({
-        where: { id_programa: estudiante.id_programa }
+        where: { id_programa: estudiante.id_programa },
+        select: { programa: true }
       })
 
       const estadoEstudiante = await db.estados_Estudiantes.findFirst({
-        where: { id_estudiante: estudiante.id_estudiante }
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { id_estado: true }
       })
 
       const estado = await db.estados.findUnique({
-        where: { id_estado: estadoEstudiante?.id_estado }
+        where: { id_estado: estadoEstudiante?.id_estado },
+        select: { estado: true }
       })
 
       return {

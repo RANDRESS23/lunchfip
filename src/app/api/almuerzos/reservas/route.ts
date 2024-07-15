@@ -43,15 +43,18 @@ export async function POST (request: Request) {
     }
 
     const almuerzosTotalesDia = await db.almuerzos.findUnique({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { total_almuerzos: true }
     })
 
     const estadoInactivo = await db.estados.findFirst({
-      where: { estado: 'Inactivo' }
+      where: { estado: 'Inactivo' },
+      select: { id_estado: true }
     })
 
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_estado: true }
     })
 
     if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
@@ -62,7 +65,8 @@ export async function POST (request: Request) {
     }
 
     const almuerzosReservadosTotales = await db.almuerzos_Reservados.findUnique({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { cantidad: true }
     })
 
     if (almuerzosReservadosTotales?.cantidad === almuerzosTotalesDia?.total_almuerzos) {
@@ -82,7 +86,8 @@ export async function POST (request: Request) {
         fecha: currentDate,
         createdAt: currentDate,
         updatedAt: currentDate
-      }
+      },
+      select: { id_reserva: true }
     })
 
     if (idEmpleado) {
@@ -129,7 +134,8 @@ export async function POST (request: Request) {
         id_estudiante: idEstudiante,
         createdAt: currentDate,
         updatedAt: currentDate
-      }
+      },
+      select: { id_estudiante_reserva: true }
     })
 
     const qrBase64Str = await QRCode.toDataURL(newEstudianteReserva.id_estudiante_reserva, { version: 10 })

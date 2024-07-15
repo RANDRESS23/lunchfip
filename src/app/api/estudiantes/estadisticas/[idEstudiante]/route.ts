@@ -7,7 +7,8 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
     const { idEstudiante } = params
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_estudiante: true }
     })
 
     if (estudiante === null) {
@@ -18,27 +19,33 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
     }
 
     const estudianteReservas = await db.estudiantes_Reservas.findMany({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_estudiante_reserva: true, id_reserva: true }
     })
 
     const estudianteEntregas = await db.estudiantes_Entregas.findMany({
-      where: { id_estudiante_reserva: { in: estudianteReservas.map((reserva) => reserva.id_estudiante_reserva) } }
+      where: { id_estudiante_reserva: { in: estudianteReservas.map((reserva) => reserva.id_estudiante_reserva) } },
+      select: { id_entrega: true }
     })
 
     const estudianteRecargas = await db.estudiantes_Recargas.findMany({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_recarga: true }
     })
 
     const reserva = await db.reservas.findFirst({
-      where: { id_reserva: estudianteReservas[estudianteReservas.length - 1]?.id_reserva || '' }
+      where: { id_reserva: estudianteReservas[estudianteReservas.length - 1]?.id_reserva || '' },
+      select: { fecha: true }
     })
 
     const entrega = await db.entregas.findFirst({
-      where: { id_entrega: estudianteEntregas[estudianteEntregas.length - 1]?.id_entrega || '' }
+      where: { id_entrega: estudianteEntregas[estudianteEntregas.length - 1]?.id_entrega || '' },
+      select: { fecha: true }
     })
 
     const recarga = await db.recargas.findFirst({
-      where: { id_recarga: estudianteRecargas[estudianteRecargas.length - 1]?.id_recarga || '' }
+      where: { id_recarga: estudianteRecargas[estudianteRecargas.length - 1]?.id_recarga || '' },
+      select: { fecha: true }
     })
 
     let fechaReserva = 'N/A'
@@ -77,8 +84,6 @@ export async function GET (_: Request, { params }: { params: { idEstudiante: str
       const fechaRecargaAux2 = new Date(fechaRecargaAux.toString())
       fechaRecarga = format(fechaRecargaAux2, 'DD/MM/YYYY')
     }
-
-    console.log({ estudianteEntregas, entrega })
 
     return NextResponse.json(
       {

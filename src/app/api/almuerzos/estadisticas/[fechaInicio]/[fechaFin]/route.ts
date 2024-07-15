@@ -46,13 +46,15 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
           lte: fechaFinAux
         }
       },
-      orderBy: { fecha: 'asc' }
+      orderBy: { fecha: 'asc' },
+      select: { id_almuerzos_fecha: true }
     })
 
     const almuerzos = await db.almuerzos.findMany({
       where: {
         id_almuerzos_fecha: { in: existingLunchesDate.map(almuerzosFecha => almuerzosFecha.id_almuerzos_fecha) }
-      }
+      },
+      select: { id_almuerzo: true, id_almuerzos_fecha: true, total_almuerzos: true }
     })
 
     if (almuerzos === null) {
@@ -80,15 +82,18 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
     const dataTotalAlmuerzosEstadisticas = await Promise.all(almuerzos.map(async (almuerzo) => {
       const almuerzoFechaPromise = await db.almuerzos_Fecha.findUnique({
-        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha }
+        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha },
+        select: { fecha: true }
       })
 
       const reservasDatePromise = await db.reservas.findMany({
-        where: { id_almuerzo: almuerzo.id_almuerzo }
+        where: { id_almuerzo: almuerzo.id_almuerzo },
+        select: { id_reserva: true }
       })
 
       const entregasDatePromise = await db.entregas.findMany({
-        where: { id_almuerzo: almuerzo.id_almuerzo }
+        where: { id_almuerzo: almuerzo.id_almuerzo },
+        select: { id_entrega: true }
       })
 
       const [
@@ -153,7 +158,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
           lte: fechaFinAux
         }
       },
-      orderBy: { fecha: 'asc' }
+      orderBy: { fecha: 'asc' },
+      select: { fecha: true }
     })
 
     let fechasAux: string[] = []
@@ -204,7 +210,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
 
     const dataTotalAlmuerzosDefinidos = await Promise.all(almuerzos.map(async (almuerzo) => {
       const almuerzoFechaPromise = await db.almuerzos_Fecha.findUnique({
-        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha }
+        where: { id_almuerzos_fecha: almuerzo.id_almuerzos_fecha },
+        select: { fecha: true }
       })
 
       const [
@@ -220,7 +227,8 @@ export async function GET (_: Request, { params }: { params: { fechaInicio: stri
     }))
 
     const totalAlmuerzosReservados = await db.reservas.findMany({
-      where: { id_almuerzo: { in: almuerzos.map(almuerzo => almuerzo.id_almuerzo) } }
+      where: { id_almuerzo: { in: almuerzos.map(almuerzo => almuerzo.id_almuerzo) } },
+      select: { id_reserva: true }
     })
 
     const totalAlmuerzosReservadosPresencial = await db.reservas_Empleados.count({

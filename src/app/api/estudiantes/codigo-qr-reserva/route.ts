@@ -11,7 +11,8 @@ export async function POST (request: Request) {
     } = body
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_estudiante: true }
     })
 
     if (estudiante === null) {
@@ -22,7 +23,8 @@ export async function POST (request: Request) {
     }
 
     const almuerzos = await db.almuerzos.findUnique({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_almuerzo: true }
     })
 
     if (almuerzos === null) {
@@ -33,7 +35,8 @@ export async function POST (request: Request) {
     }
 
     const reservas = await db.reservas.findMany({
-      where: { id_almuerzo: almuerzos.id_almuerzo }
+      where: { id_almuerzo: almuerzos.id_almuerzo },
+      select: { id_reserva: true }
     })
 
     if (reservas.length === 0) {
@@ -44,7 +47,8 @@ export async function POST (request: Request) {
     }
 
     const estudianteReserva = await db.estudiantes_Reservas.findFirst({
-      where: { id_estudiante: idEstudiante, id_reserva: { in: reservas.map((reserva) => reserva.id_reserva) } }
+      where: { id_estudiante: idEstudiante, id_reserva: { in: reservas.map((reserva) => reserva.id_reserva) } },
+      select: { id_reserva: true, id_estudiante_reserva: true }
     })
 
     if (estudianteReserva === null) {
@@ -55,7 +59,8 @@ export async function POST (request: Request) {
     }
 
     const estudianteEntrega = await db.estudiantes_Entregas.findFirst({
-      where: { id_estudiante_reserva: estudianteReserva.id_estudiante_reserva }
+      where: { id_estudiante_reserva: estudianteReserva.id_estudiante_reserva },
+      select: { id_estudiante_entrega: true }
     })
 
     if (estudianteEntrega !== null) {
@@ -66,7 +71,8 @@ export async function POST (request: Request) {
     }
 
     const codigoQRReserva = await db.codigos_QR_Reservas.findFirst({
-      where: { id_reserva: estudianteReserva.id_reserva }
+      where: { id_reserva: estudianteReserva.id_reserva },
+      select: { url_codigo_qr: true }
     })
 
     if (codigoQRReserva === null) {

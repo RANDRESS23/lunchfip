@@ -337,7 +337,7 @@ model Reservas_Empleados {
 }
 
 model Reservas_Virtuales {
-  id_reserva_empleado   String      @id @default(uuid())
+  id_reserva_virtual   String      @id @default(uuid())
   
   id_reserva            String
   reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)

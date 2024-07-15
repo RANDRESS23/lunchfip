@@ -19,11 +19,13 @@ export async function POST (request: Request) {
     }
 
     const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: empleado.id_tipo_documento }
+      where: { id_tipo_documento: empleado.id_tipo_documento },
+      select: { tipo_documento: true }
     })
 
     const sexo = await db.sexos.findUnique({
-      where: { id_sexo: empleado.id_sexo }
+      where: { id_sexo: empleado.id_sexo },
+      select: { sexo: true }
     })
 
     const { clave: _, ...empleadoWithoutClave } = empleado

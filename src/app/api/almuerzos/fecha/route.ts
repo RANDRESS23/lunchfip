@@ -11,15 +11,18 @@ export async function GET () {
     }
 
     const almuerzos = await db.almuerzos.findFirst({
-      where: { id_almuerzos_fecha: almuerzosFecha[almuerzosFecha.length - 1].id_almuerzos_fecha }
+      where: { id_almuerzos_fecha: almuerzosFecha[almuerzosFecha.length - 1].id_almuerzos_fecha },
+      select: { id_almuerzo: true }
     })
 
     const estadoActivo = await db.estados.findFirst({
-      where: { estado: 'Activo' }
+      where: { estado: 'Activo' },
+      select: { id_estado: true }
     })
 
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: almuerzos?.id_almuerzo ?? '' }
+      where: { id_almuerzo: almuerzos?.id_almuerzo ?? '' },
+      select: { id_estado: true }
     })
 
     const fechaAlmuerzosAux = new Date(almuerzosFecha[almuerzosFecha.length - 1].fecha?.toString() ?? '')
@@ -61,7 +64,8 @@ export async function POST (request: Request) {
 
     const almuerzosFecha = await db.almuerzos_Fecha.findMany()
     const existingLunchesDate = await db.almuerzos_Fecha.findUnique({
-      where: { fecha }
+      where: { fecha },
+      select: { id_almuerzos_fecha: true }
     })
 
     if (fecha < almuerzosFecha[almuerzosFecha.length - 1]?.fecha) {

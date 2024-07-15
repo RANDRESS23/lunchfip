@@ -15,7 +15,8 @@ export async function POST (request: Request) {
     } = estudianteSchema.parse(body)
 
     const existingEstudianteDocumento = await db.estudiantes.findUnique({
-      where: { numero_documento: numeroDocumento }
+      where: { numero_documento: numeroDocumento },
+      select: { numero_documento: true }
     })
 
     if (existingEstudianteDocumento !== null) {
@@ -26,7 +27,8 @@ export async function POST (request: Request) {
     }
 
     const existingEstudianteEmail = await db.estudiantes.findUnique({
-      where: { correo_institucional: correoInstitucional }
+      where: { correo_institucional: correoInstitucional },
+      select: { correo_institucional: true }
     })
 
     if (existingEstudianteEmail !== null) {
@@ -37,7 +39,8 @@ export async function POST (request: Request) {
     }
 
     const existingEstudianteCelular = await db.estudiantes.findUnique({
-      where: { celular }
+      where: { celular },
+      select: { celular: true }
     })
 
     if (existingEstudianteCelular !== null) {

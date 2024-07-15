@@ -19,7 +19,8 @@ export async function POST (request: Request) {
     } = correoInstitucionalSchema.parse(body)
 
     const existingEstudianteEmail = await db.estudiantes.findUnique({
-      where: { correo_institucional: correoInstitucional }
+      where: { correo_institucional: correoInstitucional },
+      select: { numero_documento: true }
     })
 
     if (existingEstudianteEmail === null) {

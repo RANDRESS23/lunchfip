@@ -8,7 +8,8 @@ export async function POST (request: Request) {
     const { correo } = body
 
     const administrador = await db.administradores.findUnique({
-      where: { correo }
+      where: { correo },
+      select: { id_administrador: true, id_tipo_documento: true, id_sexo: true, clave: true }
     })
 
     if (administrador === null) {
@@ -19,11 +20,13 @@ export async function POST (request: Request) {
     }
 
     const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: administrador.id_tipo_documento }
+      where: { id_tipo_documento: administrador.id_tipo_documento },
+      select: { tipo_documento: true }
     })
 
     const sexo = await db.sexos.findUnique({
-      where: { id_sexo: administrador.id_sexo }
+      where: { id_sexo: administrador.id_sexo },
+      select: { sexo: true }
     })
 
     const { clave: _, ...administradorWithoutClave } = administrador

@@ -26,11 +26,13 @@ export async function GET (request: Request) {
     const empleadosTotal = await db.empleados.findMany()
     const totalEmpleados = await Promise.all(empleadosTotal.map(async empleado => {
       const estadoEmpleado = await db.estados_Empleados.findFirst({
-        where: { id_empleado: empleado.id_empleado }
+        where: { id_empleado: empleado.id_empleado },
+        select: { id_estado: true }
       })
 
       const estado = await db.estados.findUnique({
-        where: { id_estado: estadoEmpleado?.id_estado }
+        where: { id_estado: estadoEmpleado?.id_estado },
+        select: { estado: true }
       })
 
       return { ...empleado, estado: estado?.estado ?? '' }
@@ -40,11 +42,13 @@ export async function GET (request: Request) {
 
     const empleadosLunchFip = await Promise.all(empleados.map(async (empleado) => {
       const sexoPromise = await db.sexos.findUnique({
-        where: { id_sexo: empleado.id_sexo }
+        where: { id_sexo: empleado.id_sexo },
+        select: { sexo: true }
       })
 
       const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
-        where: { id_empleado: empleado.id_empleado }
+        where: { id_empleado: empleado.id_empleado },
+        select: { id_estado: true }
       })
 
       const [
@@ -56,7 +60,8 @@ export async function GET (request: Request) {
       ])
 
       const estadoEmpleado = await db.estados.findUnique({
-        where: { id_estado: estado?.id_estado }
+        where: { id_estado: estado?.id_estado },
+        select: { estado: true }
       })
 
       return {
@@ -98,7 +103,8 @@ export async function POST (request: Request) {
     } = empleadosSchema.parse(body)
 
     const existingEmpleadoDocumento = await db.empleados.findUnique({
-      where: { numero_documento: numeroDocumento }
+      where: { numero_documento: numeroDocumento },
+      select: { numero_documento: true }
     })
 
     if (existingEmpleadoDocumento !== null) {
@@ -109,7 +115,8 @@ export async function POST (request: Request) {
     }
 
     const existingEmpleadoEmail = await db.empleados.findUnique({
-      where: { correo }
+      where: { correo },
+      select: { correo: true }
     })
 
     if (existingEmpleadoEmail !== null) {
@@ -126,8 +133,9 @@ export async function POST (request: Request) {
       )
     }
 
-    const roles = await db.roles.findMany({
-      where: { rol: 'Empleado' }
+    const [rolEmpleado] = await db.roles.findMany({
+      where: { rol: 'Empleado' },
+      select: { id_rol: true }
     })
 
     const tiposDocumento = await db.tipos_Documento.findMany()
@@ -150,7 +158,7 @@ export async function POST (request: Request) {
         clave: hashedPassword,
         id_sexo: idSexo,
         celular,
-        id_rol: roles[0].id_rol,
+        id_rol: rolEmpleado?.id_rol ?? '',
         createdAt: currentDate,
         updatedAt: currentDate
       }
@@ -168,25 +176,30 @@ export async function POST (request: Request) {
     })
 
     const sexo = await db.sexos.findUnique({
-      where: { id_sexo: newEmpleado.id_sexo }
+      where: { id_sexo: newEmpleado.id_sexo },
+      select: { sexo: true }
     })
 
     const estadoEmpleado = await db.estados_Empleados.findFirst({
-      where: { id_empleado: newEmpleado.id_empleado }
+      where: { id_empleado: newEmpleado.id_empleado },
+      select: { id_estado: true }
     })
 
     const estado = await db.estados.findUnique({
-      where: { id_estado: estadoEmpleado?.id_estado }
+      where: { id_estado: estadoEmpleado?.id_estado },
+      select: { estado: true }
     })
 
     const empleadosAux = await db.empleados.findMany()
     const empleados = await Promise.all(empleadosAux.map(async (empleado) => {
       const sexoPromise = await db.sexos.findUnique({
-        where: { id_sexo: empleado.id_sexo }
+        where: { id_sexo: empleado.id_sexo },
+        select: { sexo: true }
       })
 
       const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
-        where: { id_empleado: empleado.id_empleado }
+        where: { id_empleado: empleado.id_empleado },
+        select: { id_estado: true }
       })
 
       const [
@@ -198,7 +211,8 @@ export async function POST (request: Request) {
       ])
 
       const estadoPromise = await db.estados.findUnique({
-        where: { id_estado: estadoEmpleado?.id_estado }
+        where: { id_estado: estadoEmpleado?.id_estado },
+        select: { estado: true }
       })
 
       const [
@@ -261,12 +275,14 @@ export async function PUT (request: Request) {
     } = empleadosDataSchema.parse(body)
 
     const currentEmployee = await db.empleados.findUnique({
-      where: { id_empleado: idEmpleado }
+      where: { id_empleado: idEmpleado },
+      select: { numero_documento: true, correo: true, celular: true }
     })
 
     if (currentEmployee?.numero_documento !== numeroDocumento) {
       const existingEmpleadoDocumento = await db.empleados.findUnique({
-        where: { id_empleado: idEmpleado }
+        where: { id_empleado: idEmpleado },
+        select: { numero_documento: true }
       })
 
       if (existingEmpleadoDocumento !== null) {
@@ -279,7 +295,8 @@ export async function PUT (request: Request) {
 
     if (currentEmployee?.correo !== correo) {
       const existingEmpleadoEmail = await db.empleados.findUnique({
-        where: { correo }
+        where: { correo },
+        select: { correo: true }
       })
 
       if (existingEmpleadoEmail !== null) {
@@ -292,7 +309,8 @@ export async function PUT (request: Request) {
 
     if (currentEmployee?.celular !== celular) {
       const existingEmpleadoCelular = await db.empleados.findUnique({
-        where: { celular }
+        where: { celular },
+        select: { celular: true }
       })
 
       if (existingEmpleadoCelular !== null) {
@@ -334,25 +352,30 @@ export async function PUT (request: Request) {
     })
 
     const sexo = await db.sexos.findUnique({
-      where: { id_sexo: updatedEmpleado.id_sexo }
+      where: { id_sexo: updatedEmpleado.id_sexo },
+      select: { sexo: true }
     })
 
     const estadoEmpleado = await db.estados_Empleados.findFirst({
-      where: { id_empleado: updatedEmpleado.id_empleado }
+      where: { id_empleado: updatedEmpleado.id_empleado },
+      select: { id_estado: true }
     })
 
     const estado = await db.estados.findUnique({
-      where: { id_estado: estadoEmpleado?.id_estado }
+      where: { id_estado: estadoEmpleado?.id_estado },
+      select: { estado: true }
     })
 
     const empleadosAux = await db.empleados.findMany()
     const empleados = await Promise.all(empleadosAux.map(async (empleado) => {
       const sexoPromise = await db.sexos.findUnique({
-        where: { id_sexo: empleado.id_sexo }
+        where: { id_sexo: empleado.id_sexo },
+        select: { sexo: true }
       })
 
       const estadoEmpleadoPromise = await db.estados_Empleados.findFirst({
-        where: { id_empleado: empleado.id_empleado }
+        where: { id_empleado: empleado.id_empleado },
+        select: { id_estado: true }
       })
 
       const [
@@ -364,7 +387,8 @@ export async function PUT (request: Request) {
       ])
 
       const estadoPromise = await db.estados.findUnique({
-        where: { id_estado: estadoEmpleado?.id_estado }
+        where: { id_estado: estadoEmpleado?.id_estado },
+        select: { estado: true }
       })
 
       const [

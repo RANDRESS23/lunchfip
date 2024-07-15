@@ -35,11 +35,13 @@ export async function POST (request: Request) {
     } = entregasSchema.parse(body)
 
     const estadoInactivo = await db.estados.findFirst({
-      where: { estado: 'Inactivo' }
+      where: { estado: 'Inactivo' },
+      select: { id_estado: true }
     })
 
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_estado: true }
     })
 
     if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
@@ -50,7 +52,8 @@ export async function POST (request: Request) {
     }
 
     const reservas = await db.reservas.findMany({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_reserva: true }
     })
 
     if (reservas.length === 0) {
@@ -61,7 +64,8 @@ export async function POST (request: Request) {
     }
 
     const estudianteReserva = await db.estudiantes_Reservas.findFirst({
-      where: { id_estudiante: idEstudiante, id_reserva: { in: reservas.map((reserva) => reserva.id_reserva) } }
+      where: { id_estudiante: idEstudiante, id_reserva: { in: reservas.map((reserva) => reserva.id_reserva) } },
+      select: { id_reserva: true, id_estudiante_reserva: true }
     })
 
     if (estudianteReserva === null) {
@@ -82,7 +86,8 @@ export async function POST (request: Request) {
         fecha: currentDate,
         createdAt: currentDate,
         updatedAt: currentDate
-      }
+      },
+      select: { id_entrega: true }
     })
 
     const estados = await db.estados.findMany()
@@ -105,7 +110,8 @@ export async function POST (request: Request) {
     })
 
     const codigoQRReserva = await db.codigos_QR_Reservas.findFirst({
-      where: { id_reserva: estudianteReserva.id_reserva }
+      where: { id_reserva: estudianteReserva.id_reserva },
+      select: { url_codigo_qr: true }
     })
 
     if (codigoQRReserva === null) {

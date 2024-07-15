@@ -48,7 +48,8 @@ export async function GET (request: Request) {
       })
 
       const imageEstudiantePromise = await db.imagenes_Perfil_Estudiantes.findFirst({
-        where: { id_estudiante: estudiante.id_estudiante }
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
       })
 
       const codigoQREstudiantePromise = await db.codigos_QR_Estudiantes.findFirst({
@@ -129,8 +130,9 @@ export async function POST (request: Request) {
       celular
     } = estudianteSchema.parse(body)
 
-    const roles = await db.roles.findMany({
-      where: { rol: 'Estudiante' }
+    const [rolEstudiante] = await db.roles.findMany({
+      where: { rol: 'Estudiante' },
+      select: { id_rol: true }
     })
 
     const dateAux = new Date()
@@ -152,18 +154,21 @@ export async function POST (request: Request) {
         clave: hashedPassword,
         id_sexo: idSexo,
         celular,
-        id_rol: roles[0].id_rol,
+        id_rol: rolEstudiante.id_rol,
         createdAt: currentDate,
         updatedAt: currentDate
       }
     })
 
-    const estados = await db.estados.findMany()
+    const estadoActivo = await db.estados.findFirst({
+      where: { estado: 'Activo' },
+      select: { id_estado: true }
+    })
 
     await db.estados_Estudiantes.create({
       data: {
         id_estudiante: newEstudiante.id_estudiante,
-        id_estado: estados[0].id_estado,
+        id_estado: estadoActivo?.id_estado ?? '',
         createdAt: currentDate,
         updatedAt: currentDate
       }
@@ -201,32 +206,35 @@ export async function POST (request: Request) {
       }
     })
 
-    const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: newEstudiante.id_tipo_documento }
-    })
-
-    const sexo = await db.sexos.findUnique({
-      where: { id_sexo: newEstudiante.id_sexo }
-    })
-
-    const programa = await db.programas.findUnique({
-      where: { id_programa: newEstudiante.id_programa }
-    })
+    const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante, estadoEstudiante] = await Promise.all([
+      db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: estudiante.id_tipo_documento },
+        select: { tipo_documento: true }
+      }),
+      db.sexos.findUnique({
+        where: { id_sexo: estudiante.id_sexo },
+        select: { sexo: true }
+      }),
+      db.programas.findUnique({
+        where: { id_programa: estudiante.id_programa },
+        select: { programa: true, id_facultad: true }
+      }),
+      db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
+      }),
+      db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_codigo_qr: true }
+      }),
+      db.estados_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { id_estado: true }
+      })
+    ])
 
     const facultad = await db.facultades.findUnique({
       where: { id_facultad: programa?.id_facultad }
-    })
-
-    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    const estadoEstudiante = await db.estados_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
     })
 
     const estado = await db.estados.findUnique({
@@ -282,12 +290,14 @@ export async function PUT (request: Request) {
     } = estudianteDataSchema.parse(body)
 
     const currentStudent = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { numero_documento: true, celular: true }
     })
 
     if (currentStudent?.numero_documento !== numeroDocumento) {
       const existingEstudianteDocumento = await db.estudiantes.findUnique({
-        where: { numero_documento: numeroDocumento }
+        where: { numero_documento: numeroDocumento },
+        select: { numero_documento: true }
       })
 
       if (existingEstudianteDocumento !== null) {
@@ -300,7 +310,8 @@ export async function PUT (request: Request) {
 
     if (currentStudent?.celular !== celular) {
       const existingEstudianteCelular = await db.estudiantes.findUnique({
-        where: { celular }
+        where: { celular },
+        select: { celular: true }
       })
 
       if (existingEstudianteCelular !== null) {
@@ -330,32 +341,35 @@ export async function PUT (request: Request) {
       where: { id_estudiante: idEstudiante }
     })
 
-    const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: updatedEstudiante.id_tipo_documento }
-    })
-
-    const sexo = await db.sexos.findUnique({
-      where: { id_sexo: updatedEstudiante.id_sexo }
-    })
-
-    const programa = await db.programas.findUnique({
-      where: { id_programa: updatedEstudiante.id_programa }
-    })
+    const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante, estadoEstudiante] = await Promise.all([
+      db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: updatedEstudiante.id_tipo_documento },
+        select: { tipo_documento: true }
+      }),
+      db.sexos.findUnique({
+        where: { id_sexo: updatedEstudiante.id_sexo },
+        select: { sexo: true }
+      }),
+      db.programas.findUnique({
+        where: { id_programa: updatedEstudiante.id_programa },
+        select: { programa: true, id_facultad: true }
+      }),
+      db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: updatedEstudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
+      }),
+      db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: updatedEstudiante.id_estudiante },
+        select: { url_codigo_qr: true }
+      }),
+      db.estados_Estudiantes.findFirst({
+        where: { id_estudiante: updatedEstudiante.id_estudiante },
+        select: { id_estado: true }
+      })
+    ])
 
     const facultad = await db.facultades.findUnique({
       where: { id_facultad: programa?.id_facultad }
-    })
-
-    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
-      where: { id_estudiante: updatedEstudiante.id_estudiante }
-    })
-
-    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
-      where: { id_estudiante: updatedEstudiante.id_estudiante }
-    })
-
-    const estadoEstudiante = await db.estados_Estudiantes.findFirst({
-      where: { id_estudiante: updatedEstudiante.id_estudiante }
     })
 
     const estado = await db.estados.findUnique({

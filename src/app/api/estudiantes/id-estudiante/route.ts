@@ -10,7 +10,8 @@ export async function POST (request: Request) {
     const fecha = new Date(nextDate as string)
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { numero_documento: numeroDocumento }
+      where: { numero_documento: numeroDocumento },
+      select: { id_estudiante: true }
     })
 
     if (estudiante === null) {
@@ -21,7 +22,8 @@ export async function POST (request: Request) {
     }
 
     const almuerzosDisponiblesFecha = await db.almuerzos_Fecha.findUnique({
-      where: { fecha }
+      where: { fecha },
+      select: { id_almuerzos_fecha: true }
     })
 
     if (almuerzosDisponiblesFecha === null) {
@@ -32,7 +34,8 @@ export async function POST (request: Request) {
     }
 
     const almuerzosDisponibles = await db.almuerzos.findFirst({
-      where: { id_almuerzos_fecha: almuerzosDisponiblesFecha.id_almuerzos_fecha }
+      where: { id_almuerzos_fecha: almuerzosDisponiblesFecha.id_almuerzos_fecha },
+      select: { id_almuerzo: true }
     })
 
     if (almuerzosDisponibles === null) {
@@ -43,7 +46,8 @@ export async function POST (request: Request) {
     }
 
     const estudianteReserva = await db.estudiantes_Reservas.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
+      where: { id_estudiante: estudiante.id_estudiante },
+      select: { id_estudiante_reserva: true }
     })
 
     return NextResponse.json(

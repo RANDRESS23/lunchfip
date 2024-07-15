@@ -11,7 +11,8 @@ export async function POST (request: Request) {
     const currentDate = new Date(dateAux.toString())
 
     const almuerzos = await db.almuerzos.findFirst({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_almuerzo: true }
     })
 
     if (almuerzos === null) {
@@ -19,7 +20,8 @@ export async function POST (request: Request) {
     }
 
     const estadoInactivo = await db.estados.findFirst({
-      where: { estado: 'Inactivo' }
+      where: { estado: 'Inactivo' },
+      select: { id_estado: true }
     })
 
     if (estadoInactivo === null) {

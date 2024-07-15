@@ -26,7 +26,8 @@ export async function POST (request: Request) {
     } = estadoSchema.parse(body)
 
     const existingEstado = await db.estados.findMany({
-      where: { estado }
+      where: { estado },
+      select: { id_estado: true }
     })
 
     if (existingEstado.length > 0) {

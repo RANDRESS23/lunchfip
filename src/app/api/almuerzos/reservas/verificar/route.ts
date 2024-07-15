@@ -12,7 +12,8 @@ export async function POST (request: Request) {
     } = reservasSchema.parse(body)
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { id_estudiante: idEstudiante }
+      where: { id_estudiante: idEstudiante },
+      select: { id_estudiante: true, primer_nombre: true, id_tipo_documento: true, id_sexo: true, id_programa: true }
     })
 
     if (estudiante === null) {
@@ -22,24 +23,25 @@ export async function POST (request: Request) {
       )
     }
 
-    const estados = await db.estados.findMany()
+    const estadoInactivo = await db.estados.findFirst({
+      where: { estado: 'Inactivo' },
+      select: { id_estado: true }
+    })
+
     const [estadoEstudiante] = await db.estados_Estudiantes.findMany({
       where: { id_estudiante: estudiante.id_estudiante }
     })
 
-    if (estadoEstudiante.id_estado !== estados[0].id_estado) {
+    if (estadoEstudiante.id_estado !== estadoInactivo?.id_estado) {
       return NextResponse.json(
         { message: '¡El estudiante no se encuentra activo en LunchFip!' },
         { status: 400 }
       )
     }
 
-    const estadoInactivo = await db.estados.findFirst({
-      where: { estado: 'Inactivo' }
-    })
-
     const estadoAlmuerzos = await db.estados_Almuerzos.findFirst({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_estado: true }
     })
 
     if (estadoAlmuerzos?.id_estado === estadoInactivo?.id_estado) {
@@ -50,11 +52,13 @@ export async function POST (request: Request) {
     }
 
     const reservas = await db.reservas.findMany({
-      where: { id_almuerzo: idAlmuerzo }
+      where: { id_almuerzo: idAlmuerzo },
+      select: { id_reserva: true }
     })
 
     const estudiantesReservas = await db.estudiantes_Reservas.findMany({
-      where: { id_reserva: { in: reservas.map(reserva => reserva.id_reserva) } }
+      where: { id_reserva: { in: reservas.map(reserva => reserva.id_reserva) } },
+      select: { id_estudiante: true }
     })
 
     const existingTheStudentReservation = estudiantesReservas.some(estudianteReserva => estudianteReserva.id_estudiante === estudiante.id_estudiante)
@@ -66,25 +70,28 @@ export async function POST (request: Request) {
       )
     }
 
-    const programa = await db.programas.findUnique({
-      where: { id_programa: estudiante.id_programa }
-    })
-
-    const tipoDocumento = await db.tipos_Documento.findUnique({
-      where: { id_tipo_documento: estudiante.id_tipo_documento }
-    })
-
-    const sexo = await db.sexos.findUnique({
-      where: { id_sexo: estudiante.id_sexo }
-    })
-
-    const imageEstudiante = await db.imagenes_Perfil_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
-
-    const codigoQREstudiante = await db.codigos_QR_Estudiantes.findFirst({
-      where: { id_estudiante: estudiante.id_estudiante }
-    })
+    const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante] = await Promise.all([
+      db.tipos_Documento.findUnique({
+        where: { id_tipo_documento: estudiante.id_tipo_documento },
+        select: { tipo_documento: true }
+      }),
+      db.sexos.findUnique({
+        where: { id_sexo: estudiante.id_sexo },
+        select: { sexo: true }
+      }),
+      db.programas.findUnique({
+        where: { id_programa: estudiante.id_programa },
+        select: { programa: true }
+      }),
+      db.imagenes_Perfil_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_imagen_perfil: true }
+      }),
+      db.codigos_QR_Estudiantes.findFirst({
+        where: { id_estudiante: estudiante.id_estudiante },
+        select: { url_codigo_qr: true }
+      })
+    ])
 
     return NextResponse.json(
       {

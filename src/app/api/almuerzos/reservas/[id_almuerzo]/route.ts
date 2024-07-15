@@ -4,7 +4,8 @@ import { NextResponse } from 'next/server'
 export async function GET (_: Request, { params }: { params: { id_almuerzo: string } }) {
   try {
     const almuerzoReservado = await db.almuerzos_Reservados.findUnique({
-      where: { id_almuerzo: params.id_almuerzo }
+      where: { id_almuerzo: params.id_almuerzo },
+      select: { id_almuerzos_reservados: true }
     })
 
     if (almuerzoReservado === null) {

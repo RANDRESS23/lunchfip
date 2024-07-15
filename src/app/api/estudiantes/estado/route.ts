@@ -14,7 +14,8 @@ export async function PATCH (request: Request) {
     const currentDate = new Date(dateAux.toString())
 
     const estado = await db.estados.findFirst({
-      where: { estado: estadoNuevo }
+      where: { estado: estadoNuevo },
+      select: { id_estado: true }
     })
 
     if (estado === null) {
