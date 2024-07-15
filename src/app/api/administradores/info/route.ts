@@ -8,8 +8,7 @@ export async function POST (request: Request) {
     const { correo } = body
 
     const administrador = await db.administradores.findUnique({
-      where: { correo },
-      select: { id_administrador: true, id_tipo_documento: true, id_sexo: true, clave: true }
+      where: { correo }
     })
 
     if (administrador === null) {

@@ -8,8 +8,7 @@ export async function POST (request: Request) {
     const { correo_institucional: correoInstitucional } = body
 
     const estudiante = await db.estudiantes.findUnique({
-      where: { correo_institucional: correoInstitucional },
-      select: { id_estudiante: true, id_tipo_documento: true, id_sexo: true, id_programa: true, clave: true }
+      where: { correo_institucional: correoInstitucional }
     })
 
     if (estudiante === null) {
