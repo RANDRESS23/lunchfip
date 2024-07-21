@@ -14,7 +14,7 @@ export const HomeSection = () => {
         className="-top-10 left-0 md:left-60 md:-top-20"
         fill="white"
       />
-      <h1 className='relative flex flex-col justify-center items-center flex-wrap leading-none text-[65px] lg:text-[90px] font-extrabold tracking-tighter mt-5 md:mb-7'>
+      <h1 className='relative flex flex-col justify-center items-center flex-wrap leading-none text-[65px] md:text-[90px] font-extrabold tracking-tighter mt-5 md:mb-7'>
         <Title />
         <div className='absolute w-[110%] h-[600px] md:w-[650px] md:h-[650px] bg-gradient-to-r from-color-primary to-color-secondary rounded-full blur-[75px] opacity-15 dark:opacity-25 mt-40 lg:mt-0' />
       </h1>

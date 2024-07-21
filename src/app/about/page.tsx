@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { type Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { AboutUsSection } from './_components/AboutUsSection'
+import { Footer } from '@/components/Footer'
 
 export async function generateMetadata (): Promise<Metadata> {
   return {
@@ -29,8 +30,11 @@ export default async function AboutPage () {
   }
 
   return (
-    <main className='w-4/5 lg:w-3/5 mx-auto py-[110px] px-5 bg-grid-small-black dark:bg-grid-small-white'>
-      <AboutUsSection />
-    </main>
+    <>
+      <main className='w-4/5 lg:w-3/5 mx-auto py-[110px] px-5 bg-grid-small-black dark:bg-grid-small-white'>
+        <AboutUsSection />
+      </main>
+      <Footer />
+    </>
   )
 }

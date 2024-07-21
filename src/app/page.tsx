@@ -1,3 +1,4 @@
+import { Footer } from '@/components/Footer'
 import { BecauseSection } from '@/components/Home/BecauseSection'
 import { HomeSection } from '@/components/Home/HomeSection'
 import { getAdminEmails } from '@/services/getAdminEmails'
@@ -23,9 +24,12 @@ export default async function Home () {
   }
 
   return (
-    <main className='w-4/5 mx-auto'>
-      <HomeSection />
-      <BecauseSection />
-    </main>
+    <>
+      <main className='w-4/5 mx-auto'>
+        <HomeSection />
+        <BecauseSection />
+      </main>
+      <Footer />
+    </>
   )
 }
