@@ -62,7 +62,7 @@ export const Footer = () => {
 
         <div className="flex flex-col gap-5 items-center sm:gap-0 sm:flex-row sm:justify-between">
           <p className="text-sm text-gray-500 dark:text-gray-300">
-            © Copyright 2024. Derechos Reservados.
+            © 2024 LunchFip | Derechos Reservados.
           </p>
 
           <div className="flex -mx-2">
