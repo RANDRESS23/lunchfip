@@ -5,7 +5,7 @@ import Image from 'next/image'
 export const AboutUsSection = () => {
   return (
     <section className='font-inter-sans flex flex-col justify-center items-center gap-24 lg:gap-32'>
-      <article className='flex justify-center items-center gap-14 reveal-object'>
+      <article className='relative flex justify-center items-center gap-14 reveal-object'>
         <Image
           src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1718232128/svgs/about-us_ygz45n.svg'
           alt='about us'
@@ -22,6 +22,7 @@ export const AboutUsSection = () => {
           />
           <p className='text-neutral-700 dark:text-neutral-300 text-center lg:text-left transition-all'>Somos un equipo dedicado de estudiantes y profesionales del Instituto Tolimense de Formación Técnica Profesional (ITFIP) comprometidos con la mejora de la experiencia universitaria. Nuestra plataforma, LunchFip, nace de la necesidad de optimizar el proceso de reservas y entrega de almuerzos, brindando una solución eficiente y segura que ahorra tiempo y reduce errores.</p>
         </div>
+        <div className='absolute rotate-45 lg:left-0 w-[350px] h-[100px] md:w-[350px] md:h-[350px] bg-gradient-to-r from-color-primary to-color-secondary lg:rounded-full blur-[75px] opacity-15 dark:opacity-25 -z-10' />
       </article>
       <article className='flex justify-center items-center gap-14 reveal-object'>
         <div className='flex flex-col justify-center items-center'>
@@ -40,6 +41,7 @@ export const AboutUsSection = () => {
           height={200}
           className='hidden lg:flex w-96'
         />
+        <div className='absolute rotate-45 lg:right-0 w-[350px] h-[100px] md:w-[350px] md:h-[350px] bg-gradient-to-r from-color-primary to-color-secondary rounded-full blur-[75px] opacity-15 dark:opacity-25 -z-10' />
       </article>
       <article className='flex justify-center items-center gap-14 reveal-object'>
         <Image
@@ -58,6 +60,7 @@ export const AboutUsSection = () => {
           />
           <p className='text-neutral-700 dark:text-neutral-300 text-center lg:text-left transition-all'>Nuestra visión es ser el modelo de referencia en la gestión de servicios estudiantiles mediante soluciones tecnológicas avanzadas. Aspiramos a expandir nuestras soluciones a otras áreas y universidades, promoviendo una cultura de eficiencia, seguridad y satisfacción en la comunidad educativa.</p>
         </div>
+        <div className='absolute rotate-45 lg:left-0 w-[350px] h-[100px] md:w-[350px] md:h-[350px] bg-gradient-to-r from-color-primary to-color-secondary lg:rounded-full blur-[75px] opacity-15 dark:opacity-25 -z-10' />
       </article>
     </section>
   )
