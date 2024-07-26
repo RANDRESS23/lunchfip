@@ -3,7 +3,7 @@
 import { SubTitle } from '@/components/Home/SubTitle'
 import { Title } from '@/components/Home'
 import { Spotlight } from '../ui/Spotlight'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 
 /* ➡ Componente principal que renderiza la landing principal del aplicativo */
 export const HomeSection = () => {

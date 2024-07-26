@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu } from '@nextui-org/react'
-import Link from 'next/link.js'
+import { Link } from 'next-view-transitions'
 import { ThemeSwitcher } from '../ThemeSwitcher'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'

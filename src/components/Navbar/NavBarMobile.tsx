@@ -2,7 +2,7 @@
 
 import { createClient } from '@/utils/supabase/client'
 import { NavbarMenuItem, Divider } from '@nextui-org/react'
-import Link from 'next/link'
+import { Link } from 'next-view-transitions'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useEstudiante } from '@/hooks/useEstudiante'

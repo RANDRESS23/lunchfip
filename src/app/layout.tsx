@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
 import NextUIProviderContext from '@/providers/NextUIProvider'
 import { NavBar } from '@/components/Navbar'
+import { ViewTransitions } from 'next-view-transitions'
 import './globals.css'
 
 const inter = Inter({
@@ -35,14 +36,16 @@ export default function RootLayout ({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>
-        <NextUIProviderContext>
-          <Toaster />
-          <NavBar />
-          {children}
-        </NextUIProviderContext>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="es" suppressHydrationWarning>
+        <body className={`${inter.variable} font-sans`}>
+          <NextUIProviderContext>
+            <Toaster />
+            <NavBar />
+            {children}
+          </NextUIProviderContext>
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

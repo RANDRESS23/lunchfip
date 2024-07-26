@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { cn } from '@/libs/utils'
 import { NavbarContent, NavbarItem } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
-import Link from 'next/link.js'
+import { Link } from 'next-view-transitions'
 
 interface NavBarContentCenterProps {
   items: Array<{ title: string, href: string }>
