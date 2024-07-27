@@ -16,7 +16,7 @@ export const BecauseSection = () => {
         text2="LunchFip?"
         textSize="text-[40px]"
       />
-      <p className="flex justify-center items-center text-center text-lg lg:max-w-3xl z-10 text-p-light dark:text-p-dark font-normal italic transition-all reveal-object">LunchFip revoluciona la forma en que los estudiantes del ITFIP reservan y reclaman sus almuerzos, reduciendo las filas, incremento de seguridad, y por supuesto, mejorando la eficiencia de todo el proceso. Aquí te mostramos cómo:</p>
+      <p className="flex justify-center items-center text-center text-lg lg:max-w-3xl z-10 text-p-light dark:text-p-dark font-normal italic transition-all">LunchFip revoluciona la forma en que los estudiantes del ITFIP reservan y reclaman sus almuerzos, reduciendo las filas, incremento de seguridad, y por supuesto, mejorando la eficiencia de todo el proceso. Aquí te mostramos cómo:</p>
       <ItemsBecauseCards />
     </section>
   )

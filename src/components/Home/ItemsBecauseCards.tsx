@@ -6,7 +6,7 @@ export const ItemsBecauseCards = () => {
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 py-10 mt-5 gap-7">
       {
         itemsBeacauseSection.map(({ icon, title, description }) => (
-          <article key={title} className='p-6 border border-neutral-300 dark:border-neutral-600 rounded-xl reveal-object'>
+          <article key={title} className='p-6 border border-neutral-300 dark:border-neutral-600 rounded-xl'>
             <div className='w-[60px] h-[60px] flex justify-center items-center p-2 rounded-full border border-neutral-200 dark:border-neutral-700 mb-4'>
               <div className='w-full h-full rounded-full flex justify-center items-center p-[10px] border border-neutral-300 dark:border-neutral-600'>
                 {icon}

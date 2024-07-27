@@ -5,7 +5,7 @@ import Image from 'next/image'
 export const AboutUsSection = () => {
   return (
     <section className='font-inter-sans flex flex-col justify-center items-center gap-24 lg:gap-32'>
-      <article className='relative flex justify-center items-center gap-14 reveal-object'>
+      <article className='relative flex justify-center items-center gap-14'>
         <Image
           src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1718232128/svgs/about-us_ygz45n.svg'
           alt='about us'
@@ -24,7 +24,7 @@ export const AboutUsSection = () => {
         </div>
         <div className='hidden lg:flex absolute left-0 w-[350px] h-[350px] bg-gradient-to-r from-color-primary to-color-secondary lg:rounded-full blur-[75px] opacity-15 dark:opacity-25 -z-10' />
       </article>
-      <article className='flex justify-center items-center gap-14 reveal-object'>
+      <article className='flex justify-center items-center gap-14'>
         <div className='flex flex-col justify-center items-center'>
           <TitleAnimated
             text1='Nuestra'
@@ -43,7 +43,7 @@ export const AboutUsSection = () => {
         />
         <div className='hidden lg:flex absolute right-0 w-[350px] h-[350px] bg-gradient-to-r from-color-primary to-color-secondary rounded-full blur-[75px] opacity-15 dark:opacity-25 -z-10' />
       </article>
-      <article className='flex justify-center items-center gap-14 reveal-object'>
+      <article className='flex justify-center items-center gap-14'>
         <Image
           src='https://res.cloudinary.com/dje4ke8hw/image/upload/v1718234155/svgs/vision_srsmbj.svg'
           alt='about us'
