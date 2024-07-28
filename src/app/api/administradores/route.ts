@@ -6,8 +6,9 @@ import { NextResponse } from 'next/server'
 export async function GET () {
   try {
     const administradores = await db.administradores.findMany()
+    const emailsAdministradores = administradores.map((admin) => admin.correo)
 
-    return NextResponse.json(administradores)
+    return NextResponse.json({ emailsAdministradores })
   } catch (error) {
     console.error({ error })
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import api from '@/libs/api'
-import { type Administrador } from '@/types/administradores'
 
 /* ➡ Hook para manejar los emails de los administradores */
 export const useEmailsAdmin = () => {
@@ -13,9 +12,8 @@ export const useEmailsAdmin = () => {
         setLoadingEmailsAdmin(true)
 
         const response = await api.get('/administradores')
-        const emails: string[] = response.data.map((admin: Administrador) => admin.correo)
 
-        setEmailsAdmin(emails)
+        setEmailsAdmin(response?.data?.emailsAdministradores as string[])
       } catch (error) {
         console.log(error)
       } finally {
