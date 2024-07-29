@@ -1,9 +1,19 @@
 import { db } from '@/libs/prismaDB'
 import { NextResponse } from 'next/server'
 import { totalLunchesSchema } from './schema'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 
 export async function GET () {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const almuerzos = await db.almuerzos.findMany()
 
     return NextResponse.json(almuerzos)
@@ -20,6 +30,15 @@ export async function GET () {
 export async function POST (request: Request) {
   try {
     const body = await request.json()
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
 
     const {
       total_almuerzos: totalAlmuerzos,
@@ -138,6 +157,16 @@ export async function POST (request: Request) {
 export async function PATCH (request: Request) {
   try {
     const body = await request.json()
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const { id_almuerzo: idAlmuerzo, cantidad } = body
 
     const dateAux = new Date()

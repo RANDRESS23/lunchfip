@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { reservasSchema } from './schema'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,6 +13,15 @@ cloudinary.config({
 
 export async function GET () {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const reservas = await db.reservas.findMany()
 
     return NextResponse.json(reservas)
@@ -26,9 +36,18 @@ export async function GET () {
 }
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const {
       id_empleado: idEmpleado,
       id_estudiante: idEstudiante,

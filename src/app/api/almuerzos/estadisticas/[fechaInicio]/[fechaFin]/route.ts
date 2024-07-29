@@ -1,4 +1,5 @@
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
@@ -25,6 +26,15 @@ const getDefaultData = (fechaInicioAux: Date, fechaFinAux: Date) => [
 
 export async function GET (_: Request, { params }: { params: { fechaInicio: string, fechaFin: string } }) {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const fechaInicioAux = new Date(params.fechaInicio)
     const fechaFinAux = new Date(params.fechaFin)
     const fechaInicioAux2 = new Date(params.fechaInicio)

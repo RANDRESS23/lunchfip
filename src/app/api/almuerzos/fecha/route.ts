@@ -1,9 +1,19 @@
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 export async function GET () {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const almuerzosFecha = await db.almuerzos_Fecha.findMany()
 
     if (almuerzosFecha.length === 0) {
@@ -55,6 +65,15 @@ export async function POST (request: Request) {
   try {
     const body = await request.json()
     const { newFecha } = body
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
 
     const fecha = new Date(newFecha as string)
 
@@ -125,6 +144,16 @@ export async function POST (request: Request) {
 export async function PATCH (request: Request) {
   try {
     const body = await request.json()
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const { id_almuerzos_fecha: idAlmuerzosFecha, newFecha } = body
 
     const fecha = new Date(newFecha as string)
