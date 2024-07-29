@@ -2,6 +2,7 @@ import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
 import { administradoresSchema } from './schema'
 import { NextResponse } from 'next/server'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 
 export async function GET () {
   try {
@@ -20,14 +21,23 @@ export async function GET () {
 }
 
 export async function POST (request: Request) {
-  const body = await request.json()
-  const CREATE_ADMIN_IS_POSIBLE = false
-
   try {
+    const body = await request.json()
+    const CREATE_ADMIN_IS_POSIBLE = false
+
     if (!CREATE_ADMIN_IS_POSIBLE) {
       return NextResponse.json(
         { messsage: '¡Por el momento no se pueden registrar más administradores!' },
         { status: 400 }
+      )
+    }
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
       )
     }
 
