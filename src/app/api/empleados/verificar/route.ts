@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server'
 import { empleadosSchema } from '../schema'
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const {
       numero_documento: numeroDocumento,
       correo,

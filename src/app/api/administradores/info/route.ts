@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import { db } from '@/libs/prismaDB'
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const { correo } = body
 
     const administrador = await db.administradores.findUnique({
