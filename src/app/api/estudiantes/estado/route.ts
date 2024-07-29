@@ -1,8 +1,18 @@
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 import { NextResponse } from 'next/server'
 
 export async function PATCH (request: Request) {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     const {
       id_estudiante: idEstudiante,

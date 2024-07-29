@@ -3,9 +3,9 @@ import { estudianteSchema } from '../schema'
 import { db } from '@/libs/prismaDB'
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const {
       numero_documento: numeroDocumento,
       correo_institucional: correoInstitucional,

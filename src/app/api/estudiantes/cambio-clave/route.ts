@@ -6,11 +6,7 @@ import { encryptPassword } from '@/libs/bcrypt'
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
 
 const cambioClaveSchema = z.object({
-  numero_documento: z.string().min(7, {
-    message: 'El número de documento debe tener al menos 7 caracteres.'
-  }).max(12, {
-    message: 'El número de documento debe tener máximo 12 caracteres.'
-  }),
+  id_estudiante: z.string(),
   clave: z.string().refine(value => passwordRegex.test(value), {
     message: 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial.'
   }),
@@ -21,11 +17,11 @@ const cambioClaveSchema = z.object({
 })
 
 export async function PATCH (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const {
-      numero_documento: numeroDocumento,
+      id_estudiante: idEstudiante,
       clave,
       clave_2: clave2
     } = cambioClaveSchema.parse(body)
@@ -44,7 +40,7 @@ export async function PATCH (request: Request) {
     const hashedPassword = await encryptPassword(clave)
     await db.estudiantes.update({
       data: { clave: hashedPassword, updatedAt: currentDate },
-      where: { numero_documento: numeroDocumento }
+      where: { id_estudiante: idEstudiante }
     })
 
     return NextResponse.json(

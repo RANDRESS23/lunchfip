@@ -79,7 +79,7 @@ export const FormResetPassword = ({ token }: { token: string }) => {
         return toast.error('¡Ocurrió un error al solicitar el cambio de contraseña, puede que el link de restablecimiento haya vencido!.')
       }
 
-      await api.patch('/estudiantes/cambio-clave', { numero_documento: estudiante.numero_documento, clave: data.clave, clave_2: data.clave_2 })
+      await api.patch('/estudiantes/cambio-clave', { id_estudiante: estudiante.id_estudiante, clave: data.clave, clave_2: data.clave_2 })
 
       const response = await api.post('/estudiantes/info', {
         correo_institucional: estudiante.correo_institucional

@@ -4,8 +4,7 @@ import { estudianteDataSchema, estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
-import { createClient } from '@/utils/supabase/server'
-import { getAdminEmails } from '@/services/getAdminEmails'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -15,13 +14,9 @@ cloudinary.config({
 
 export async function GET (request: Request) {
   try {
-    const supabase = createClient()
-    const { data } = await supabase.auth.getUser()
-    const adminEmails = await getAdminEmails()
+    const isValidateAccessAPI = await validateAccessAPI()
 
-    const isAdmin = adminEmails.includes(data?.user?.email ?? '')
-
-    if (!isAdmin) {
+    if (isValidateAccessAPI) {
       return NextResponse.json(
         { message: '¡No tienes permisos para acceder a esta información!' },
         { status: 401 }
@@ -127,9 +122,9 @@ export async function GET (request: Request) {
 }
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const {
       id_estudiante: idEstudiante,
       primer_nombre: primerNombre,
@@ -289,9 +284,9 @@ export async function POST (request: Request) {
 }
 
 export async function PUT (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const {
       id_estudiante: idEstudiante,
       primer_nombre: primerNombre,

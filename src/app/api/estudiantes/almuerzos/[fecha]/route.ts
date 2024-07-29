@@ -1,9 +1,19 @@
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 import { format } from '@formkit/tempo'
 import { NextResponse } from 'next/server'
 
 export async function GET (request: Request, { params }: { params: { fecha: string } }) {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const fecha = new Date(params.fecha)
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')

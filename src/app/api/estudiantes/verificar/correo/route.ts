@@ -11,9 +11,9 @@ const correoInstitucionalSchema = z.object({
 })
 
 export async function POST (request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
+
     const {
       correo_institucional: correoInstitucional
     } = correoInstitucionalSchema.parse(body)

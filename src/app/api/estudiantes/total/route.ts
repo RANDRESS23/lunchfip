@@ -1,8 +1,18 @@
 import { db } from '@/libs/prismaDB'
+import { validateAccessAPI } from '@/libs/validateAccessAPI'
 import { NextResponse } from 'next/server'
 
 export async function GET () {
   try {
+    const isValidateAccessAPI = await validateAccessAPI()
+
+    if (isValidateAccessAPI) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const estudiantesTotal = await db.estudiantes.findMany()
     const totalEstudiantes = await Promise.all(estudiantesTotal.map(async (estudiante) => {
       const programa = await db.programas.findUnique({
