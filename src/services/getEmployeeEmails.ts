@@ -1,15 +1,13 @@
 import api from '@/libs/api'
-import { type Empleado } from '@/types/empleados'
 
 /* ➡ Función para obtener los emails de todos los empleados */
 export const getEmployeeEmails = async () => {
   let employeeEmails: string[] = []
 
   try {
-    const response = await api.get(`/empleados/?page=${1}&rows=${10}`)
-    const emails: string[] = response.data.totalEmpleados.map((empleado: Empleado) => empleado.correo)
+    const { data: { emailsEmpleados } } = await api.get('/empleados/emails')
 
-    employeeEmails = emails
+    employeeEmails = emailsEmpleados
   } catch (error) {
     console.log(error)
   }
