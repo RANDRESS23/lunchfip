@@ -10,7 +10,6 @@ import { Button } from '@/components/Button'
 import { signInSchema } from '@/app/api/estudiantes/schema'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
-import { useEmpleados } from '@/hooks/useEmpleados'
 import api from '@/libs/api'
 import { type Empleado } from '@/types/empleados'
 import { Link } from 'next-view-transitions'
@@ -22,13 +21,14 @@ import { createClient } from '@/utils/supabase/client'
 import { useEmailsAdmin } from '@/hooks/useEmailsAdmin'
 import { useAdministrador } from '@/hooks/useAdministrador'
 import { type Administrador } from '@/types/administradores'
+import { useEmailsEmployee } from '@/hooks/useEmailsEmployee'
 
 /* ➡ Este componente es el que se renderiza el formulario principal de la pagina "Iniciar Sesión" del aplicativo */
 export const FormSignIn = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isConfirmResponse, setIsConfirmResponse] = useState(false)
-  const { emailsEmpleados } = useEmpleados({})
+  const { emailsEmployee } = useEmailsEmployee()
   const { emailsAdmin } = useEmailsAdmin()
   const { setEmpleado } = useEmpleado()
   const { setAdministrador } = useAdministrador()
@@ -66,7 +66,7 @@ export const FormSignIn = () => {
         return toast.error('!El correo electrónico o la contraseña son incorrectos!')
       }
 
-      const isEmpleado = emailsEmpleados.includes(data.correo as string)
+      const isEmpleado = emailsEmployee.includes(data.correo as string)
       const isAdmin = emailsAdmin.includes(data.correo as string)
 
       if (isEmpleado) {

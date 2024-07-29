@@ -16,7 +16,6 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
   const setTotalEmpleados = useEmpleadoStore(state => state.setTotalEmpleados)
   const empleadosCount = useEmpleadoStore(state => state.empleadosCount)
   const setEmpleadosCount = useEmpleadoStore(state => state.setEmpleadosCount)
-  const [emailsEmpleados, setEmailsEmpleados] = useState<string[]>([])
   const [loadingEmpleados, setLoadingEmpleados] = useState(false)
 
   useEffect(() => {
@@ -25,11 +24,9 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
         setLoadingEmpleados(true)
 
         const response = await api.get(`/empleados/?page=${page}&rows=${rows}`)
-        const emails: string[] = response.data.totalEmpleados.map((empleado: Empleado) => empleado.correo)
 
         setEmpleados(response.data.empleados as Empleado[])
         setTotalEmpleados(response.data.totalEmpleados as Empleado[])
-        setEmailsEmpleados(emails)
         setEmpleadosCount(response.data.empleadosCount as number)
       } catch (error) {
         console.log(error)
@@ -41,5 +38,5 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
     getEmpleados()
   }, [page, rows])
 
-  return { empleados, empleadosCount, emailsEmpleados, totalEmpleados, loadingEmpleados, setEmpleados }
+  return { empleados, empleadosCount, totalEmpleados, loadingEmpleados, setEmpleados }
 }
