@@ -4,6 +4,8 @@ import { estudianteDataSchema, estudianteSchema } from './schema'
 import { NextResponse } from 'next/server'
 import { type UploadApiResponse, v2 as cloudinary } from 'cloudinary'
 import QRCode from 'qrcode'
+import { createClient } from '@/utils/supabase/server'
+import { getAdminEmails } from '@/services/getAdminEmails'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,6 +15,19 @@ cloudinary.config({
 
 export async function GET (request: Request) {
   try {
+    const supabase = createClient()
+    const { data } = await supabase.auth.getUser()
+    const adminEmails = await getAdminEmails()
+
+    const isAdmin = adminEmails.includes(data?.user?.email ?? '')
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
     const rows = searchParams.get('rows')

@@ -23,7 +23,7 @@ export const useEmpleados = ({ page = '1', rows = '10' }: EmpleadoProps) => {
       try {
         setLoadingEmpleados(true)
 
-        const response = await api.get(`/empleados/?page=${page}&rows=${rows}`)
+        const response = await api.get(`/empleados?page=${page}&rows=${rows}`)
 
         setEmpleados(response.data.empleados as Empleado[])
         setTotalEmpleados(response.data.totalEmpleados as Empleado[])

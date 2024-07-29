@@ -21,8 +21,16 @@ export async function GET () {
 
 export async function POST (request: Request) {
   const body = await request.json()
+  const CREATE_ADMIN_IS_POSIBLE = false
 
   try {
+    if (!CREATE_ADMIN_IS_POSIBLE) {
+      return NextResponse.json(
+        { messsage: '¡Por el momento no se pueden registrar más administradores!' },
+        { status: 400 }
+      )
+    }
+
     const {
       id_administrador: idAdministrador,
       primer_nombre: primerNombre,

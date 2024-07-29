@@ -25,7 +25,7 @@ export const useEstudiantesAlmuerzos = ({ fecha, page, rows }: { fecha: string, 
       try {
         setLoadingEstudiantesAlmuerzos(true)
 
-        const response = await api.get(`/estudiantes/almuerzos/${fechaFinal}/?page=${page}&rows=${rows}`)
+        const response = await api.get(`/estudiantes/almuerzos/${fechaFinal}?page=${page}&rows=${rows}`)
 
         setEstudiantesAlmuerzos(response.data.estudiantesAlmuerzos as EstudianteAlmuerzo[])
         setEstudiantesAlmuerzosCount(response.data.estudiantesAlmuerzosCount as number)

@@ -19,7 +19,7 @@ export const useEstudiantes = ({ page, rows }: { page: string, rows: string }) =
       try {
         setLoadingEstudiantes(true)
 
-        const response = await api.get(`/estudiantes/?page=${page}&rows=${rows}`)
+        const response = await api.get(`/estudiantes?page=${page}&rows=${rows}`)
 
         setEstudiantes(response.data.estudiantes as Estudiante[])
         setEstudiantesCount(response.data.estudiantesCount as number)

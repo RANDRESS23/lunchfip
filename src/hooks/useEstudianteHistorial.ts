@@ -20,7 +20,7 @@ export const useEstudianteHistorial = ({ idEstudiante, page, rows }: { idEstudia
       try {
         setLoadingEstudianteHistorial(true)
 
-        const response = await api.get(`/estudiantes/historial/${idEstudiante}/?page=${page}&rows=${rows}`)
+        const response = await api.get(`/estudiantes/historial/${idEstudiante}?page=${page}&rows=${rows}`)
 
         setEstudianteHistorialReservas(response.data.estudianteHistorialReservas as EstudianteHistorialReservas[])
         setEstudianteHistorialReservasCount(response.data.estudianteHistorialReservasCount as number)

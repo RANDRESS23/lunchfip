@@ -2,9 +2,24 @@ import { encryptPassword } from '@/libs/bcrypt'
 import { db } from '@/libs/prismaDB'
 import { empleadosDataSchema, empleadosSchema } from './schema'
 import { NextResponse } from 'next/server'
+import { createClient } from '@/utils/supabase/server'
+import { getAdminEmails } from '@/services/getAdminEmails'
 
 export async function GET (request: Request) {
   try {
+    const supabase = createClient()
+    const { data } = await supabase.auth.getUser()
+    const adminEmails = await getAdminEmails()
+
+    const isAdmin = adminEmails.includes(data?.user?.email ?? '')
+
+    if (!isAdmin) {
+      return NextResponse.json(
+        { message: '¡No tienes permisos para acceder a esta información!' },
+        { status: 401 }
+      )
+    }
+
     const searchParams = new URL(request.url).searchParams
     const page = searchParams.get('page')
     const rows = searchParams.get('rows')
