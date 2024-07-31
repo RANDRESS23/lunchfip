@@ -11,6 +11,6 @@ LunchFip es una plataforma web que revoluciona la forma en que los estudiantes d
 - **Acceso remoto:** Realiza y verifica tus reservas desde cualquier lugar y en cualquier momento. No necesitas estar físicamente presente para asegurar tu almuerzo.
 - **Reportes detallados:** Accede a reportes detallados sobre tus reservas y entregas de almuerzos. Mantén un control preciso y transparente de tu historial de almuerzos en todo momento.
 
-## Home Page
+## Página de Inicio
 ![image](https://github.com/user-attachments/assets/200cb469-c78b-4f84-b888-c08be924297e)
 
