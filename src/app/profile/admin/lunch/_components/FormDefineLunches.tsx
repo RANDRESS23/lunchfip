@@ -131,7 +131,7 @@ export const FormDefineLunches = () => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-full lg:w-96 flex flex-col justify-center items-center font-inter-sans'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-full lg:w-[420px] flex flex-col justify-center items-center font-inter-sans'>
         <div className='mb-3'>
           {
             almuerzosFecha.id_almuerzos_fecha === ''
