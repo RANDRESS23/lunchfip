@@ -25,14 +25,6 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
     return format(fecha, 'h:mm A')
   }
 
-  const getNextFullDate = () => {
-    if (almuerzosFecha.id_almuerzos_fecha !== '') {
-      const fechaAux = new Date(almuerzosFecha.fecha?.toString() ?? new Date().toString())
-      const fechaAux2 = new Date(fechaAux.setDate(fechaAux.getDate() + 1))
-      return format(fechaAux2, 'full')
-    }
-  }
-
   return (
     <section className='flex flex-col items-center justify-center gap-10 w-full'>
       {
@@ -64,8 +56,8 @@ export const LunchesReservedStats = ({ isFlex }: LunchesReservedStatsProps) => {
               </div>
             )
           : (
-              <div className='relative w-full z-10 mt-32'>
-                <p className='w-full italic text-center text-color-secondary'>⚠ ¡No hay datos para mostrar debido a que el administrador no ha definido la cantidad de almuerzos para el dia {getNextFullDate()}.! ⚠</p>
+              <div className='relative w-full z-10 mt-16 lg:mt-32'>
+                <p className='w-full italic text-center text-color-secondary'>⚠ ¡No hay datos para mostrar debido a que el administrador no ha definido la cantidad de almuerzos, o no se ha definido la fecha del servicio de almuerzos.! ⚠</p>
               </div>
             )
       }
