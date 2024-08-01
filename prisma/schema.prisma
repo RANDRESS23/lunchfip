@@ -42,6 +42,10 @@ model Estudiantes {
 
   createdAt                   DateTime        @default(now())
   updatedAt                   DateTime        @updatedAt
+  xata_id                     String          @unique(map: "_pgroll_new_Estudiantes_xata_id_key")      @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version                Int             @default(0)
+  xata_createdat              DateTime        @default(now()) @db.Timestamptz(6)
+  xata_updatedat              DateTime        @default(now()) @db.Timestamptz(6)
 
   @@index([id_tipo_documento])
   @@index([id_programa])
@@ -50,46 +54,58 @@ model Estudiantes {
 }
 
 model Imagenes_Perfil_Estudiantes {
-  id_imagen_perfil_estudiante   String      @id @default(uuid())
+  id_imagen_perfil_estudiante   String                   @id @default(uuid())
 
-  id_estudiante                 String
-  estudiante                    Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  id_estudiante                 String                   @unique
+  estudiante                    Estudiantes              @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
 
-  url_imagen_perfil             String      @db.Text
+  url_imagen_perfil             String                   @db.Text
 
-  createdAt                     DateTime    @default(now())
-  updatedAt                     DateTime    @updatedAt
+  createdAt                     DateTime                 @default(now())
+  updatedAt                     DateTime                 @updatedAt
+  xata_id                       String                   @unique(map: "_pgroll_new_Imagenes_Perfil_Estudiantes_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version                  Int                      @default(0)
+  xata_createdat                DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat                DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_estudiante])
 }
 
 model Estados_Estudiantes {
-  id_estado_estudiante  String      @id @default(uuid())
+  id_estado_estudiante  String                   @id @default(uuid())
   
   id_estudiante         String
-  estudiante            Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  estudiante            Estudiantes              @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
 
   id_estado             String
-  estado                Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+  estado                Estados                  @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  xata_id               String                   @unique(map: "_pgroll_new_Estados_Estudiantes_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                      @default(0)
+  xata_createdat        DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_estudiante])
   @@index([id_estado])
 }
 
 model Estados_Empleados {
-  id_estado_empleado  String      @id @default(uuid())
+  id_estado_empleado  String                   @id @default(uuid())
   
   id_empleado           String
-  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+  empleado              Empleados              @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
 
   id_estado             String
-  estado                Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+  estado                Estados                @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  xata_id               String                 @unique(map: "_pgroll_new_Estados_Empleados_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                    @default(0)
+  xata_createdat        DateTime               @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime               @default(now()) @db.Timestamptz(6)
 
   @@index([id_empleado])
   @@index([id_estado])
@@ -125,6 +141,10 @@ model Empleados {
 
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
+  xata_id                String                 @unique(map: "_pgroll_new_Empleados_xata_id_key")   @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version           Int             @default(0)
+  xata_createdat         DateTime        @default(now()) @db.Timestamptz(6)
+  xata_updatedat         DateTime        @default(now()) @db.Timestamptz(6)
 
   @@index([id_tipo_documento])
   @@index([id_sexo])
@@ -132,30 +152,34 @@ model Empleados {
 }
 
 model Administradores {
-  id_administrador       String          @id @default(uuid())
-  primer_nombre          String          @db.VarChar(50)
-  segundo_nombre         String?         @db.VarChar(50)
-  primer_apellido        String          @db.VarChar(50)
-  segundo_apellido       String?         @db.VarChar(50)
+  id_administrador       String               @id @default(uuid())
+  primer_nombre          String               @db.VarChar(50)
+  segundo_nombre         String?              @db.VarChar(50)
+  primer_apellido        String               @db.VarChar(50)
+  segundo_apellido       String?              @db.VarChar(50)
   
   id_tipo_documento      String
-  tipo_documento         Tipos_Documento @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
+  tipo_documento         Tipos_Documento      @relation(fields: [id_tipo_documento], references: [id_tipo_documento], onDelete: Cascade)
 
-  numero_documento       String          @db.VarChar(20) @unique
+  numero_documento       String               @db.VarChar(20) @unique
 
-  correo                 String          @db.VarChar(50) @unique
+  correo                 String               @db.VarChar(50) @unique
   clave                  String 
 
   id_sexo                String
-  sexo                   Sexos           @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
+  sexo                   Sexos                @relation(fields: [id_sexo], references: [id_sexo], onDelete: Cascade)
 
-  celular                String          @db.VarChar(20) @unique
+  celular                String               @db.VarChar(20) @unique
 
   id_rol                 String
-  rol                    Roles           @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
+  rol                    Roles                @relation(fields: [id_rol], references: [id_rol], onDelete: Cascade)
 
-  createdAt              DateTime        @default(now())
-  updatedAt              DateTime        @updatedAt
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  xata_id                String               @unique(map: "_pgroll_new_Administradores_xata_id_key")  @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version           Int                  @default(0)
+  xata_createdat         DateTime             @default(now()) @db.Timestamptz(6)
+  xata_updatedat         DateTime             @default(now()) @db.Timestamptz(6)
 
   @@index([id_tipo_documento])
   @@index([id_sexo])
@@ -175,6 +199,10 @@ model Recargas {
 
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
+  xata_id               String      @unique(map: "_pgroll_new_Recargas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int         @default(0)
+  xata_createdat        DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime    @default(now()) @db.Timestamptz(6)
 
   @@index([id_empleado])
 }
@@ -190,6 +218,10 @@ model Estados {
 
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
+  xata_id              String      @unique(map: "_pgroll_new_Estados_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version         Int         @default(0)
+  xata_createdat       DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat       DateTime    @default(now()) @db.Timestamptz(6)
 }
 
 model Roles {
@@ -202,6 +234,10 @@ model Roles {
 
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
+  xata_id           String      @unique(map: "_pgroll_new_Roles_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version      Int         @default(0)
+  xata_createdat    DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat    DateTime    @default(now()) @db.Timestamptz(6)
 }
 
 model Sexos {
@@ -214,6 +250,10 @@ model Sexos {
 
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+  xata_id          String      @unique(map: "_pgroll_new_Sexos_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version     Int         @default(0)
+  xata_createdat   DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat   DateTime    @default(now()) @db.Timestamptz(6)
 }
 
 model Tipos_Documento {
@@ -226,86 +266,110 @@ model Tipos_Documento {
 
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
+  xata_id           String      @unique(map: "_pgroll_new_Tipos_Documento_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version      Int         @default(0)
+  xata_createdat    DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat    DateTime    @default(now()) @db.Timestamptz(6)
 }
 
 model Facultades {
-  id_facultad String      @id @default(uuid())
-  facultad    String      @db.VarChar(100)
+  id_facultad       String      @id @default(uuid())
+  facultad          String      @db.VarChar(100)
 
-  programas   Programas[]
+  programas         Programas[]
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  xata_id           String      @unique(map: "_pgroll_new_Facultades_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version      Int         @default(0)
+  xata_createdat    DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat    DateTime    @default(now()) @db.Timestamptz(6)
 }
 
 model Programas {
-  id_programa   String      @id @default(uuid())
-  programa      String      @db.VarChar(100)
+  id_programa    String      @id @default(uuid())
+  programa       String      @db.VarChar(100)
 
-  id_facultad   String
-  facultad      Facultades  @relation(fields: [id_facultad], references: [id_facultad], onDelete: Cascade)
+  id_facultad    String
+  facultad       Facultades  @relation(fields: [id_facultad], references: [id_facultad], onDelete: Cascade)
 
-  estudiantes   Estudiantes[]
+  estudiantes    Estudiantes[]
 
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  xata_id        String      @unique(map: "_pgroll_new_Programas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int         @default(0)
+  xata_createdat DateTime    @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime    @default(now()) @db.Timestamptz(6)
 
   @@index([id_facultad])
 }
 
 model Codigos_QR_Estudiantes {
-  id_codigo_qr_estudiante   String      @id @default(uuid())
+  id_codigo_qr_estudiante   String                  @id @default(uuid())
 
   id_estudiante             String
-  estudiante                Estudiantes @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  estudiante                Estudiantes             @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
 
-  url_codigo_qr             String      @db.Text
+  url_codigo_qr             String                  @db.Text
 
-  createdAt                 DateTime    @default(now())
-  updatedAt                 DateTime    @updatedAt
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+  xata_id                   String                  @unique(map: "_pgroll_new_Codigos_QR_Estudiantes_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version              Int                     @default(0)
+  xata_createdat            DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat            DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_estudiante])
 }
 
 model Estados_Almuerzos {
-  id_estado_almuerzo  String      @id @default(uuid())
+  id_estado_almuerzo  String                   @id @default(uuid())
   
   id_almuerzo         String
-  almuerzo            Almuerzos    @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+  almuerzo            Almuerzos                @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   id_estado           String
-  estado              Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+  estado              Estados                  @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
 
-  createdAt           DateTime    @default(now())
-  updatedAt           DateTime    @updatedAt
+  createdAt           DateTime                 @default(now())
+  updatedAt           DateTime                 @updatedAt
+  xata_id             String                   @unique(map: "_pgroll_new_Estados_Almuerzos_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version        Int                      @default(0)
+  xata_createdat      DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat      DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_almuerzo])
   @@index([id_estado])
 }
 
 model Estados_Reservas {
-  id_estado_reserva  String      @id @default(uuid())
+  id_estado_reserva  String                   @id @default(uuid())
   
   id_reserva         String
-  reserva            Reservas    @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  reserva            Reservas                 @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
 
   id_estado          String
-  estado             Estados     @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
+  estado             Estados                  @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
 
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  xata_id            String                   @unique(map: "_pgroll_new_Estados_Reservas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version       Int                      @default(0)
+  xata_createdat     DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat     DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_reserva])
   @@index([id_estado])
 }
 
 model Reservas {
-  id_reserva            String      @id @default(uuid())
+  id_reserva            String                @id @default(uuid())
   
   id_almuerzo           String
-  almuerzo              Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+  almuerzo              Almuerzos             @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
-  fecha                 DateTime    @default(now())
+  fecha                 DateTime              @default(now())
 
   reservas_empleados    Reservas_Empleados[]
   reservas_virtuales    Reservas_Virtuales[]
@@ -313,139 +377,175 @@ model Reservas {
   codigos_qr_reservas   Codigos_QR_Reservas[]
   estudiantes_reservas  Estudiantes_Reservas[]
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  xata_id               String                @unique(map: "_pgroll_new_Reservas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                   @default(0)
+  xata_createdat        DateTime              @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime              @default(now()) @db.Timestamptz(6)
 
   @@index([id_almuerzo])
 }
 
 model Reservas_Empleados {
-  id_reserva_empleado   String      @id @default(uuid())
+  id_reserva_empleado   String                  @id @default(uuid())
   
   id_reserva            String
-  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  reserva               Reservas                @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
   
   id_empleado           String
-  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+  empleado              Empleados               @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  xata_id               String                  @unique(map: "_pgroll_new_Reservas_Empleados_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                     @default(0)
+  xata_createdat        DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_reserva])
   @@index([id_empleado])
 }
 
 model Reservas_Virtuales {
-  id_reserva_virtual   String      @id @default(uuid())
+  id_reserva_virtual   String                   @id @default(uuid())
   
   id_reserva            String
-  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  reserva               Reservas                @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  xata_id               String                  @unique(map: "_pgroll_new_Reservas_Virtuales_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                     @default(0)
+  xata_createdat        DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_reserva])
 }
 
 model Entregas {
-  id_entrega            String      @id @default(uuid())
+  id_entrega            String                  @id @default(uuid())
 
   id_empleado           String
-  empleado              Empleados   @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
+  empleado              Empleados               @relation(fields: [id_empleado], references: [id_empleado], onDelete: Cascade)
 
   id_almuerzo           String
-  almuerzo              Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+  almuerzo              Almuerzos               @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
-  fecha                 DateTime    @default(now())
+  fecha                 DateTime                @default(now())
 
   estudiantes_entregas  Estudiantes_Entregas[]
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  xata_id               String                  @unique(map: "_pgroll_new_Entregas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                     @default(0)
+  xata_createdat        DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_empleado])
   @@index([id_almuerzo])
 }
 
 model Codigos_QR_Reservas {
-  id_codigo_qr_reserva  String     @id @default(uuid())
+  id_codigo_qr_reserva  String                   @id @default(uuid())
 
   id_reserva            String
-  reserva               Reservas   @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  reserva               Reservas                 @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
 
-  url_codigo_qr         String     @db.Text
+  url_codigo_qr         String                   @db.Text
 
-  createdAt             DateTime   @default(now())
-  updatedAt             DateTime   @updatedAt
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  xata_id               String                   @unique(map: "_pgroll_new_Codigos_QR_Reservas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                      @default(0)
+  xata_createdat        DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_reserva])
 }
 
 model Estudiantes_Reservas {
-  id_estudiante_reserva  String        @id @default(uuid())
+  id_estudiante_reserva  String                   @id @default(uuid())
 
   id_reserva             String
-  reserva                Reservas      @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
+  reserva                Reservas                 @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
   
   id_estudiante          String
-  estudiante             Estudiantes   @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  estudiante             Estudiantes              @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
 
-  estudiantes_entregas  Estudiantes_Entregas[]
+  estudiantes_entregas   Estudiantes_Entregas[]
 
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  xata_id                String                   @unique(map: "_pgroll_new_Estudiantes_Reservas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version           Int                      @default(0)
+  xata_createdat         DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat         DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_reserva])
   @@index([id_estudiante])
 }
 
 model Estudiantes_Entregas {
-  id_estudiante_entrega  String                @id @default(uuid())
+  id_estudiante_entrega  String                   @id @default(uuid())
 
   id_entrega             String
-  entrega                Entregas              @relation(fields: [id_entrega], references: [id_entrega], onDelete: Cascade)
+  entrega                Entregas                 @relation(fields: [id_entrega], references: [id_entrega], onDelete: Cascade)
   
   id_estudiante_reserva  String
-  estudiante_reserva     Estudiantes_Reservas  @relation(fields: [id_estudiante_reserva], references: [id_estudiante_reserva], onDelete: Cascade)
+  estudiante_reserva     Estudiantes_Reservas     @relation(fields: [id_estudiante_reserva], references: [id_estudiante_reserva], onDelete: Cascade)
 
-  createdAt              DateTime              @default(now())
-  updatedAt              DateTime              @updatedAt
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  xata_id                String                   @unique(map: "_pgroll_new_Estudiantes_Entregas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version           Int                      @default(0)
+  xata_createdat         DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat         DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_entrega])
   @@index([id_estudiante_reserva])
 }
 
 model Estudiantes_Recargas {
-  id_estudiante_recarga  String       @id @default(uuid())
+  id_estudiante_recarga  String                   @id @default(uuid())
 
   id_estudiante          String
-  estudiante             Estudiantes  @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
+  estudiante             Estudiantes              @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
   
   id_recarga             String
-  recarga                Recargas     @relation(fields: [id_recarga], references: [id_recarga], onDelete: Cascade)
+  recarga                Recargas                 @relation(fields: [id_recarga], references: [id_recarga], onDelete: Cascade)
 
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  xata_id                String                   @unique(map: "_pgroll_new_Estudiantes_Recargas_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version           Int                      @default(0)
+  xata_createdat         DateTime                 @default(now()) @db.Timestamptz(6)
+  xata_updatedat         DateTime                 @default(now()) @db.Timestamptz(6)
 
   @@index([id_estudiante])
   @@index([id_recarga])
 }
 
 model Almuerzos_Fecha {
-  id_almuerzos_fecha    String      @id @default(uuid())
-  fecha                 DateTime    @db.Date @unique
+  id_almuerzos_fecha    String               @id @default(uuid())
+  fecha                 DateTime             @db.Date @unique
 
   almuerzos             Almuerzos[]
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt  
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt  
+  xata_id               String               @unique(map: "_pgroll_new_Almuerzos_Fecha_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                  @default(0)
+  xata_createdat        DateTime             @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime             @default(now()) @db.Timestamptz(6)
 }
 
 model Almuerzos {
-  id_almuerzo           String           @id @default(uuid())
+  id_almuerzo           String                  @id @default(uuid())
   
   id_almuerzos_fecha    String
-  almuerzo_fecha        Almuerzos_Fecha  @relation(fields: [id_almuerzos_fecha], references: [id_almuerzos_fecha], onDelete: Cascade)
+  almuerzo_fecha        Almuerzos_Fecha         @relation(fields: [id_almuerzos_fecha], references: [id_almuerzos_fecha], onDelete: Cascade)
 
   total_almuerzos       Int
 
@@ -455,36 +555,48 @@ model Almuerzos {
   entregas              Entregas[]
   estados_almuerzos     Estados_Almuerzos[]
 
-  createdAt             DateTime    @default(now())
-  updatedAt             DateTime    @updatedAt  
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt  
+  xata_id               String                  @unique(map: "_pgroll_new_Almuerzos_xata_id_key")          @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version          Int                     @default(0)
+  xata_createdat        DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat        DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_almuerzos_fecha])
 }
 
 model Almuerzos_Entregados {
-  id_almuerzos_entregados  String      @id @default(uuid())
+  id_almuerzos_entregados  String                  @id @default(uuid())
 
-  id_almuerzo              String      @unique
-  almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+  id_almuerzo              String                  @unique
+  almuerzos                Almuerzos               @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   cantidad                 Int
 
-  createdAt                DateTime    @default(now())
-  updatedAt                DateTime    @updatedAt
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+  xata_id                  String                  @unique(map: "_pgroll_new_Almuerzos_Entregados_xata_id_key")  @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version             Int                     @default(0)
+  xata_createdat           DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat           DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_almuerzo])
 }
 
 model Almuerzos_Reservados {
-  id_almuerzos_reservados  String      @id @default(uuid())
+  id_almuerzos_reservados  String                  @id @default(uuid())
 
-  id_almuerzo              String      @unique
-  almuerzos                Almuerzos   @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
+  id_almuerzo              String                  @unique
+  almuerzos                Almuerzos               @relation(fields: [id_almuerzo], references: [id_almuerzo], onDelete: Cascade)
 
   cantidad                 Int
 
-  createdAt                DateTime    @default(now())
-  updatedAt                DateTime    @updatedAt
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+  xata_id                  String                  @unique(map: "_pgroll_new_Almuerzos_Reservados_xata_id_key")  @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version             Int                     @default(0)
+  xata_createdat           DateTime                @default(now()) @db.Timestamptz(6)
+  xata_updatedat           DateTime                @default(now()) @db.Timestamptz(6)
 
   @@index([id_almuerzo])
 }
