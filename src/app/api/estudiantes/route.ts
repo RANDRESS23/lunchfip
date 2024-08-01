@@ -336,20 +336,29 @@ export async function PUT (request: Request) {
     dateAux.setUTCHours(dateAux.getUTCHours() - 5)
     const currentDate = new Date(dateAux.toString())
 
-    const updatedEstudiante = await db.estudiantes.update({
-      data: {
-        primer_nombre: primerNombre,
-        segundo_nombre: segundoNombre,
-        primer_apellido: primerApellido,
-        segundo_apellido: segundoApellido,
-        id_tipo_documento: idTipoDocumento,
-        numero_documento: numeroDocumento,
-        id_programa: idPrograma,
-        celular,
-        updatedAt: currentDate
-      },
-      where: { id_estudiante: idEstudiante }
-    })
+    const [updatedEstudiante, updatedImageEstudiante] = await Promise.all([
+      db.estudiantes.update({
+        data: {
+          primer_nombre: primerNombre,
+          segundo_nombre: segundoNombre,
+          primer_apellido: primerApellido,
+          segundo_apellido: segundoApellido,
+          id_tipo_documento: idTipoDocumento,
+          numero_documento: numeroDocumento,
+          id_programa: idPrograma,
+          celular,
+          updatedAt: currentDate
+        },
+        where: { id_estudiante: idEstudiante }
+      }),
+      db.imagenes_Perfil_Estudiantes.update({
+        data: {
+          url_imagen_perfil: `https://guia.itfip.edu.co/sgacampus/images/dynamic/foto/1/${numeroDocumento}/${numeroDocumento}.jpg?width=1000&cut=1`,
+          updatedAt: currentDate
+        },
+        where: { id_estudiante: idEstudiante }
+      })
+    ])
 
     const [tipoDocumento, sexo, programa, imageEstudiante, codigoQREstudiante, estadoEstudiante] = await Promise.all([
       db.tipos_Documento.findUnique({
@@ -365,7 +374,7 @@ export async function PUT (request: Request) {
         select: { programa: true, id_facultad: true }
       }),
       db.imagenes_Perfil_Estudiantes.findFirst({
-        where: { id_estudiante: updatedEstudiante.id_estudiante },
+        where: { id_estudiante: updatedImageEstudiante.id_estudiante },
         select: { url_imagen_perfil: true }
       }),
       db.codigos_QR_Estudiantes.findFirst({
