@@ -63,7 +63,7 @@ export async function POST (request: Request) {
       select: { id_estado: true }
     })
 
-    if (estadoEstudiante.id_estado !== estadoInactivo?.id_estado) {
+    if (estadoEstudiante.id_estado === estadoInactivo?.id_estado) {
       return NextResponse.json(
         { message: '¡El estudiante no se encuentra activo en LunchFip!' },
         { status: 400 }
