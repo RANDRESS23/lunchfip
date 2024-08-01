@@ -25,7 +25,7 @@ export const useEstudiante = () => {
     else if (estudianteStorage.correo_institucional !== '') {
       const getStudentInfo = async () => {
         try {
-          const response = await api.post('/estudiantes/info/', {
+          const response = await api.post('/estudiantes/info', {
             correo_institucional: estudianteStorage.correo_institucional
           })
 

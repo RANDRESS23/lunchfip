@@ -34,15 +34,13 @@ export async function POST (request: Request) {
 
     if (numeroDocumento) {
       estudiante = await db.estudiantes.findUnique({
-        where: { numero_documento: numeroDocumento },
-        select: { id_estudiante: true, primer_nombre: true, id_tipo_documento: true, id_sexo: true, id_programa: true }
+        where: { numero_documento: numeroDocumento }
       })
     }
 
     if (idEstudiante) {
       estudiante = await db.estudiantes.findUnique({
-        where: { id_estudiante: idEstudiante },
-        select: { id_estudiante: true, primer_nombre: true, id_tipo_documento: true, id_sexo: true, id_programa: true }
+        where: { id_estudiante: idEstudiante }
       })
     }
 
