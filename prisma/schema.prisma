@@ -74,7 +74,7 @@ model Imagenes_Perfil_Estudiantes {
 model Estados_Estudiantes {
   id_estado_estudiante  String                   @id @default(uuid())
   
-  id_estudiante         String
+  id_estudiante         String                   @unique
   estudiante            Estudiantes              @relation(fields: [id_estudiante], references: [id_estudiante], onDelete: Cascade)
 
   id_estado             String
@@ -209,7 +209,7 @@ model Recargas {
 
 model Estados {
   id_estado            String      @id @default(uuid())
-  estado               String      @db.VarChar(20)
+  estado               String      @db.VarChar(20) @unique
 
   estados_estudiantes  Estados_Estudiantes[]
   estados_empleados    Estados_Empleados[]
@@ -226,7 +226,7 @@ model Estados {
 
 model Roles {
   id_rol            String      @id @default(uuid())
-  rol               String      @db.VarChar(20)
+  rol               String      @db.VarChar(20) @unique
 
   estudiantes       Estudiantes[]
   empleados         Empleados[]
@@ -242,7 +242,7 @@ model Roles {
 
 model Sexos {
   id_sexo          String      @id @default(uuid())
-  sexo             String      @db.VarChar(20)
+  sexo             String      @db.VarChar(20) @unique
 
   estudiantes      Estudiantes[]
   empleados        Empleados[]
@@ -258,7 +258,7 @@ model Sexos {
 
 model Tipos_Documento {
   id_tipo_documento String      @id @default(uuid())
-  tipo_documento    String      @db.VarChar(50)
+  tipo_documento    String      @db.VarChar(50) @unique
 
   estudiantes       Estudiantes[]
   empleados         Empleados[]
@@ -274,7 +274,7 @@ model Tipos_Documento {
 
 model Facultades {
   id_facultad       String      @id @default(uuid())
-  facultad          String      @db.VarChar(100)
+  facultad          String      @db.VarChar(100) @unique
 
   programas         Programas[]
 
@@ -288,7 +288,7 @@ model Facultades {
 
 model Programas {
   id_programa    String      @id @default(uuid())
-  programa       String      @db.VarChar(100)
+  programa       String      @db.VarChar(100) @unique
 
   id_facultad    String
   facultad       Facultades  @relation(fields: [id_facultad], references: [id_facultad], onDelete: Cascade)
@@ -346,10 +346,10 @@ model Estados_Almuerzos {
 model Estados_Reservas {
   id_estado_reserva  String                   @id @default(uuid())
   
-  id_reserva         String
+  id_reserva         String                   @unique
   reserva            Reservas                 @relation(fields: [id_reserva], references: [id_reserva], onDelete: Cascade)
 
-  id_estado          String
+  id_estado          String                   
   estado             Estados                  @relation(fields: [id_estado], references: [id_estado], onDelete: Cascade)
 
   createdAt          DateTime                 @default(now())
