@@ -36,11 +36,12 @@ export async function POST (request: Request) {
       id_facultad: idFacultad
     } = programaSchema.parse(body)
 
-    const existingPrograma = await db.programas.findMany({
-      where: { programa }
+    const existingPrograma = await db.programas.findUnique({
+      where: { programa },
+      select: { id_programa: true }
     })
 
-    if (existingPrograma.length > 0) {
+    if (existingPrograma) {
       return NextResponse.json(
         { messsage: 'Programa already exists' },
         { status: 400 }

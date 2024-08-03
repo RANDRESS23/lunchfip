@@ -35,11 +35,12 @@ export async function POST (request: Request) {
       tipo_documento: tipoDocumento
     } = tipoDocumentoSchema.parse(body)
 
-    const existingTipoDocumento = await db.tipos_Documento.findMany({
-      where: { tipo_documento: tipoDocumento }
+    const existingTipoDocumento = await db.tipos_Documento.findUnique({
+      where: { tipo_documento: tipoDocumento },
+      select: { id_tipo_documento: true }
     })
 
-    if (existingTipoDocumento.length > 0) {
+    if (existingTipoDocumento) {
       return NextResponse.json(
         { messsage: 'Tipo Documento already exists' },
         { status: 400 }

@@ -35,12 +35,12 @@ export async function POST (request: Request) {
       estado
     } = estadoSchema.parse(body)
 
-    const existingEstado = await db.estados.findMany({
+    const existingEstado = await db.estados.findUnique({
       where: { estado },
       select: { id_estado: true }
     })
 
-    if (existingEstado.length > 0) {
+    if (existingEstado) {
       return NextResponse.json(
         { messsage: 'Estado already exists' },
         { status: 400 }

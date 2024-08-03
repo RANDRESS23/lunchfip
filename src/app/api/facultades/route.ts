@@ -35,11 +35,12 @@ export async function POST (request: Request) {
       facultad
     } = facultadSchema.parse(body)
 
-    const existingFacultad = await db.facultades.findMany({
-      where: { facultad }
+    const existingFacultad = await db.facultades.findUnique({
+      where: { facultad },
+      select: { id_facultad: true }
     })
 
-    if (existingFacultad.length > 0) {
+    if (existingFacultad) {
       return NextResponse.json(
         { messsage: 'Facultad already exists' },
         { status: 400 }

@@ -35,11 +35,12 @@ export async function POST (request: Request) {
       sexo
     } = sexoSchema.parse(body)
 
-    const existingSexo = await db.sexos.findMany({
-      where: { sexo }
+    const existingSexo = await db.sexos.findUnique({
+      where: { sexo },
+      select: { id_sexo: true }
     })
 
-    if (existingSexo.length > 0) {
+    if (existingSexo) {
       return NextResponse.json(
         { messsage: 'Sexo already exists' },
         { status: 400 }

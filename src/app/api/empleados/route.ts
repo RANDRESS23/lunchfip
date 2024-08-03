@@ -152,7 +152,7 @@ export async function POST (request: Request) {
       )
     }
 
-    const [rolEmpleado] = await db.roles.findMany({
+    const rolEmpleado = await db.roles.findUnique({
       where: { rol: 'Empleado' },
       select: { id_rol: true }
     })

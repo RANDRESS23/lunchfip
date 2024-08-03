@@ -35,11 +35,12 @@ export async function POST (request: Request) {
       rol
     } = rolSchema.parse(body)
 
-    const existingRol = await db.roles.findMany({
-      where: { rol }
+    const existingRol = await db.roles.findUnique({
+      where: { rol },
+      select: { id_rol: true }
     })
 
-    if (existingRol.length > 0) {
+    if (existingRol) {
       return NextResponse.json(
         { messsage: 'Rol already exists' },
         { status: 400 }

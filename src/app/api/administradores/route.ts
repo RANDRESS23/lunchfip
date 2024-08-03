@@ -86,8 +86,9 @@ export async function POST (request: Request) {
       )
     }
 
-    const [rolAdministrador] = await db.roles.findMany({
-      where: { rol: 'Administrador' }
+    const rolAdministrador = await db.roles.findUnique({
+      where: { rol: 'Administrador' },
+      select: { id_rol: true }
     })
 
     const dateAux = new Date()

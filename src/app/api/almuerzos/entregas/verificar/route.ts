@@ -56,12 +56,12 @@ export async function POST (request: Request) {
       )
     }
 
-    const [estadosReserva] = await db.estados_Reservas.findMany({
+    const estadosReserva = await db.estados_Reservas.findUnique({
       where: { id_reserva: estudianteReserva.id_reserva },
       select: { id_estado: true }
     })
 
-    if (estadosReserva.id_estado !== estados[0].id_estado) {
+    if (estadosReserva?.id_estado !== estados[0].id_estado) {
       return NextResponse.json(
         { message: '¡La reserva ya fue entregada!' },
         { status: 400 }
@@ -80,12 +80,12 @@ export async function POST (request: Request) {
       )
     }
 
-    const [estadoEstudiante] = await db.estados_Estudiantes.findMany({
+    const estadoEstudiante = await db.estados_Estudiantes.findUnique({
       where: { id_estudiante: estudiante.id_estudiante },
       select: { id_estado: true }
     })
 
-    if (estadoEstudiante.id_estado !== estados[0].id_estado) {
+    if (estadoEstudiante?.id_estado !== estados[0].id_estado) {
       return NextResponse.json(
         { message: '¡El estudiante no se encuentra activo en LunchFip!' },
         { status: 400 }

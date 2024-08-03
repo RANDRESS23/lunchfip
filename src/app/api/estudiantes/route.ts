@@ -140,7 +140,7 @@ export async function POST (request: Request) {
       celular
     } = estudianteSchema.parse(body)
 
-    const [rolEstudiante] = await db.roles.findMany({
+    const rolEstudiante = await db.roles.findUnique({
       where: { rol: 'Estudiante' },
       select: { id_rol: true }
     })
@@ -164,7 +164,7 @@ export async function POST (request: Request) {
         clave: hashedPassword,
         id_sexo: idSexo,
         celular,
-        id_rol: rolEstudiante.id_rol,
+        id_rol: rolEstudiante?.id_rol ?? '',
         createdAt: currentDate,
         updatedAt: currentDate
       }
